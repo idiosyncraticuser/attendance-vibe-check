@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skip Simulator 💀</title>
+<link rel="icon" type="image/png" href="icon-512.png">
+<link rel="apple-touch-icon" href="icon-512.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#172033">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+*{box-sizing:border-box}
+body{
+    margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;
+    background:#f4f7fb;color:#172033
+}
+.container{max-width:720px;margin:auto;padding:28px 20px 45px}
+.back{
+    display:inline-block;color:#667085;text-decoration:none;
+    font-size:13px;font-weight:700;margin-bottom:18px
+}
+h1{margin:0;font-size:32px}
+.subtitle{margin:7px 0 24px;color:#667085}
+.panel{
+    background:white;border:1px solid #e4e9f0;border-radius:18px;
+    padding:20px;box-shadow:0 5px 18px rgba(16,24,40,.06)
+}
+label{display:block;font-size:12px;color:#667085;font-weight:700;margin-bottom:7px}
+select,input{
+    width:100%;padding:12px;border:1px solid #d7dde6;border-radius:10px;
+    background:#fbfcfe;color:#172033;font:14px Inter,Segoe UI,Arial,sans-serif;
+    outline:none
+}
+input:focus,select:focus{border-color:#6b8afd;box-shadow:0 0 0 3px rgba(107,138,253,.12)}
+.field{margin-bottom:16px}
+.subject-info{
+    display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:18px 0
+}
+.stat{
+    background:#f7f9fb;border-radius:12px;padding:12px
+}
+.stat small{display:block;color:#667085;font-size:11px;margin-bottom:4px}
+.stat b{font-size:18px}
+button{
+    width:100%;border:0;border-radius:10px;padding:12px 16px;
+    background:#172033;color:white;font-weight:700;cursor:pointer
+}
+button:hover{opacity:.9}
+.result{
+    margin-top:18px;padding:18px;border-radius:14px;text-align:center;
+    display:none
+}
+.result.safe{display:block;background:#e8f7ee;color:#138a45}
+.result.danger{display:block;background:#fdecec;color:#c62828}
+.result .big{font-size:30px;font-weight:800;margin:5px 0}
+.result .roast{margin-top:10px;font-weight:700}
+.detail{
+    margin-top:10px;font-size:13px;line-height:1.5;color:#667085
+}
+@media(max-width:550px){
+    .container{padding:22px 14px 35px}
+    h1{font-size:27px}
+    .subject-info{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<a class="back" href="index.html">← Back to Attendance Vibe Check</a>
+<h1>Skip Simulator 💀</h1>
+<p class="subtitle">Wanna skip? Let's see if the math lets you get away with it.</p>
+
+<section class="panel">
+    <div class="field">
+        <label for="subject">Pick your victim 🎯</label>
+        <select id="subject">
+            <option value="">Paste your report on the main page first</option>
+        </select>
+    </div>
+
+    <div class="subject-info">
+        <div class="stat"><small>Current</small><b id="current">—</b></div>
+        <div class="stat"><small>Attended</small><b id="attended">—</b></div>
+        <div class="stat"><small>Target</small><b id="target">—</b></div>
+    </div>
+
+    <div class="field">
+        <label for="skipHours">How many hours are you thinking of skipping? 👀</label>
+        <input id="skipHours" type="number" min="0" step="1" value="1">
+    </div>
+
+    <button onclick="simulate()">Run the damage calculation 🧪</button>
+
+    <div id="result" class="result">
+        <div id="resultTitle"></div>
+        <div id="resultPct" class="big"></div>
+        <div id="resultText"></div>
+        <div id="roast" class="roast"></div>
+        <div id="detail" class="detail"></div>
+    </div>
+</section>
+</div>
+
+<script>
+const subjects=JSON.parse(localStorage.getItem("attendanceVibeSubjects")||"[]");
+let target=Number(localStorage.getItem("attendanceVibeTarget")||75);
+
+const select=document.getElementById("subject");
+if(subjects.length){
+    select.innerHTML=subjects.map((s,i)=>
+        `<option value="${i}">${s.code} — ${s.name}</option>`).join("");
+    updateSubject();
+}else{
+    select.innerHTML='<option value="">No report loaded yet 💀</option>';
+}
+select.addEventListener("change",updateSubject);
+
+function stats(s){
+    const attended=s.present+s.od+s.makeup;
+    const total=attended+s.absent;
+    return {attended,total,pct:total?attended/total*100:0};
+}
+function updateSubject(){
+    const s=subjects[Number(select.value)];
+    if(!s)return;
+    const x=stats(s);
+    document.getElementById("current").textContent=x.pct.toFixed(2)+"%";
+    document.getElementById("attended").textContent=x.attended+" hr";
+    document.getElementById("target").textContent=target+"%";
+}
+function simulate(){
+    const s=subjects[Number(select.value)];
+    const skip=Math.max(0,Number(document.getElementById("skipHours").value)||0);
+    const result=document.getElementById("result");
+    if(!s||!subjects.length){
+        result.className="result danger";
+        result.style.display="block";
+        document.getElementById("resultTitle").textContent="BRO 💀";
+        document.getElementById("resultPct").textContent="No report";
+        document.getElementById("resultText").textContent="Paste your attendance report on the main page first.";
+        document.getElementById("roast").textContent="";
+        return;
+    }
+
+    const x=stats(s);
+    const afterTotal=x.total+skip;
+    const afterPct=afterTotal?x.attended/afterTotal*100:0;
+    const safe=afterPct>=target;
+
+    result.className="result "+(safe?"safe":"danger");
+    result.style.display="block";
+    document.getElementById("resultTitle").textContent=safe?"YOU SURVIVE 😮‍💨":"BRO DON'T 💀";
+    document.getElementById("resultPct").textContent=afterPct.toFixed(2)+"%";
+    document.getElementById("resultText").textContent=safe
+        ?`After skipping ${skip} ${skip===1?"hour":"hours"}, you're still above your ${target}% target.`
+        :`After skipping ${skip} ${skip===1?"hour":"hours"}, you're below your ${target}% target.`;
+
+    const roasts=safe
+        ?[
+            "Approved by the Attendance Department™ 🗿",
+            "You got away with it. For now 😭",
+            "The ERP police didn't catch you 😮‍💨",
+            "Risky, but the math is on your side 💀"
+        ]
+        :[
+            "DO NOT PRESS THAT SKIP BUTTON IRL 😭",
+            "Yeah... you're cooked. Lock TF in 🔒",
+            "One more absence and the comeback is in the ICU 💀",
+            "The math said absolutely NOT 🫡"
+        ];
+    document.getElementById("roast").textContent=roasts[Math.floor(Math.random()*roasts.length)];
+
+    document.getElementById("detail").textContent=
+        `Current: ${x.pct.toFixed(2)}% → After skip: ${afterPct.toFixed(2)}% · Target: ${target}%`;
+}
+</script>
+</body>
+</html>
