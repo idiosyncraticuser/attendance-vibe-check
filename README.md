@@ -12,7 +12,9 @@ Paste your attendance report, and the app tells you:
 🔒 How many hours you need to attend to hit 75%
 📊 Your aggregate attendance
 ☕ Whether your overall attendance is giving W or lock-in required
+
 ✨ Features
+
 📋 Paste your attendance report directly
 📈 Individual attendance pie charts
 🍕 Aggregate attendance chart
