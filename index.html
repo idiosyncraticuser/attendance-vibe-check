@@ -81,6 +81,12 @@
     }
     button:hover{opacity:.9}
     button.secondary{background:#eef1f5;color:#344054}
+    .skip-link{
+        display:inline-flex;align-items:center;justify-content:center;
+        border-radius:10px;padding:10px 16px;background:#e8f7ee;color:#138a45;
+        font-weight:700;text-decoration:none;font-size:13px
+    }
+    .skip-link:hover{background:#d9f1e3}
     .error{color:#c62828;font-size:13px;margin-top:9px;display:none}
     .cards{
         display:grid;
@@ -230,6 +236,7 @@ Example:
                 <div class="input-actions">
                     <button onclick="parseReport()">Run the vibe check ⚡</button>
                     <button class="secondary" onclick="clearReport()">Reset the lore 🗑️</button>
+                    <a href="skip_simulator.html" class="skip-link">🧪 Skip Simulator</a>
                 </div>
                 <div id="error" class="error"></div>
             </div>
@@ -270,6 +277,14 @@ Example:
 
 <script>
 let subjects = [];
+const savedTarget=localStorage.getItem("attendanceVibeTarget");
+if(savedTarget){
+    const targetSelect=document.getElementById("targetSelect");
+    if(targetSelect){
+        const option=[...targetSelect.options].find(o=>o.value===savedTarget);
+        if(option) targetSelect.value=savedTarget;
+    }
+}
 
 function parseReport(){
     const raw=document.getElementById("report").value.trim();
@@ -347,6 +362,7 @@ function parseReport(){
 
     subjects=parsed;
     error.style.display="none";
+    localStorage.setItem("attendanceVibeSubjects",JSON.stringify(subjects));
     render();
 }
 
@@ -384,32 +400,105 @@ function getStats(s){
     return {attended,total,pct,canMiss,needAttend,target};
 }
 
+const ROASTS={
+    perfect:[
+        "WHO ARE YOU 😭 Bro IS the timetable.",
+        "100%. Bro has apparently moved into the classroom 💀",
+        "Attendance so clean it's suspicious 🗿",
+        "Bro attends classes like rent is due 😭"
+    ],
+    excellent:[
+        "Attendance looking illegally good 💀",
+        "Bro is farming attendance. Don't get too confident 😮‍💨",
+        "This is getting teacher's-favourite suspicious 👀",
+        "Bro really said attendance comes first 😭"
+    ],
+    good:[
+        "Attendance merchant spotted 🫡",
+        "You're chilling. Don't fumble the bag 😮‍💨",
+        "We got breathing room. Please don't waste it 💀",
+        "Lowkey cooking. Keep it together 🗿"
+    ],
+    safe:[
+        "Bare minimum secured 🗿 Don't test your luck.",
+        "75% gang has entered the chat 😭",
+        "Technically surviving. We take those 😮‍💨",
+        "You're alive. That's what matters 💀"
+    ],
+    danger:[
+        "LOCK. TF. IN. 🔒 You're one bad week from cooked.",
+        "Bro is walking the attendance tightrope 😭",
+        "One more L and it's over 💀",
+        "The 75% committee is watching you 👀"
+    ],
+    bad:[
+        "Bro attends classes in spirit only 💀",
+        "At this point you're on a long-distance relationship with the classroom 😭",
+        "Attendance has officially entered the danger zone 🚨",
+        "Academic comeback loading... maybe 🫠"
+    ],
+    cooked:[
+        "This attendance has LEFT THE CHAT 😭",
+        "Bro is collecting absences like achievements 💀",
+        "The classroom hasn't seen you in ages 😭",
+        "Attendance status: cooked beyond repair 🫠"
+    ]
+};
+
+function randomFrom(list){
+    return list[Math.floor(Math.random()*list.length)];
+}
+
 function getRoast(pct,target){
-    if(pct>=100) return "WHO ARE YOU 😭 Bro IS the timetable.";
-    if(pct>=95) return "Attendance looking illegally good 💀";
-    if(pct>=90) return "Bro is farming attendance. Don't get too confident 😮‍💨";
-    if(pct>=85) return "Attendance merchant spotted 🫡";
-    if(pct>=80) return "You're chilling... for now. Don't fumble it 😭";
-    if(pct>=target) return "Bare minimum secured 🗿 Don't test your luck.";
-    if(pct>=70) return "LOCK. TF. IN. 🔒 You're one bad week from cooked.";
-    if(pct>=60) return "Bro attends classes in spirit only 💀";
-    return "This attendance has LEFT THE CHAT 😭";
+    if(pct>=100) return randomFrom(ROASTS.perfect);
+    if(pct>=95) return randomFrom(ROASTS.excellent);
+    if(pct>=85) return randomFrom(ROASTS.good);
+    if(pct>=target) return randomFrom(ROASTS.safe);
+    if(pct>=70) return randomFrom(ROASTS.danger);
+    if(pct>=60) return randomFrom(ROASTS.bad);
+    return randomFrom(ROASTS.cooked);
 }
 
 function subjectRoast(s,pct){
     const name=s.name.toLowerCase();
     if(pct>=100){
-        if(name.includes("machine learning")) return "Machine learned how to attend 😭";
-        if(name.includes("algorithm")||name.includes("daa")) return "Solved attendance before solving DAA 🗿";
-        if(name.includes("devops")) return "Attendance deployed successfully 🚀";
-        return "Bro lives in the classroom 💀";
+        if(name.includes("machine learning")) return randomFrom([
+            "Machine learned how to attend 😭",
+            "Bro trained the attendance model to 100% 💀"
+        ]);
+        if(name.includes("algorithm")||name.includes("daa")) return randomFrom([
+            "Solved attendance before solving DAA 🗿",
+            "Algorithm for attendance: show up. Bro mastered it 😭"
+        ]);
+        if(name.includes("devops")) return randomFrom([
+            "Attendance deployed successfully 🚀",
+            "CI/CD pipeline for showing up is undefeated 💀"
+        ]);
+        return randomFrom([
+            "Bro lives in the classroom 💀",
+            "Perfect attendance. Who even are you 😭"
+        ]);
     }
     if(pct<60){
-        if(name.includes("climate")) return "Climate changed. Your attendance did too 💀";
-        return "Bro is attending this subject through telepathy 😭";
+        if(name.includes("climate")) return randomFrom([
+            "Climate changed. Your attendance did too 💀",
+            "The climate is changing and so is your eligibility 😭"
+        ]);
+        return randomFrom([
+            "Bro is attending this subject through telepathy 😭",
+            "This subject has forgotten what you look like 💀"
+        ]);
     }
-    if(pct<75) return "The 75% committee is looking for you 👀";
-    return "We're surviving. Barely, but we're surviving 😮‍💨";
+    if(pct<75) return randomFrom([
+        "The 75% committee is looking for you 👀",
+        "Bro is speedrunning the shortage list 💀",
+        "LOCK IN BEFORE THE ERP LOCKS YOU OUT 😭"
+    ]);
+    return randomFrom([
+        "We're surviving. Barely, but we're surviving 😮‍💨",
+        "Still alive. Don't get brave now 💀",
+        "Attendance is giving 'one more absence and we're done' 😭"
+    ]);
 }
 
 function card(s){
@@ -444,7 +533,7 @@ function card(s){
         <div class="action">
             ${safe?`
             <div class="action-box">
-                <small>Free passes💦😙</small>
+                <small>Free passes 💦😙</small>
                 <strong class="miss">${x.canMiss} ${x.canMiss===1?"hour":"hours"}</strong>
             </div>
             <div class="action-box">
@@ -452,7 +541,7 @@ function card(s){
                 <strong class="miss">${(x.pct-x.target).toFixed(2)}%</strong>
             </div>`:`
             <div class="action-box">
-                <small>LOCK TF IN🔒🫨</small>
+                <small>LOCK TF IN 🔒🫨</small>
                 <strong class="catch">${x.needAttend} ${x.needAttend===1?"hour":"hours"}</strong>
             </div>
             <div class="action-box">
@@ -501,14 +590,18 @@ function render(){
         <div class="roast">${getRoast(overall,target)}</div>
         <div class="aggregate-action ${overall>=target?"safe":"danger"}">
             ${overall>=target
-                ?`Free pass unlocked💦😙 — you can miss <b>${aggregateCanMiss} ${aggregateCanMiss===1?"hour":"hours"}</b> and stay ${target}%+`
-                :`LOCK TF IN🔒🫨 — attend <b>${aggregateNeed} ${aggregateNeed===1?"hour":"hours"}</b> to hit ${target}%`}
+                ?`Free pass unlocked 💦😙 — you can miss <b>${aggregateCanMiss} ${aggregateCanMiss===1?"hour":"hours"}</b> and stay ${target}%+`
+                :`LOCK TF IN 🔒🫨 — attend <b>${aggregateNeed} ${aggregateNeed===1?"hour":"hours"}</b> to hit ${target}%`}
         </div>`;
 
     document.getElementById("summary").innerHTML=`
         <div class="stat"><span>How cooked are we?</span><strong>${overall.toFixed(2)}%</strong></div>
         <div class="stat"><span>Not cooked</span><strong>${safeSubjects}/${subjects.length}</strong></div>
         <div class="stat"><span>Total hours</span><strong>${totalHours}</strong></div>`;
+
+    // Keep the latest report available to the Skip Simulator.
+    localStorage.setItem("attendanceVibeSubjects",JSON.stringify(subjects));
+    localStorage.setItem("attendanceVibeTarget",String(target));
 }
 
 render();
