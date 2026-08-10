@@ -1,0 +1,15 @@
+{
+    "name":"Attendance Vibe Check",
+    "short_name":"Vibe Check",
+    "start_url":"./",
+    "display":"standalone",
+    "background_color":"#f4f7fb",
+    "theme_color":"#172033",
+    "icons":[
+        {
+            "src":"icon-512.png",
+            "sizes":"512x512",
+            "type":"image/png"
+        }
+    ]
+}
