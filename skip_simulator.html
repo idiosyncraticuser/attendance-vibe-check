@@ -85,6 +85,7 @@ button:hover{opacity:.9}
         <div class="stat"><small>Attended</small><b id="attended">—</b></div>
         <div class="stat"><small>Target</small><b id="target">—</b></div>
     </div>
+    <div id="ruleNotice" class="detail" style="margin:0 0 16px"></div>
 
     <div class="field">
         <label for="skipHours">How many hours are you thinking of skipping? 👀</label>
@@ -99,27 +100,31 @@ button:hover{opacity:.9}
         <div id="resultText"></div>
         <div id="roast" class="roast"></div>
         <div id="detail" class="detail"></div>
+        <div id="aggregateImpact" class="detail" style="margin-top:14px;padding-top:14px;border-top:1px solid #e4e9f0"></div>
     </div>
 </section>
 </div>
 
 <script>
 const subjects=JSON.parse(localStorage.getItem("attendanceVibeSubjects")||"[]");
-let target=Number(localStorage.getItem("attendanceVibeTarget")||75);
-
+const target=Number(localStorage.getItem("attendanceVibeTarget")||75);
 const select=document.getElementById("subject");
+
 if(subjects.length){
-    select.innerHTML=subjects.map((s,i)=>
-        `<option value="${i}">${s.code} — ${s.name}</option>`).join("");
+    select.innerHTML=subjects.map((s,i)=>`<option value="${i}">${s.code} — ${s.name}</option>`).join("");
     updateSubject();
-}else{
-    select.innerHTML='<option value="">No report loaded yet 💀</option>';
-}
+}else select.innerHTML='<option value="">No report loaded yet 💀</option>';
+
 select.addEventListener("change",updateSubject);
 
+function isLab(s){return /lab/i.test(s.type)}
 function stats(s){
-    const attended=s.present+s.od+s.makeup;
-    const total=attended+s.absent;
+    const attended=s.present+s.od+s.makeup,total=attended+s.absent;
+    return {attended,total,pct:total?attended/total*100:0};
+}
+function aggregateStats(){
+    const attended=subjects.reduce((a,s)=>a+stats(s).attended,0);
+    const total=subjects.reduce((a,s)=>a+stats(s).total,0);
     return {attended,total,pct:total?attended/total*100:0};
 }
 function updateSubject(){
@@ -129,51 +134,56 @@ function updateSubject(){
     document.getElementById("current").textContent=x.pct.toFixed(2)+"%";
     document.getElementById("attended").textContent=x.attended+" hr";
     document.getElementById("target").textContent=target+"%";
+    document.getElementById("ruleNotice").textContent=isLab(s)
+        ?"🚨 Lab rule: this lab must individually stay at "+target+"%+."
+        :"Lecture rule: below "+target+"% is okay by itself if your aggregate stays at "+target+"%+.";
 }
 function simulate(){
     const s=subjects[Number(select.value)];
     const skip=Math.max(0,Number(document.getElementById("skipHours").value)||0);
     const result=document.getElementById("result");
-    if(!s||!subjects.length){
-        result.className="result danger";
-        result.style.display="block";
+
+    if(!s){
+        result.className="result danger";result.style.display="block";
         document.getElementById("resultTitle").textContent="BRO 💀";
         document.getElementById("resultPct").textContent="No report";
-        document.getElementById("resultText").textContent="Paste your attendance report on the main page first.";
-        document.getElementById("roast").textContent="";
+        document.getElementById("resultText").textContent="Paste your report on the main page first.";
         return;
     }
 
-    const x=stats(s);
-    const afterTotal=x.total+skip;
-    const afterPct=afterTotal?x.attended/afterTotal*100:0;
-    const safe=afterPct>=target;
+    const x=stats(s),agg=aggregateStats();
+    const afterSubjectPct=x.attended/(x.total+skip)*100;
+    const afterAggPct=agg.attended/(agg.total+skip)*100;
 
-    result.className="result "+(safe?"safe":"danger");
+    const subjectDebarred=isLab(s)
+        ?afterSubjectPct<target
+        :(afterAggPct<target&&afterSubjectPct<target);
+    const aggregateDebarred=afterAggPct<target;
+
+    result.className="result "+(subjectDebarred||aggregateDebarred?"danger":"safe");
     result.style.display="block";
-    document.getElementById("resultTitle").textContent=safe?"YOU SURVIVE 😮‍💨":"BRO DON'T 💀";
-    document.getElementById("resultPct").textContent=afterPct.toFixed(2)+"%";
-    document.getElementById("resultText").textContent=safe
-        ?`After skipping ${skip} ${skip===1?"hour":"hours"}, you're still above your ${target}% target.`
-        :`After skipping ${skip} ${skip===1?"hour":"hours"}, you're below your ${target}% target.`;
+    document.getElementById("resultTitle").textContent=subjectDebarred||aggregateDebarred?"BRO DON'T 💀":"YOU SURVIVE 😮‍💨";
+    document.getElementById("resultPct").textContent=afterSubjectPct.toFixed(2)+"%";
+    document.getElementById("resultText").innerHTML=`Subject after skipping ${skip} ${skip===1?"hour":"hours"}: <b>${afterSubjectPct.toFixed(2)}%</b>`;
 
-    const roasts=safe
-        ?[
-            "Approved by the Attendance Department™ 🗿",
-            "You got away with it. For now 😭",
-            "The ERP police didn't catch you 😮‍💨",
-            "Risky, but the math is on your side 💀"
-        ]
-        :[
-            "DO NOT PRESS THAT SKIP BUTTON IRL 😭",
-            "Yeah... you're cooked. Lock TF in 🔒",
-            "One more absence and the comeback is in the ICU 💀",
-            "The math said absolutely NOT 🫡"
-        ];
+    const roasts=subjectDebarred||aggregateDebarred
+        ?["Yeah... the math said absolutely NOT 😭","One button press and you're cooked 💀","LOCK TF IN 🔒","The ERP police have entered the chat 🚨"]
+        :["Approved by the Attendance Department™ 🗿","You got away with it. For now 😭","The ERP police didn't catch you 😮‍💨","Risky, but the math is on your side 💀"];
     document.getElementById("roast").textContent=roasts[Math.floor(Math.random()*roasts.length)];
 
-    document.getElementById("detail").textContent=
-        `Current: ${x.pct.toFixed(2)}% → After skip: ${afterPct.toFixed(2)}% · Target: ${target}%`;
+    document.getElementById("detail").textContent=`Subject: ${x.pct.toFixed(2)}% → ${afterSubjectPct.toFixed(2)}% · Target: ${target}%`;
+
+    const delta=afterAggPct-agg.pct;
+    const aggText=aggregateDebarred
+        ?`💀 Aggregate: ${agg.pct.toFixed(2)}% → <b>${afterAggPct.toFixed(2)}%</b>. That's below ${target}% — aggregate debarred.`
+        :`😮‍💨 Aggregate: ${agg.pct.toFixed(2)}% → <b>${afterAggPct.toFixed(2)}%</b>. Still above ${target}%.`;
+
+    const subText=subjectDebarred
+        ?`🚨 This ${isLab(s)?"lab":"subject"} would be debarred after the skip.`
+        :`✅ This subject would NOT be debarred after the skip.`;
+
+    document.getElementById("aggregateImpact").innerHTML=
+        `<b>Aggregate damage:</b> ${delta.toFixed(2)} percentage points<br>${aggText}<br>${subText}`;
 }
 </script>
 </body>
