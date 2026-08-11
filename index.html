@@ -270,7 +270,7 @@ Example:
     <div class="legend">
         <b>How the attendance lore works:</b>
         “Free pass” = maximum future hours you can skip while staying at or above your target.
-        “LOCK TF IN” = minimum future hours you need to attend to reach your target.
+        “LOCK TF IN” = minimum future hours you need to attend to reach your target. Labs must individually stay at target; lectures only become individually debarred when aggregate is below target.
         Pick your target, drop the report, and let the math cook. No cap 😭.
     </div>
 </div>
@@ -387,6 +387,12 @@ function getTarget(){
     return Number(select.value);
 }
 
+function isLab(s){return /lab/i.test(s.type);}
+function isDebarred(s,overall){
+    const pct=getStats(s).pct;
+    const target=getTarget();
+    return isLab(s) ? pct<target : (overall<target && pct<target);
+}
 function getStats(s){
     const attended=s.present+s.od+s.makeup;
     const total=attended+s.absent;
@@ -449,7 +455,17 @@ function randomFrom(list){
     return list[Math.floor(Math.random()*list.length)];
 }
 
-function getRoast(pct,target){
+function getRoast(pct,target,overall,lab=false){
+    if(lab && pct<target) return randomFrom([
+        "LAB SHORTAGE ALERT 🚨 You're actually cooked.",
+        "Bro the lab attendance police are outside 💀",
+        "Lab below target = instant academic jump scare 😭"
+    ]);
+    if(overall<target && pct<target) return randomFrom([
+        "Aggregate is cooked, and this subject is caught in the crossfire 💀",
+        "Overall below target. This subject is NOT getting a free pass 😭",
+        "The aggregate said no and took this subject down with it 🫠"
+    ]);
     if(pct>=100) return randomFrom(ROASTS.perfect);
     if(pct>=95) return randomFrom(ROASTS.excellent);
     if(pct>=85) return randomFrom(ROASTS.good);
@@ -501,62 +517,46 @@ function subjectRoast(s,pct){
     ]);
 }
 
-function card(s){
-    const x=getStats(s);
-    const safe=x.pct>=x.target;
-    const pctText=x.pct.toFixed(2);
+function card(s,overall){
+    const x=getStats(s),target=x.target,lab=isLab(s);
+    const debarred=isDebarred(s,overall),below=x.pct<target;
+
+    let badge=debarred?"DEBARRED 💀":(below&&!lab?"Below target, still safe 😮‍💨":"W • You're chilling 😮‍💨");
 
     return `
-    <article class="card ${safe?"":"danger-bar"}">
+    <article class="card ${debarred?"danger-bar":""}">
         <div class="top">
-            <div>
-                <div class="code">${s.code}</div>
-                <div class="name">${s.name}</div>
-                <div class="type">${s.type}</div>
-            </div>
-            <div class="badge ${safe?"safe":"danger"}">${safe?"W • You're chilling 😮‍💨":"Cooked 💀"}</div>
+            <div><div class="code">${s.code}</div><div class="name">${s.name}</div><div class="type">${s.type}</div></div>
+            <div class="badge ${debarred?"danger":"safe"}">${badge}</div>
         </div>
-
         <div class="chart-row">
-            <div class="donut" style="--pct:${Math.min(x.pct,100)}%;--chart-color:${safe?"#22a85a":"#e5484d"}">
-                <div class="donut-text">${pctText}%</div>
+            <div class="donut" style="--pct:${Math.min(x.pct,100)}%;--chart-color:${debarred?"#e5484d":"#22a85a"}">
+                <div class="donut-text">${x.pct.toFixed(2)}%</div>
             </div>
             <div class="metrics">
                 <div class="metric"><span>Actually showed up</span><b>${x.attended} hr</b></div>
                 <div class="metric"><span>Bro was NOT there</span><b>${s.absent} hr</b></div>
                 <div class="metric"><span>Total hours</span><b>${x.total} hr</b></div>
                 <div class="progress"><div style="width:${Math.min(x.pct,100)}%"></div></div>
-                <div class="subject-roast">${subjectRoast(s,x.pct)}</div>
+                <div class="subject-roast">${getRoast(x.pct,target,overall,lab)}</div>
             </div>
         </div>
-
         <div class="action">
-            ${safe?`
-            <div class="action-box">
-                <small>Free passes 💦😙</small>
-                <strong class="miss">${x.canMiss} ${x.canMiss===1?"hour":"hours"}</strong>
-            </div>
-            <div class="action-box">
-                <small>Buffer above ${x.target}%</small>
-                <strong class="miss">${(x.pct-x.target).toFixed(2)}%</strong>
-            </div>`:`
-            <div class="action-box">
-                <small>LOCK TF IN 🔒🫨</small>
-                <strong class="catch">${x.needAttend} ${x.needAttend===1?"hour":"hours"}</strong>
-            </div>
-            <div class="action-box">
-                <small>Skip limit rn</small>
-                <strong class="catch">0 hours</strong>
-            </div>`}
+            ${x.pct>=target?`
+            <div class="action-box"><small>Free passes 🎟️</small><strong class="miss">${x.canMiss} ${x.canMiss===1?"hour":"hours"}</strong></div>
+            <div class="action-box"><small>${lab?"Lab target":"Target"}: ${target}%</small><strong class="miss">${(x.pct-target).toFixed(2)}%</strong></div>
+            `:`
+            <div class="action-box"><small>${lab||overall<target?"LOCK TF IN 🔒":"Below target, but safe 😮‍💨"}</small>
+            <strong class="${lab||overall<target?"catch":"miss"}">${lab||overall<target?x.needAttend+" "+(x.needAttend===1?"hour":"hours"):"No mandatory recovery"}</strong></div>
+            <div class="action-box"><small>${lab?"Lab rule 🚨":"Aggregate rule"}</small><strong class="${debarred?"catch":"miss"}">${debarred?"DEBARRED":"Not debarred"}</strong></div>
+            `}
         </div>
     </article>`;
 }
 
 function render(){
-    const select=document.getElementById("targetSelect");
-    const custom=document.getElementById("customTarget");
+    const select=document.getElementById("targetSelect"),custom=document.getElementById("customTarget");
     if(select&&custom) custom.style.display=select.value==="custom"?"block":"none";
-
     if(!subjects.length){
         document.getElementById("cards").innerHTML="";
         document.getElementById("summary").innerHTML="";
@@ -566,40 +566,25 @@ function render(){
         return;
     }
 
-    document.getElementById("cards").innerHTML=subjects.map(card).join("");
-
     const totalAttended=subjects.reduce((a,s)=>a+getStats(s).attended,0);
     const totalHours=subjects.reduce((a,s)=>a+getStats(s).total,0);
     const overall=totalHours?totalAttended/totalHours*100:0;
     const target=getTarget();
-    const safeSubjects=subjects.filter(s=>getStats(s).pct>=target).length;
 
-    const aggregateColor=overall>=target?"#22a85a":"#e5484d";
-    document.getElementById("aggregateChart").innerHTML=`
-        <div class="aggregate-donut" style="--aggregate-pct:${Math.min(overall,100)}%;background:conic-gradient(${aggregateColor} var(--aggregate-pct),#e9edf2 0)">
-            <div class="aggregate-value">${overall.toFixed(2)}%</div>
-        </div>`;
+    document.getElementById("cards").innerHTML=subjects.map(s=>card(s,overall)).join("");
 
+    const color=overall>=target?"#22a85a":"#e5484d";
+    document.getElementById("aggregateChart").innerHTML=`<div class="aggregate-donut" style="--aggregate-pct:${Math.min(overall,100)}%;background:conic-gradient(${color} var(--aggregate-pct),#e9edf2 0)"><div class="aggregate-value">${overall.toFixed(2)}%</div></div>`;
     document.getElementById("aggregateSub").textContent=`${totalAttended} / ${totalHours} hours attended · target ${target}%`;
 
     const ratio=target/100;
-    const aggregateNeed=overall<target?Math.ceil((ratio*totalHours-totalAttended)/(1-ratio)-1e-9):0;
-    const aggregateCanMiss=overall>=target?Math.max(0,Math.floor(totalAttended/ratio-totalHours+1e-9)):0;
+    const need=overall<target?Math.ceil((ratio*totalHours-totalAttended)/(1-ratio)-1e-9):0;
+    const canMiss=overall>=target?Math.max(0,Math.floor(totalAttended/ratio-totalHours+1e-9)):0;
+    document.getElementById("aggregateRoast").innerHTML=`<div class="roast">${getRoast(overall,target,overall,false)}</div><div class="aggregate-action ${overall>=target?"safe":"danger"}">${overall>=target?`Free pass unlocked 🎟️ — you can miss <b>${canMiss} ${canMiss===1?"hour":"hours"}</b> and stay ${target}%+`:`LOCK TF IN 🔒 — attend <b>${need} ${need===1?"hour":"hours"}</b> to hit ${target}%`}</div>`;
 
-    document.getElementById("aggregateRoast").innerHTML=`
-        <div class="roast">${getRoast(overall,target)}</div>
-        <div class="aggregate-action ${overall>=target?"safe":"danger"}">
-            ${overall>=target
-                ?`Free pass unlocked 💦😙 — you can miss <b>${aggregateCanMiss} ${aggregateCanMiss===1?"hour":"hours"}</b> and stay ${target}%+`
-                :`LOCK TF IN 🔒🫨 — attend <b>${aggregateNeed} ${aggregateNeed===1?"hour":"hours"}</b> to hit ${target}%`}
-        </div>`;
+    const safeSubjects=subjects.filter(s=>!isDebarred(s,overall)).length;
+    document.getElementById("summary").innerHTML=`<div class="stat"><span>How cooked are we?</span><strong>${overall.toFixed(2)}%</strong></div><div class="stat"><span>Subjects safe</span><strong>${safeSubjects}/${subjects.length}</strong></div><div class="stat"><span>Total hours</span><strong>${totalHours}</strong></div>`;
 
-    document.getElementById("summary").innerHTML=`
-        <div class="stat"><span>How cooked are we?</span><strong>${overall.toFixed(2)}%</strong></div>
-        <div class="stat"><span>Not cooked</span><strong>${safeSubjects}/${subjects.length}</strong></div>
-        <div class="stat"><span>Total hours</span><strong>${totalHours}</strong></div>`;
-
-    // Keep the latest report available to the Skip Simulator.
     localStorage.setItem("attendanceVibeSubjects",JSON.stringify(subjects));
     localStorage.setItem("attendanceVibeTarget",String(target));
 }
