@@ -167,40 +167,40 @@ const COLLEGE_HOLIDAYS=[
 // Labs are 2 hr except ITR Lab = 1 hr.
 const TIMETABLE={
     1:[ // Monday
-        ["Machine Learning Lab","Lab",2],
-        ["Campus Recruitment Training","Lab",2],
-        ["Cryptography and Network Security","Lecture",1],
-        ["DevOps Practices and Principles","Lecture",1]
+        ["CSUP521","Lab",2],   // Machine Learning Lab
+        ["CRT","Lab",2],       // Campus Recruitment Training Lab
+        ["CSUL503","Lecture",1], // Cryptography and Network Security
+        ["CSUL511","Lecture",1]  // DevOps Practices and Principles
     ],
     2:[ // Tuesday
-        ["Full Stack Development","Lecture",1],
-        ["Design and Analysis of Algorithms","Lecture",1],
-        ["Machine Learning","Lecture",1],
-        ["Campus Recruitment Training","Lab",2]
+        ["CSUL504","Lecture",1], // Full Stack Development
+        ["CSUL501","Lecture",1], // Design and Analysis of Algorithms
+        ["CSUL502","Lecture",1], // Machine Learning
+        ["CRT","Lab",2]          // Campus Recruitment Training Lab
     ],
     3:[ // Wednesday
-        ["DevOps Practices and Principles","Lecture",1],
-        ["Cryptography and Network Security","Lecture",1],
-        ["Full Stack Development","Lab",2]
+        ["CSUL511","Lecture",1], // DevOps Practices and Principles
+        ["CSUL503","Lecture",1], // Cryptography and Network Security
+        ["CSUP522","Lab",2]      // Full Stack Development Lab
     ],
     4:[ // Thursday
-        ["DevOps Practices and Principles","Lecture",1],
-        ["Design and Analysis of Algorithms","Lecture",1],
-        ["Full Stack Development","Lecture",1],
-        ["Design and Analysis of Algorithms Lab","Lab",2],
-        ["Climate Change Science","Lecture",1]
+        ["CSUL511","Lecture",1], // DevOps Practices and Principles
+        ["CSUL501","Lecture",1], // Design and Analysis of Algorithms
+        ["CSUL504","Lecture",1], // Full Stack Development
+        ["CSUP520","Lab",2],     // Design and Analysis of Algorithms Lab
+        ["CEUL560.1","Lecture",1] // Climate Change Science
     ],
     5:[ // Friday
-        ["Design and Analysis of Algorithms","Lecture",1],
-        ["Industrial Training","Lab",1],
-        ["Cryptography and Network Security","Lecture",1],
-        ["Machine Learning","Lecture",1],
-        ["Climate Change Science","Lecture",1]
+        ["CSUL501","Lecture",1], // Design and Analysis of Algorithms
+        ["CSUT530","Lab",1],     // Industrial Training (1 hour exception)
+        ["CSUL503","Lecture",1], // Cryptography and Network Security
+        ["CSUL502","Lecture",1], // Machine Learning
+        ["CEUL560.1","Lecture",1] // Climate Change Science
     ],
     6:[ // Saturday
-        ["Campus Recruitment Training","Lab",2],
-        ["Machine Learning","Lecture",1],
-        ["Climate Change Science","Lecture",1]
+        ["CRT","Lab",2],         // Campus Recruitment Training Lab
+        ["CSUL502","Lecture",1], // Machine Learning
+        ["CEUL560.1","Lecture",1] // Climate Change Science
     ]
 };
 
@@ -335,23 +335,9 @@ function renderSelected(){
     }).join("");
 }
 
-function normalize(s){
-    return s.toLowerCase().replace(/[^a-z0-9]/g,"");
-}
-function findSubject(name){
-    const n=normalize(name);
-    return savedSubjects.find(s=>{
-        const x=normalize(s.name);
-        const code=normalize(s.code);
-        if(x===n)return true;
-        if((n.includes("campusrecruitmenttraining")||n==="crt")&&(code==="crt"||x.includes("campusrecruitmenttraining")))return true;
-        if(n.includes("designandanalysisofalgorithmslab")&&(code==="csup520"||x.includes("designandanalysisofalgorithmslab")))return true;
-        if(n.includes("machinelearninglab")&&(code==="csup521"||x.includes("machinelearninglab")))return true;
-        if(n.includes("fullstackdevelopmentlab")&&(code==="csup522"||x.includes("fullstackdevelopmentlab")))return true;
-        if(n==="industrialtraining"&&(code==="csut530"||x==="industrialtraining"))return true;
-        if(n==="climatechangescience"&&(code==="ceul560.1"||x==="climatechangescience"))return true;
-        return false;
-    });
+function findSubject(code){
+    const wanted=code.toLowerCase();
+    return savedSubjects.find(s=>String(s.code).toLowerCase()===wanted);
 }
 
 function baseStats(s){
@@ -368,9 +354,9 @@ function calcFuture(){
         const jsDay=d.getDay();
         const dayNumber=jsDay===0?7:jsDay;
         const classes=TIMETABLE[dayNumber]||[];
-        classes.forEach(([name,type,hours])=>{
+        classes.forEach(([code,type,hours])=>{
             missedHours+=hours;
-            const s=findSubject(name);
+            const s=findSubject(code);
             if(!s)return;
             const keySubject=s.code;
             if(!map.has(keySubject)) map.set(keySubject,{s,missed:0,classes:[]});
@@ -453,40 +439,4 @@ function predict(){
                 </div>
             </div>
             <div class="action">
-                <div class="action-box"><small>Current → Future</small><strong>${baseStats(s).total?((baseStats(s).attended/baseStats(s).total*100).toFixed(2)):"0.00"}% → ${s.pct.toFixed(2)}%</strong></div>
-                <div class="action-box"><small>${debar?"Why you're cooked":"Status"}</small><strong>${debar?(/lab/i.test(s.type)?"Lab <75%":"Aggregate <75% + subject <75%"):"Safe"}</strong></div>
-            </div>
-        </article>`;
-    }).join("");
-
-    document.getElementById("result").innerHTML=`
-        <div class="hero">
-            <div class="stat"><small>Predicted aggregate</small><b>${overall.toFixed(2)}%</b></div>
-            <div class="stat"><small>Total vacation damage</small><b>${data.missedHours} hr</b></div>
-            <div class="stat"><small>Rejoin day</small><b style="font-size:14px">${dateText}</b></div>
-        </div>
-        <div class="status ${labRisk.length||overall<target?"danger":"safe"}">
-            ${labRisk.length?`🚨 ${labRisk.length} lab${labRisk.length>1?"s":""} below ${target}% — DEBARMENT ALERT.`:overall<target?`💀 Aggregate falls below ${target}% — you're debarred.`:`😮‍💨 Aggregate survives ${target}%. Vacation damage contained.`}
-        </div>
-        <div class="roast">${roast(overall,labRisk.length)}</div>
-        <div class="report-title">Predicted ERP on rejoin day 📋</div>
-        <div class="cards">${cards}</div>
-        <div class="footer-note">
-            Calculation assumes every selected non-holiday weekday follows your fixed timetable and every scheduled hour on a selected day becomes absent.
-            College holidays contribute 0 hours. Sundays are disabled. Lectures below ${target}% are only debarred when aggregate is also below ${target}%; labs must individually stay at ${target}%+.
-        </div>`;
-}
-
-renderCalendar();
-renderSelected();
-
-if(!savedSubjects.length){
-    document.getElementById("reportStatus").className="status danger";
-    document.getElementById("reportStatus").textContent="No saved ERP report. Go paste one on the homepage first 💀";
-}else{
-    document.getElementById("reportStatus").className="status safe";
-    document.getElementById("reportStatus").textContent=`Loaded ${savedSubjects.length} subjects from your latest report 😮‍💨`;
-}
-</script>
-</body>
-</html>
+                <div class="action-box"><small>Current → Future</small><strong>${baseStats(s).total?((baseStats(s).attended/baseStats(s).total*100).toFixed(2)):
