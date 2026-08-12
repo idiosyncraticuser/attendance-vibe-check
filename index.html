@@ -1,13 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Attendance Vibe Check</title>
-<link rel="icon" type="image/png" href="icon-512.png">
-<link rel="apple-touch-icon" href="icon-512.png">
-<link rel="manifest" href="manifest.json">
-<style>
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Vibe Check</title>
+  <link rel="icon" type="image/png" href="icon-512.png">
+  <link rel="apple-touch-icon" href="icon-512.png">
+  <link rel="manifest" href="manifest.json">
+  <style>
     *{box-sizing:border-box}
     body{
         margin:0;
@@ -66,7 +66,7 @@
     .custom-target{display:none;margin-top:7px;width:100%;padding:8px;border:1px solid #d7dde6;border-radius:8px}
     .roast{margin-top:10px;padding:10px 12px;border-radius:11px;background:#172033;color:white;font-size:12px;font-weight:700;line-height:1.35;text-align:center}
     .subject-roast{margin-top:8px;font-size:11px;color:#667085;line-height:1.3;min-height:29px}
-
+ 
     .input-panel label{display:block;margin-bottom:9px}
     textarea{
         width:100%;min-height:190px;resize:vertical;border:1px solid #d7dde6;
@@ -214,71 +214,55 @@
         .summary{width:100%}.stat{flex:1;min-width:110px}
     }
 </style>
-</head>
-<body>
-<div class="container">
-    <div class="header">
-        <div>
-            <h1>Attendance Vibe Check 💀</h1>
-            <p class="subtitle">Paste your latest attendance report and let’s see if your attendance is <b>giving</b> or you’re absolutely <b>cooked</b>.</p>
-        </div>
-        <div class="summary" id="summary"></div>
+ </head>
+ <body>
+  <div class="container">
+   <div class="header">
+    <div>
+     <h1>Attendance Vibe Check 💀</h1>
+     <p class="subtitle">Paste your latest attendance report and let’s see if your attendance is <b>giving</b> or you’re absolutely <b>cooked</b>.</p>
     </div>
-
-    <section class="input-panel">
-        <div class="input-layout">
-            <div>
-                <label for="report"><b>Drop the attendance report 📋</b></label>
-                <textarea id="report" placeholder="Paste your latest attendance report here...
-
+    <div class="summary" id="summary"></div>
+   </div>
+   <section class="input-panel">
+    <div class="input-layout">
+     <div>
+      <label for="report"><b>Drop the attendance report 📋</b></label> <textarea id="report" placeholder="Paste your latest attendance report here...
+ 
 Example:
 # Subject Code    Subject    Subject Type    Present    OD    Makeup    Absent    Percentage
 1    CEUL560.1    Climate Change Science    Lecture    6    0    0    5    54.55
 2    CRT    Campus Recruitment Training    Lab    24    0    0    0    100.00"></textarea>
-                <div class="input-actions">
-                    <button onclick="parseReport()">Run the vibe check ⚡</button>
-                    <button class="secondary" onclick="clearReport()">Reset the lore 🗑️</button>
-                    <a href="skip_simulator.html" class="skip-link">🧪 Skip Simulator</a>
-                    <a href="future_predictor.html" class="skip-link predictor-link">🔮 Future Predictor</a>
-                </div>
-                <div id="error" class="error"></div>
-            </div>
-
-            <div class="aggregate">
-                <div class="aggregate-title">How cooked are we? 💀</div>
-                <div id="aggregateChart">
-                    <div class="aggregate-empty">Drop your report to unlock<br>the attendance tea ☕</div>
-                </div>
-                <div id="aggregateSub" class="aggregate-sub"></div>
-                <div class="target-box">
-                    <span class="target-label">Pick your survival level 🎯</span>
-                    <select id="targetSelect" class="target-select" onchange="render()">
-                        <option value="75">75% — Bare minimum 🗿</option>
-                        <option value="80">80% — Playing it safe 😮‍💨</option>
-                        <option value="85">85% — Attendance merchant</option>
-                        <option value="90">90% — Teacher's favourite 💀</option>
-                        <option value="95">95% — Touch grass bro</option>
-                        <option value="100">100% — Bro IS the timetable</option>
-                        <option value="custom">Custom — I'm built different</option>
-                    </select>
-                    <input id="customTarget" class="custom-target" type="number" min="1" max="100" step="0.5" placeholder="Custom target %" oninput="render()">
-                </div>
-                <div id="aggregateRoast"></div>
-            </div>
-        </div>
-    </section>
-
-    <div class="cards" id="cards"></div>
-
-    <div class="legend">
-        <b>How the attendance lore works:</b>
-        “Free pass” = maximum future hours you can skip while staying at or above your target.
-        “LOCK TF IN” = minimum future hours you need to attend to reach your target. Labs must individually stay at target; lectures only become individually debarred when aggregate is below target.
-        Pick your target, drop the report, and let the math cook. No cap 😭.
+      <div class="input-actions">
+       <button onclick="parseReport()">Run the vibe check ⚡</button>
+       <button class="secondary" onclick="clearReport()">Reset the lore 🗑️</button>
+       <a href="skip_simulator.html" class="skip-link">🧪 Skip Simulator</a> <a href="future_predictor.html?v=3" class="skip-link predictor-link">🔮 Future Predictor</a>
+      </div>
+      <div id="error" class="error"></div>
+     </div>
+     <div class="aggregate">
+      <div class="aggregate-title">How cooked are we? 💀</div>
+      <div id="aggregateChart">
+       <div class="aggregate-empty">
+        Drop your report to unlock
+        <br>
+        the attendance tea ☕
+       </div>
+      </div>
+      <div id="aggregateSub" class="aggregate-sub"></div>
+      <div class="target-box">
+       <span class="target-label">Pick your survival level 🎯</span> <select id="targetSelect" class="target-select" onchange="render()"> <option value="75">75% — Bare minimum 🗿</option> <option value="80">80% — Playing it safe 😮‍💨</option> <option value="85">85% — Attendance merchant</option> <option value="90">90% — Teacher's favourite 💀</option> <option value="95">95% — Touch grass bro</option> <option value="100">100% — Bro IS the timetable</option> <option value="custom">Custom — I'm built different</option> </select> <input id="customTarget" class="custom-target" type="number" min="1" max="100" step="0.5" placeholder="Custom target %" oninput="render()">
+      </div>
+      <div id="aggregateRoast"></div>
+     </div>
     </div>
-</div>
-
-<script>
+   </section>
+   <div class="cards" id="cards"></div>
+   <div class="legend">
+    <b>How the attendance lore works:</b> “Free pass” = maximum future hours you can skip while staying at or above your target. “LOCK TF IN” = minimum future hours you need to attend to reach your target. Labs must individually stay at target; lectures only become individually debarred when aggregate is below target. Pick your target, drop the report, and let the math cook. No cap 😭.
+   </div>
+  </div>
+  <script>
 let subjects = [];
 const savedTarget=localStorage.getItem("attendanceVibeTarget");
 if(savedTarget){
@@ -288,47 +272,47 @@ if(savedTarget){
         if(option) targetSelect.value=savedTarget;
     }
 }
-
+ 
 function parseReport(){
     const raw=document.getElementById("report").value.trim();
     const error=document.getElementById("error");
-
+ 
     if(!raw){
         error.textContent="Bro, paste the report first 😭";
         error.style.display="block";
         return;
     }
-
+ 
     const lines=raw.split(/\r?\n/).filter(line=>line.trim());
     const parsed=[];
-
+ 
     for(const line of lines){
         if(/subject code|percentage|attendance report/i.test(line)) continue;
-
+ 
         // Handles tabs, multiple spaces, and table text copied from a webpage.
         let parts=line.includes("\t")
             ? line.split("\t").map(x=>x.trim()).filter(Boolean)
             : line.split(/\s{2,}/).map(x=>x.trim()).filter(Boolean);
-
+ 
         // Fallback for reports copied with single spaces:
         // identify the numeric tail: Present, OD, Makeup, Absent, Percentage.
         const nums=line.match(/(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+(?:\.\d+)?)(?:\s*)$/);
-
+ 
         if(nums){
             const idx=nums.index;
             const prefix=line.slice(0,idx).trim();
             const number=prefix.match(/^(\d+)\s+/);
             if(!number) continue;
-
+ 
             let fields=prefix.slice(number[0].length).trim().split(/\s{2,}/).filter(Boolean);
-
+ 
             // If spacing was lost, use known subject-code pattern to split.
             if(fields.length<3){
                 const m=prefix.slice(number[0].length).match(/^(\S+)\s+(.+?)\s+(Lecture|Lab)\s*$/i);
                 if(!m) continue;
                 fields=[m[1],m[2],m[3]];
             }
-
+ 
             if(fields.length>=3){
                 parsed.push({
                     code:fields[0],
@@ -342,7 +326,7 @@ function parseReport(){
                 continue;
             }
         }
-
+ 
         // Standard tab-separated row.
         if(parts.length>=8 && /^\d+$/.test(parts[0])){
             parsed.push({
@@ -356,19 +340,19 @@ function parseReport(){
             });
         }
     }
-
+ 
     if(!parsed.length){
         error.textContent="Couldn’t read that report 💀. Paste the full table with Subject Code, Present, OD, Makeup, Absent and Percentage.";
         error.style.display="block";
         return;
     }
-
+ 
     subjects=parsed;
     error.style.display="none";
     localStorage.setItem("attendanceVibeSubjects",JSON.stringify(subjects));
     render();
 }
-
+ 
 function clearReport(){
     document.getElementById("report").value="";
     document.getElementById("error").style.display="none";
@@ -379,7 +363,7 @@ function clearReport(){
     document.getElementById("aggregateSub").textContent="";
     document.getElementById("aggregateRoast").innerHTML="";
 }
-
+ 
 function getTarget(){
     const select=document.getElementById("targetSelect");
     if(!select) return 75;
@@ -389,7 +373,7 @@ function getTarget(){
     }
     return Number(select.value);
 }
-
+ 
 function isLab(s){return /lab/i.test(s.type);}
 function isDebarred(s,overall){
     const pct=getStats(s).pct;
@@ -402,13 +386,13 @@ function getStats(s){
     const pct=total?attended/total*100:0;
     const target=getTarget();
     const ratio=target/100;
-
+ 
     const canMiss=Math.max(0,Math.floor(attended/ratio-total+1e-9));
     const needAttend=pct>=target?0:Math.ceil((ratio*total-attended)/(1-ratio)-1e-9);
-
+ 
     return {attended,total,pct,canMiss,needAttend,target};
 }
-
+ 
 const ROASTS={
     perfect:[
         "WHO ARE YOU 😭 Bro IS the timetable.",
@@ -453,11 +437,11 @@ const ROASTS={
         "Attendance status: cooked beyond repair 🫠"
     ]
 };
-
+ 
 function randomFrom(list){
     return list[Math.floor(Math.random()*list.length)];
 }
-
+ 
 function getRoast(pct,target,overall,lab=false){
     if(lab && pct<target) return randomFrom([
         "LAB SHORTAGE ALERT 🚨 You're actually cooked.",
@@ -477,7 +461,7 @@ function getRoast(pct,target,overall,lab=false){
     if(pct>=60) return randomFrom(ROASTS.bad);
     return randomFrom(ROASTS.cooked);
 }
-
+ 
 function subjectRoast(s,pct){
     const name=s.name.toLowerCase();
     if(pct>=100){
@@ -519,13 +503,13 @@ function subjectRoast(s,pct){
         "Attendance is giving 'one more absence and we're done' 😭"
     ]);
 }
-
+ 
 function card(s,overall){
     const x=getStats(s),target=x.target,lab=isLab(s);
     const debarred=isDebarred(s,overall),below=x.pct<target;
-
+ 
     let badge=debarred?"DEBARRED 💀":(below&&!lab?"Below target, still safe 😮‍💨":"W • You're chilling 😮‍💨");
-
+ 
     return `
     <article class="card ${debarred?"danger-bar":""}">
         <div class="top">
@@ -556,7 +540,7 @@ function card(s,overall){
         </div>
     </article>`;
 }
-
+ 
 function render(){
     const select=document.getElementById("targetSelect"),custom=document.getElementById("customTarget");
     if(select&&custom) custom.style.display=select.value==="custom"?"block":"none";
@@ -568,31 +552,31 @@ function render(){
         document.getElementById("aggregateRoast").innerHTML="";
         return;
     }
-
+ 
     const totalAttended=subjects.reduce((a,s)=>a+getStats(s).attended,0);
     const totalHours=subjects.reduce((a,s)=>a+getStats(s).total,0);
     const overall=totalHours?totalAttended/totalHours*100:0;
     const target=getTarget();
-
+ 
     document.getElementById("cards").innerHTML=subjects.map(s=>card(s,overall)).join("");
-
+ 
     const color=overall>=target?"#22a85a":"#e5484d";
     document.getElementById("aggregateChart").innerHTML=`<div class="aggregate-donut" style="--aggregate-pct:${Math.min(overall,100)}%;background:conic-gradient(${color} var(--aggregate-pct),#e9edf2 0)"><div class="aggregate-value">${overall.toFixed(2)}%</div></div>`;
     document.getElementById("aggregateSub").textContent=`${totalAttended} / ${totalHours} hours attended · target ${target}%`;
-
+ 
     const ratio=target/100;
     const need=overall<target?Math.ceil((ratio*totalHours-totalAttended)/(1-ratio)-1e-9):0;
     const canMiss=overall>=target?Math.max(0,Math.floor(totalAttended/ratio-totalHours+1e-9)):0;
     document.getElementById("aggregateRoast").innerHTML=`<div class="roast">${getRoast(overall,target,overall,false)}</div><div class="aggregate-action ${overall>=target?"safe":"danger"}">${overall>=target?`Free pass unlocked 🎟️ — you can miss <b>${canMiss} ${canMiss===1?"hour":"hours"}</b> and stay ${target}%+`:`LOCK TF IN 🔒 — attend <b>${need} ${need===1?"hour":"hours"}</b> to hit ${target}%`}</div>`;
-
+ 
     const safeSubjects=subjects.filter(s=>!isDebarred(s,overall)).length;
     document.getElementById("summary").innerHTML=`<div class="stat"><span>How cooked are we?</span><strong>${overall.toFixed(2)}%</strong></div><div class="stat"><span>Subjects safe</span><strong>${safeSubjects}/${subjects.length}</strong></div><div class="stat"><span>Total hours</span><strong>${totalHours}</strong></div>`;
-
+ 
     localStorage.setItem("attendanceVibeSubjects",JSON.stringify(subjects));
     localStorage.setItem("attendanceVibeTarget",String(target));
 }
-
+ 
 render();
 </script>
-</body>
+ </body>
 </html>
