@@ -1,16 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Future Attendance Predictor 🔮</title>
-<link rel="icon" type="image/png" href="icon-512.png">
-<link rel="apple-touch-icon" href="icon-512.png">
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#172033">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<style>
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Future Attendance Predictor 🔮</title>
+  <link rel="icon" type="image/png" href="icon-512.png">
+  <link rel="apple-touch-icon" href="icon-512.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#172033">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:#f4f7fb;color:#172033}
 .container{max-width:1100px;margin:auto;padding:28px 20px 50px}
@@ -93,67 +93,62 @@ select{width:100%;padding:11px;border:1px solid #d7dde6;border-radius:10px;backg
 @media(max-width:800px){.grid{grid-template-columns:1fr}}
 @media(max-width:520px){.container{padding:20px 13px 40px}h1{font-size:27px}.hero{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr}.day{min-height:40px}}
 </style>
-</head>
-<body>
-<div class="container">
-<a class="back" href="index.html">← Back to Attendance Vibe Check</a>
-<h1>Future Attendance Predictor 🔮</h1>
-<p class="subtitle">Plan the vacation. Predict the damage. Don't let the ERP jump-scare you on rejoin day 💀</p>
-
-<div class="grid">
-<section class="panel">
-    <div class="section-title">Pick your disappearance dates 🧳</div>
-    <div class="section-sub">Past dates, Sundays and marked college holidays are locked. Select the days you'll actually miss.</div>
-
-    <div class="calendar-head">
-        <div id="monthTitle" class="month-title"></div>
-        <div class="month-buttons">
-            <button onclick="changeMonth(-1)">‹</button>
-            <button onclick="changeMonth(1)">›</button>
-        </div>
-    </div>
-    <div class="weekdays">
-        <div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div><div>SUN</div>
-    </div>
-    <div id="calendar" class="calendar"></div>
-
-    <div class="legend">
-        <span><i class="dot available"></i>Selectable</span>
-        <span><i class="dot selected"></i>Vacation</span>
-        <span><i class="dot holiday"></i>College holiday</span>
-        <span><i class="dot disabled"></i>Locked</span>
-    </div>
-
-    <div class="holiday-box">
-        <b style="font-size:11px">🏫 Holiday list lives in the code</b>
-        <div class="note">Edit <code>COLLEGE_HOLIDAYS</code> near the top of the JavaScript. Use YYYY-MM-DD. Add/remove tentative holidays whenever college updates them.</div>
-        <code id="holidayPreview"></code>
-    </div>
-</section>
-
-<section class="panel">
-    <div class="section-title">Prediction setup 🎯</div>
-    <div class="section-sub">Your latest ERP report and target are pulled from the main page.</div>
-
-    <div class="field">
-        <label>Current report</label>
-        <div id="reportStatus" class="status warn">Checking your saved attendance...</div>
-    </div>
-
-    <div class="field">
-        <label>Target attendance</label>
-        <select id="targetSelect"></select>
-    </div>
-
-    <div class="selected-list" id="selectedList"></div>
-    <button class="run" onclick="predict()">🔮 Predict my rejoin-day attendance</button>
-</section>
-</div>
-
-<div id="result" class="result"></div>
-</div>
-
-<script>
+ </head>
+ <body>
+  <div class="container">
+   <a class="back" href="index.html">← Back to Attendance Vibe Check</a>
+   <h1>Future Attendance Predictor 🔮</h1>
+   <p class="subtitle">Plan the vacation. Predict the damage. Don't let the ERP jump-scare you on rejoin day 💀</p>
+   <div class="grid">
+    <section class="panel">
+     <div class="section-title">Pick your disappearance dates 🧳</div>
+     <div class="section-sub">Past dates, Sundays and marked college holidays are locked. Select the days you'll actually miss.</div>
+     <div class="calendar-head">
+      <div id="monthTitle" class="month-title"></div>
+      <div class="month-buttons">
+       <button onclick="changeMonth(-1)">‹</button>
+       <button onclick="changeMonth(1)">›</button>
+      </div>
+     </div>
+     <div class="weekdays">
+      <div>MON</div>
+      <div>TUE</div>
+      <div>WED</div>
+      <div>THU</div>
+      <div>FRI</div>
+      <div>SAT</div>
+      <div>SUN</div>
+     </div>
+     <div id="calendar" class="calendar"></div>
+     <div class="legend">
+      <span><i class="dot available"></i>Selectable</span> <span><i class="dot selected"></i>Vacation</span> <span><i class="dot holiday"></i>College holiday</span> <span><i class="dot disabled"></i>Locked</span>
+     </div>
+     <div class="holiday-box">
+      <b style="font-size:11px">🏫 Holiday list lives in the code</b>
+      <div class="note">
+       Edit <code>COLLEGE_HOLIDAYS</code> near the top of the JavaScript. Use YYYY-MM-DD. Add/remove tentative holidays whenever college updates them.
+      </div>
+      <code id="holidayPreview"></code>
+     </div>
+    </section>
+    <section class="panel">
+     <div class="section-title">Prediction setup 🎯</div>
+     <div class="section-sub">Your latest ERP report and target are pulled from the main page.</div>
+     <div class="field">
+      <label>Current report</label>
+      <div id="reportStatus" class="status warn">Checking your saved attendance...</div>
+      <div id="storageHint" class="note" style="display:none"></div>
+     </div>
+     <div class="field">
+      <label>Target attendance</label> <select id="targetSelect"> <option value="75">75%</option> <option value="80">80%</option> <option value="85">85%</option> <option value="90">90%</option> <option value="95">95%</option> <option value="custom">Custom</option> </select>
+     </div>
+     <div class="selected-list" id="selectedList"></div>
+     <button class="run" onclick="predict()">🔮 Predict my rejoin-day attendance</button>
+    </section>
+   </div>
+   <div id="result" class="result"></div>
+  </div>
+  <script>
 // ================================
 // EDIT THIS LIST WHEN COLLEGE ADDS
 // OR REMOVES A HOLIDAY.
@@ -162,7 +157,7 @@ select{width:100%;padding:11px;border:1px solid #d7dde6;border-radius:10px;backg
 const COLLEGE_HOLIDAYS=[
     "2026-08-28"
 ];
-
+ 
 // Your approved 30-hour weekly timetable.
 // Labs are 2 hr except ITR Lab = 1 hr.
 const TIMETABLE={
@@ -203,25 +198,44 @@ const TIMETABLE={
         ["CEUL560.1","Lecture",1] // Climate Change Science
     ]
 };
-
-const savedSubjects=JSON.parse(localStorage.getItem("attendanceVibeSubjects")||"[]");
-let target=Number(localStorage.getItem("attendanceVibeTarget")||75);
+ 
+function safeGet(key,fallback=null){
+    try{
+        const value=localStorage.getItem(key);
+        return value===null?fallback:value;
+    }catch(error){
+        console.warn("Storage read failed:",error);
+        return fallback;
+    }
+}
+function safeSet(key,value){
+    try{localStorage.setItem(key,value);return true;}
+    catch(error){console.warn("Storage write failed:",error);return false;}
+}
+function loadSavedSubjects(){
+    try{
+        const raw=safeGet("attendanceVibeSubjects","[]");
+        const parsed=JSON.parse(raw||"[]");
+        return Array.isArray(parsed)?parsed:[];
+    }catch(error){
+        console.warn("Could not read saved attendance:",error);
+        return [];
+    }
+}
+function loadSavedTarget(){
+    const raw=Number(safeGet("attendanceVibeTarget","75"));
+    return Number.isFinite(raw)&&raw>0&&raw<=100?raw:75;
+}
+const savedSubjects=loadSavedSubjects();
+let target=loadSavedTarget();
 let selectedDates=new Set();
 let viewDate=new Date();
 viewDate.setDate(1);
-
+ 
 const targetSelect=document.getElementById("targetSelect");
-[75,80,85,90,95].forEach(v=>{
-    const o=document.createElement("option");
-    o.value=v;o.textContent=v+"%";
-    targetSelect.appendChild(o);
-});
-const customOpt=document.createElement("option");
-customOpt.value="custom";customOpt.textContent="Custom";
-targetSelect.appendChild(customOpt);
-if([75,80,85,90,95].includes(target)) targetSelect.value=target;
+if([75,80,85,90,95].includes(target)) targetSelect.value=String(target);
 else targetSelect.value="custom";
-
+ 
 function localKey(d){
     const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");
     return `${y}-${m}-${day}`;
@@ -234,23 +248,23 @@ function today(){
 function isSunday(d){return d.getDay()===0}
 function isHoliday(key){return COLLEGE_HOLIDAYS.includes(key)}
 function isBeforeToday(d){return d<today()}
-
+ 
 function renderCalendar(){
     const year=viewDate.getFullYear(),month=viewDate.getMonth();
     document.getElementById("monthTitle").textContent=viewDate.toLocaleString("en-IN",{month:"long",year:"numeric"});
     const calendar=document.getElementById("calendar");
     calendar.innerHTML="";
-
+ 
     const first=new Date(year,month,1);
     let mondayIndex=(first.getDay()+6)%7;
     const days=new Date(year,month+1,0).getDate();
-
+ 
     for(let i=0;i<mondayIndex;i++){
         const blank=document.createElement("div");
         blank.className="day other";
         calendar.appendChild(blank);
     }
-
+ 
     for(let day=1;day<=days;day++){
         const d=new Date(year,month,day);
         d.setHours(0,0,0,0);
@@ -258,12 +272,12 @@ function renderCalendar(){
         const cell=document.createElement("button");
         cell.className="day";
         cell.textContent=day;
-
+ 
         if(key===localKey(today())) cell.classList.add("today");
-
+ 
         const holiday=isHoliday(key);
         const disabled=isBeforeToday(d)||isSunday(d)||holiday;
-
+ 
         if(holiday){
             cell.classList.add("holiday");
             cell.innerHTML=`${day}<small>HOLIDAY</small>`;
@@ -273,9 +287,9 @@ function renderCalendar(){
         }else if(isBeforeToday(d)){
             cell.classList.add("disabled");
         }
-
+ 
         if(selectedDates.has(key)) cell.classList.add("selected");
-
+ 
         if(!disabled){
             cell.onclick=()=>{
                 if(selectedDates.has(key)) selectedDates.delete(key);
@@ -288,11 +302,11 @@ function renderCalendar(){
         }
         calendar.appendChild(cell);
     }
-
+ 
     document.getElementById("holidayPreview").textContent=
         COLLEGE_HOLIDAYS.length?COLLEGE_HOLIDAYS.join("\\n"):"No holidays marked.";
 }
-
+ 
 function changeMonth(delta){
     const next=new Date(viewDate.getFullYear(),viewDate.getMonth()+delta,1);
     const min=new Date(today().getFullYear(),today().getMonth(),1);
@@ -300,25 +314,25 @@ function changeMonth(delta){
     viewDate=next;
     renderCalendar();
 }
-
+ 
 function getTarget(){
     if(targetSelect.value==="custom"){
         const v=Number(prompt("Enter target attendance %:",String(target)));
         if(v>0&&v<=100){
             target=v;
-            localStorage.setItem("attendanceVibeTarget",String(target));
+            safeSet("attendanceVibeTarget",String(target));
         }
         return target;
     }
     target=Number(targetSelect.value);
-    localStorage.setItem("attendanceVibeTarget",String(target));
+    safeSet("attendanceVibeTarget",String(target));
     return target;
 }
-
+ 
 targetSelect.addEventListener("change",()=>{
     getTarget();
 });
-
+ 
 function renderSelected(){
     const box=document.getElementById("selectedList");
     const keys=[...selectedDates].sort();
@@ -334,12 +348,12 @@ function renderSelected(){
         return `<div class="selected-date"><span>${weekday}, ${d.toLocaleDateString("en-IN",{day:"numeric",month:"short"})}</span><span>${hours} hr damage 💀</span></div>`;
     }).join("");
 }
-
+ 
 function findSubject(code){
     const wanted=code.toLowerCase();
     return savedSubjects.find(s=>String(s.code).toLowerCase()===wanted);
 }
-
+ 
 function baseStats(s){
     const attended=s.present+s.od+s.makeup;
     const total=attended+s.absent;
@@ -348,7 +362,7 @@ function baseStats(s){
 function calcFuture(){
     const map=new Map();
     let missedHours=0;
-
+ 
     [...selectedDates].forEach(key=>{
         const d=new Date(key+"T00:00:00");
         const jsDay=d.getDay();
@@ -365,7 +379,7 @@ function calcFuture(){
             item.classes.push({date:key,hours});
         });
     });
-
+ 
     const projected=savedSubjects.map(s=>{
         const item=map.get(s.code);
         const base=baseStats(s);
@@ -374,14 +388,14 @@ function calcFuture(){
         const pct=total?base.attended/total*100:0;
         return {...s,attended:base.attended,total,missed,pct};
     });
-
+ 
     const attended=savedSubjects.reduce((a,s)=>a+baseStats(s).attended,0);
     const total=savedSubjects.reduce((a,s)=>a+baseStats(s).total,0)+missedHours;
     const aggregate=total?attended/total*100:0;
-
+ 
     return {projected,aggregate,missedHours};
 }
-
+ 
 function nextRejoinDate(){
     if(!selectedDates.size)return null;
     const latest=[...selectedDates].sort().pop();
@@ -390,13 +404,13 @@ function nextRejoinDate(){
     while(isSunday(d)||isHoliday(localKey(d))) d.setDate(d.getDate()+1);
     return d;
 }
-
+ 
 function roast(aggregate,atRisk){
     if(atRisk>0)return ["BRO YOUR VACATION JUST COOKED A LAB 💀","Vacation itinerary: fun. Attendance itinerary: ICU 😭","The ERP is about to ruin the post-vacation mood 🚨"][Math.floor(Math.random()*3)];
     if(aggregate>=target)return ["Vacation approved by the Attendance Department™ 🗿","Go touch grass. The attendance math survives 😮‍💨","Holiday arc unlocked without academic consequences 😭"][Math.floor(Math.random()*3)];
     return ["Bro planned a vacation and accidentally planned an academic downfall 💀","That vacation has consequences 😭","The beach is calling. So is the attendance shortage 🚨"][Math.floor(Math.random()*3)];
 }
-
+ 
 function predict(){
     if(!savedSubjects.length){
         document.getElementById("result").innerHTML='<div class="status danger">Paste your latest ERP report on the homepage first 💀</div>';
@@ -406,7 +420,7 @@ function predict(){
         document.getElementById("result").innerHTML='<div class="status warn">Pick at least one day to disappear first 👀</div>';
         return;
     }
-
+ 
     const data=calcFuture();
     const rejoin=nextRejoinDate();
     const overall=data.aggregate;
@@ -415,9 +429,9 @@ function predict(){
         const lecture=/lecture/i.test(s.type);
         return /lab/i.test(s.type)?s.pct<target:(overall<target&&s.pct<target);
     });
-
+ 
     const dateText=rejoin?rejoin.toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"}):"—";
-
+ 
     const cards=data.projected.map(s=>{
         const debar=/lab/i.test(s.type)?s.pct<target:(overall<target&&s.pct<target);
         const color=debar?"#e5484d":"#22a85a";
@@ -439,4 +453,52 @@ function predict(){
                 </div>
             </div>
             <div class="action">
-                <div class="action-box"><small>Current → Future</small><strong>${baseStats(s).total?((baseStats(s).attended/baseStats(s).total*100).toFixed(2)):
+                <div class="action-box"><small>Current → Future</small><strong>${baseStats(s).total?((baseStats(s).attended/baseStats(s).total*100).toFixed(2)):"0.00"}% → ${s.pct.toFixed(2)}%</strong></div>
+                <div class="action-box"><small>${debar?"Why you're cooked":"Status"}</small><strong>${debar?(/lab/i.test(s.type)?"Lab <75%":"Aggregate <75% + subject <75%"):"Safe"}</strong></div>
+            </div>
+        </article>`;
+    }).join("");
+ 
+    document.getElementById("result").innerHTML=`
+        <div class="hero">
+            <div class="stat"><small>Predicted aggregate</small><b>${overall.toFixed(2)}%</b></div>
+            <div class="stat"><small>Total vacation damage</small><b>${data.missedHours} hr</b></div>
+            <div class="stat"><small>Rejoin day</small><b style="font-size:14px">${dateText}</b></div>
+        </div>
+        <div class="status ${labRisk.length||overall<target?"danger":"safe"}">
+            ${labRisk.length?`🚨 ${labRisk.length} lab${labRisk.length>1?"s":""} below ${target}% — DEBARMENT ALERT.`:overall<target?`💀 Aggregate falls below ${target}% — you're debarred.`:`😮‍💨 Aggregate survives ${target}%. Vacation damage contained.`}
+        </div>
+        <div class="roast">${roast(overall,labRisk.length)}</div>
+        <div class="report-title">Predicted ERP on rejoin day 📋</div>
+        <div class="cards">${cards}</div>
+        <div class="footer-note">
+            Calculation assumes every selected non-holiday weekday follows your fixed timetable and every scheduled hour on a selected day becomes absent.
+            College holidays contribute 0 hours. Sundays are disabled. Lectures below ${target}% are only debarred when aggregate is also below ${target}%; labs must individually stay at ${target}%+.
+        </div>`;
+}
+ 
+try{
+    renderCalendar();
+    renderSelected();
+}catch(error){
+    console.error("Future Predictor UI error:",error);
+    document.getElementById("calendar").innerHTML='<div style="grid-column:1/-1;padding:20px;text-align:center;color:#c62828;font-size:12px">Calendar failed to render. Refresh once and try again.</div>';
+}
+ 
+if(!savedSubjects.length){
+    document.getElementById("reportStatus").className="status danger";
+    document.getElementById("reportStatus").textContent="No saved ERP report yet. The calendar still works — paste your report on the homepage before predicting 💀";
+}else{
+    document.getElementById("reportStatus").className="status safe";
+    document.getElementById("reportStatus").textContent=`Loaded ${savedSubjects.length} subjects from your latest report 😮‍💨`;
+}
+try{
+    localStorage.setItem("__attendance_test","1");
+    localStorage.removeItem("__attendance_test");
+}catch(error){
+    document.getElementById("storageHint").style.display="block";
+    document.getElementById("storageHint").textContent="⚠️ Local storage is blocked in this browser/PWA. Open both pages from the same GitHub Pages site.";
+}
+</script>
+ </body>
+</html>
