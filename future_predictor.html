@@ -345,7 +345,7 @@ function renderSelected(){
         const weekday=d.toLocaleString("en-IN",{weekday:"short"});
         const classes=TIMETABLE[(d.getDay()+6)%7+1]||[];
         const hours=classes.reduce((a,c)=>a+c[2],0);
-        return `<div class="selected-date"><span>${weekday}, ${d.toLocaleDateString("en-IN",{day:"numeric",month:"short"})}</span><span>${hours} hr damage 💀</span></div>`;
+        return `<div class="selected-date"><span>${weekday}, ${d.toLocaleDateString("en-IN",{day:"numeric",month:"short"})}</span><span>${hours} hr absent 💀</span></div>`;
     }).join("");
 }
  
@@ -360,40 +360,90 @@ function baseStats(s){
     return {attended,total};
 }
 function calcFuture(){
-    const map=new Map();
+    const selected=[...selectedDates].sort();
+    const lastVacation=selected.length?new Date(selected[selected.length-1]+"T00:00:00"):null;
+    const startDate=today();
+    startDate.setDate(startDate.getDate()+1); // ERP already contains today's report.
+ 
+    const future=new Map();
+    let futureAttendedHours=0;
     let missedHours=0;
  
-    [...selectedDates].forEach(key=>{
-        const d=new Date(key+"T00:00:00");
-        const jsDay=d.getDay();
-        const dayNumber=jsDay===0?7:jsDay;
-        const classes=TIMETABLE[dayNumber]||[];
-        classes.forEach(([code,type,hours])=>{
-            missedHours+=hours;
-            const s=findSubject(code);
-            if(!s)return;
-            const keySubject=s.code;
-            if(!map.has(keySubject)) map.set(keySubject,{s,missed:0,classes:[]});
-            const item=map.get(keySubject);
+    function addSubject(code,type,hours,kind,dateKey){
+        if(!future.has(code)){
+            future.set(code,{attended:0,missed:0,type,days:[]});
+        }
+        const item=future.get(code);
+        if(kind==="attended"){
+            item.attended+=hours;
+        }else{
             item.missed+=hours;
-            item.classes.push({date:key,hours});
-        });
-    });
+        }
+        item.days.push({date:dateKey,hours,kind});
+    }
+ 
+    if(lastVacation && startDate<=lastVacation){
+        const cursor=new Date(startDate);
+        while(cursor<=lastVacation){
+            const key=localKey(cursor);
+            const jsDay=cursor.getDay();
+            const dayNumber=jsDay===0?7:jsDay;
+ 
+            // Sundays and college holidays have no classes/attendance impact.
+            if(jsDay!==0 && !isHoliday(key)){
+                const isSelected=selectedDates.has(key);
+                const classes=TIMETABLE[dayNumber]||[];
+ 
+                classes.forEach(([code,type,hours])=>{
+                    if(isSelected){
+                        missedHours+=hours;
+                        addSubject(code,type,hours,"missed",key);
+                    }else{
+                        futureAttendedHours+=hours;
+                        addSubject(code,type,hours,"attended",key);
+                    }
+                });
+            }
+            cursor.setDate(cursor.getDate()+1);
+        }
+    }
  
     const projected=savedSubjects.map(s=>{
-        const item=map.get(s.code);
         const base=baseStats(s);
-        const missed=item?item.missed:0;
-        const total=base.total+missed;
-        const pct=total?base.attended/total*100:0;
-        return {...s,attended:base.attended,total,missed,pct};
+        const item=future.get(s.code)||{attended:0,missed:0};
+        const predictedAttended=base.attended+item.attended;
+        const predictedTotal=base.total+item.attended+item.missed;
+        const pct=predictedTotal?predictedAttended/predictedTotal*100:0;
+ 
+        return {
+            ...s,
+            currentAttended:base.attended,
+            currentTotal:base.total,
+            futureAttended:item.attended,
+            missed:item.missed,
+            attended:predictedAttended,
+            total:predictedTotal,
+            pct
+        };
     });
  
-    const attended=savedSubjects.reduce((a,s)=>a+baseStats(s).attended,0);
-    const total=savedSubjects.reduce((a,s)=>a+baseStats(s).total,0)+missedHours;
-    const aggregate=total?attended/total*100:0;
+    const currentAttended=savedSubjects.reduce((a,s)=>a+baseStats(s).attended,0);
+    const currentTotal=savedSubjects.reduce((a,s)=>a+baseStats(s).total,0);
  
-    return {projected,aggregate,missedHours};
+    const predictedAttended=currentAttended+futureAttendedHours;
+    const predictedTotal=currentTotal+futureAttendedHours+missedHours;
+    const aggregate=predictedTotal?predictedAttended/predictedTotal*100:0;
+ 
+    return {
+        projected,
+        aggregate,
+        missedHours,
+        futureAttendedHours,
+        currentAttended,
+        currentTotal,
+        predictedAttended,
+        predictedTotal
+    };
 }
  
 function nextRejoinDate(){
@@ -408,97 +458,4 @@ function nextRejoinDate(){
 function roast(aggregate,atRisk){
     if(atRisk>0)return ["BRO YOUR VACATION JUST COOKED A LAB 💀","Vacation itinerary: fun. Attendance itinerary: ICU 😭","The ERP is about to ruin the post-vacation mood 🚨"][Math.floor(Math.random()*3)];
     if(aggregate>=target)return ["Vacation approved by the Attendance Department™ 🗿","Go touch grass. The attendance math survives 😮‍💨","Holiday arc unlocked without academic consequences 😭"][Math.floor(Math.random()*3)];
-    return ["Bro planned a vacation and accidentally planned an academic downfall 💀","That vacation has consequences 😭","The beach is calling. So is the attendance shortage 🚨"][Math.floor(Math.random()*3)];
-}
- 
-function predict(){
-    if(!savedSubjects.length){
-        document.getElementById("result").innerHTML='<div class="status danger">Paste your latest ERP report on the homepage first 💀</div>';
-        return;
-    }
-    if(!selectedDates.size){
-        document.getElementById("result").innerHTML='<div class="status warn">Pick at least one day to disappear first 👀</div>';
-        return;
-    }
- 
-    const data=calcFuture();
-    const rejoin=nextRejoinDate();
-    const overall=data.aggregate;
-    const labRisk=data.projected.filter(s=>/lab/i.test(s.type)&&s.pct<target);
-    const debarred=data.projected.filter(s=>{
-        const lecture=/lecture/i.test(s.type);
-        return /lab/i.test(s.type)?s.pct<target:(overall<target&&s.pct<target);
-    });
- 
-    const dateText=rejoin?rejoin.toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"}):"—";
- 
-    const cards=data.projected.map(s=>{
-        const debar=/lab/i.test(s.type)?s.pct<target:(overall<target&&s.pct<target);
-        const color=debar?"#e5484d":"#22a85a";
-        const badge=debar?"DEBARRED 💀":s.pct<target?"Below target, still safe 😮‍💨":"W • You're chilling 😮‍💨";
-        return `<article class="card">
-            <div class="card-top">
-                <div><div class="code">${s.code}</div><div class="name">${s.name}</div><div class="type">${s.type}</div></div>
-                <div class="badge ${debar?"danger":"safe"}">${badge}</div>
-            </div>
-            <div class="chart-row">
-                <div class="donut" style="background:conic-gradient(${color} ${Math.min(s.pct,100)}%,#e9edf2 0)">
-                    <div class="donut-text">${s.pct.toFixed(2)}%</div>
-                </div>
-                <div>
-                    <div class="metric"><span>Current present</span><b>${s.present+s.od+s.makeup} hr</b></div>
-                    <div class="metric"><span>Vacation damage</span><b>${s.missed} hr</b></div>
-                    <div class="metric"><span>Future total</span><b>${s.total} hr</b></div>
-                    <div class="progress"><div style="width:${Math.min(s.pct,100)}%;background:${color}"></div></div>
-                </div>
-            </div>
-            <div class="action">
-                <div class="action-box"><small>Current → Future</small><strong>${baseStats(s).total?((baseStats(s).attended/baseStats(s).total*100).toFixed(2)):"0.00"}% → ${s.pct.toFixed(2)}%</strong></div>
-                <div class="action-box"><small>${debar?"Why you're cooked":"Status"}</small><strong>${debar?(/lab/i.test(s.type)?"Lab <75%":"Aggregate <75% + subject <75%"):"Safe"}</strong></div>
-            </div>
-        </article>`;
-    }).join("");
- 
-    document.getElementById("result").innerHTML=`
-        <div class="hero">
-            <div class="stat"><small>Predicted aggregate</small><b>${overall.toFixed(2)}%</b></div>
-            <div class="stat"><small>Total vacation damage</small><b>${data.missedHours} hr</b></div>
-            <div class="stat"><small>Rejoin day</small><b style="font-size:14px">${dateText}</b></div>
-        </div>
-        <div class="status ${labRisk.length||overall<target?"danger":"safe"}">
-            ${labRisk.length?`🚨 ${labRisk.length} lab${labRisk.length>1?"s":""} below ${target}% — DEBARMENT ALERT.`:overall<target?`💀 Aggregate falls below ${target}% — you're debarred.`:`😮‍💨 Aggregate survives ${target}%. Vacation damage contained.`}
-        </div>
-        <div class="roast">${roast(overall,labRisk.length)}</div>
-        <div class="report-title">Predicted ERP on rejoin day 📋</div>
-        <div class="cards">${cards}</div>
-        <div class="footer-note">
-            Calculation assumes every selected non-holiday weekday follows your fixed timetable and every scheduled hour on a selected day becomes absent.
-            College holidays contribute 0 hours. Sundays are disabled. Lectures below ${target}% are only debarred when aggregate is also below ${target}%; labs must individually stay at ${target}%+.
-        </div>`;
-}
- 
-try{
-    renderCalendar();
-    renderSelected();
-}catch(error){
-    console.error("Future Predictor UI error:",error);
-    document.getElementById("calendar").innerHTML='<div style="grid-column:1/-1;padding:20px;text-align:center;color:#c62828;font-size:12px">Calendar failed to render. Refresh once and try again.</div>';
-}
- 
-if(!savedSubjects.length){
-    document.getElementById("reportStatus").className="status danger";
-    document.getElementById("reportStatus").textContent="No saved ERP report yet. The calendar still works — paste your report on the homepage before predicting 💀";
-}else{
-    document.getElementById("reportStatus").className="status safe";
-    document.getElementById("reportStatus").textContent=`Loaded ${savedSubjects.length} subjects from your latest report 😮‍💨`;
-}
-try{
-    localStorage.setItem("__attendance_test","1");
-    localStorage.removeItem("__attendance_test");
-}catch(error){
-    document.getElementById("storageHint").style.display="block";
-    document.getElementById("storageHint").textContent="⚠️ Local storage is blocked in this browser/PWA. Open both pages from the same GitHub Pages site.";
-}
-</script>
- </body>
-</html>
+    return ["Bro planned a vacation and accidentally planned an academic downfall 💀","Tha
