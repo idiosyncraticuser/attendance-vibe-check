@@ -188,19 +188,19 @@ const TIMETABLES={
         1:[["CSUP521","Lab",2],["CRT","Lab",2],["CSUL503","Lecture",1],["CSUL511","Lecture",1]],
         2:[["CSUL504","Lecture",1],["CSUL501","Lecture",1],["CSUL502","Lecture",1],["CRT","Lab",2]],
         3:[["CSUL511","Lecture",1],["CSUL503","Lecture",1],["CSUP522","Lab",2]],
-        4:[["CSUL511","Lecture",1],["CSUL501","Lecture",1],["CSUL504","Lecture",1],["CSUP520","Lab",2],["OPEN_ELECTIVE","Lecture",1]],
-        5:[["CSUL501","Lecture",1],["CSUT530","Lab",1],["CSUL503","Lecture",1],["CSUL502","Lecture",1],["OPEN_ELECTIVE","Lecture",1]],
-        6:[["CRT","Lab",2],["CSUL502","Lecture",1],["OPEN_ELECTIVE","Lecture",1]]
+        4:[["CSUL511","Lecture",1],["CSUL501","Lecture",1],["CSUL504","Lecture",1],["CSUP520","Lab",2],["CEUL560.1","Lecture",1]],
+        5:[["CSUL501","Lecture",1],["CSUT530","Lab",1],["CSUL503","Lecture",1],["CSUL502","Lecture",1],["CEUL560.1","Lecture",1]],
+        6:[["CRT","Lab",2],["CSUL502","Lecture",1],["CEUL560.1","Lecture",1]]
     },
     "5CSE":{
         1:[["CSUL501","Lecture",1],["CSUL511","Lecture",1],["CSUL502","Lecture",1],["CRT","Lab",2]],
         2:[["CSUL503","Lecture",1],["CSUL511","Lecture",1],["CRT","Lab",2],["CSUP522","Lab",2]],
         3:[["CSUP521","Lab",2],["CSUL511","Lecture",1]],
-        4:[["CSUL501","Lecture",1],["CSUL503","Lecture",1],["CSUT530","Lab",1],["CRT","Lab",2],["OPEN_ELECTIVE","Lecture",1]],
-        5:[["CSUL503","Lecture",1],["CSUL502","Lecture",1],["CSUL501","Lecture",1],["CSUL504","Lecture",1],["OPEN_ELECTIVE","Lecture",1]],
-        6:[["CSUP520","Lab",2],["CSUL504","Lecture",1],["CSUL502","Lecture",1],["OPEN_ELECTIVE","Lecture",1]]
+        4:[["CSUL501","Lecture",1],["CSUL503","Lecture",1],["CSUT530","Lab",1],["CRT","Lab",2],["CEUL560.1","Lecture",1]],
+        5:[["CSUL503","Lecture",1],["CSUL502","Lecture",1],["CSUL501","Lecture",1],["CSUL504","Lecture",1],["CEUL560.1","Lecture",1]],
+        6:[["CSUP520","Lab",2],["CSUL504","Lecture",1],["CSUL502","Lecture",1],["CEUL560.1","Lecture",1]]
     }
-};
+}
 
 function safeGet(key,fallback=null){
     try{
@@ -417,7 +417,7 @@ function calcFuture(){
                 const classes=TIMETABLES[selectedSection][dayNumber]||[];
 
                 classes.forEach(([code,type,hours])=>{
-                    if(code==="OPEN_ELECTIVE")return;
+                    
 
                     if(isSelected){
                         missedHours+=hours;
