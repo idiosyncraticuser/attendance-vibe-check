@@ -382,7 +382,7 @@ function isDebarred(s,overall){
 }
 function getStats(s){
     const attended=s.present+s.od+s.makeup;
-    const total=attended+s.absent;
+    const total=s.present+s.od+s.absent;
     const pct=total?attended/total*100:0;
     const target=getTarget();
     const ratio=target/100;

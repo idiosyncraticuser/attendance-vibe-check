@@ -119,7 +119,7 @@ select.addEventListener("change",updateSubject);
 
 function isLab(s){return /lab/i.test(s.type)}
 function stats(s){
-    const attended=s.present+s.od+s.makeup,total=attended+s.absent;
+    const attended=s.present+s.od+s.makeup,total=s.present+s.od+s.absent;
     return {attended,total,pct:total?attended/total*100:0};
 }
 function aggregateStats(){
