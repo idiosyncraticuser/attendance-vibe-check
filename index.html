@@ -419,7 +419,7 @@ const ROASTS={
         "You're alive. That's what matters 💀"
     ],
     danger:[
-        "LOCK. TF. IN. 🔒 You're one bad week from cooked.",
+        "LOCK. TF. IN. 🔒🫡 You're one bad week from cooked.",
         "Bro is walking the attendance tightrope 😭",
         "One more L and it's over 💀",
         "The 75% committee is watching you 👀"
@@ -530,10 +530,10 @@ function card(s,overall){
         </div>
         <div class="action">
             ${x.pct>=target?`
-            <div class="action-box"><small>Free passes 🎟️</small><strong class="miss">${x.canMiss} ${x.canMiss===1?"hour":"hours"}</strong></div>
+            <div class="action-box"><small>Free passes 🗿💦</small><strong class="miss">${x.canMiss} ${x.canMiss===1?"hour":"hours"}</strong></div>
             <div class="action-box"><small>${lab?"Lab target":"Target"}: ${target}%</small><strong class="miss">${(x.pct-target).toFixed(2)}%</strong></div>
             `:`
-            <div class="action-box"><small>${lab||overall<target?"LOCK TF IN 🔒":"Below target, but safe 😮‍💨"}</small>
+            <div class="action-box"><small>${lab||overall<target?"LOCK TF IN 🔒🫡":"Below target, but safe 😮‍💨"}</small>
             <strong class="${lab||overall<target?"catch":"miss"}">${lab||overall<target?x.needAttend+" "+(x.needAttend===1?"hour":"hours"):"No mandatory recovery"}</strong></div>
             <div class="action-box"><small>${lab?"Lab rule 🚨":"Aggregate rule"}</small><strong class="${debarred?"catch":"miss"}">${debarred?"DEBARRED":"Not debarred"}</strong></div>
             `}
@@ -567,7 +567,7 @@ function render(){
     const ratio=target/100;
     const need=overall<target?Math.ceil((ratio*totalHours-totalAttended)/(1-ratio)-1e-9):0;
     const canMiss=overall>=target?Math.max(0,Math.floor(totalAttended/ratio-totalHours+1e-9)):0;
-    document.getElementById("aggregateRoast").innerHTML=`<div class="roast">${getRoast(overall,target,overall,false)}</div><div class="aggregate-action ${overall>=target?"safe":"danger"}">${overall>=target?`Free pass unlocked 🎟️ — you can miss <b>${canMiss} ${canMiss===1?"hour":"hours"}</b> and stay ${target}%+`:`LOCK TF IN 🔒 — attend <b>${need} ${need===1?"hour":"hours"}</b> to hit ${target}%`}</div>`;
+    document.getElementById("aggregateRoast").innerHTML=`<div class="roast">${getRoast(overall,target,overall,false)}</div><div class="aggregate-action ${overall>=target?"safe":"danger"}">${overall>=target?`Free pass unlocked 🗿💦 — you can miss <b>${canMiss} ${canMiss===1?"hour":"hours"}</b> and stay ${target}%+`:`LOCK TF IN 🔒🫡 — attend <b>${need} ${need===1?"hour":"hours"}</b> to hit ${target}%`}</div>`;
  
     const safeSubjects=subjects.filter(s=>!isDebarred(s,overall)).length;
     document.getElementById("summary").innerHTML=`<div class="stat"><span>How cooked are we?</span><strong>${overall.toFixed(2)}%</strong></div><div class="stat"><span>Subjects safe</span><strong>${safeSubjects}/${subjects.length}</strong></div><div class="stat"><span>Total hours</span><strong>${totalHours}</strong></div>`;
