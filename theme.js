@@ -2,22 +2,26 @@
 (() => {
   const KEY = "attendanceVibeTheme";
   const profiles = {
-    light: { label: "Light", icon: "☀", color: "#f4f7fb" },
-    night: { label: "Night", icon: "☾", color: "#0b1020" },
-    arc: { label: "Arc", icon: "◉", color: "#071a2d" },
-    stealth: { label: "Stealth", icon: "◈", color: "#0b0d10" },
-    holographic: { label: "Holographic", icon: "✦", color: "#111128" }
+    light: { label: "Light", icon: "☀", color: "#f4f7fb", detail: "Crisp daylight", effect: "daylight" },
+    dark: { label: "Dark", icon: "☾", color: "#0b1020", detail: "Deep night", effect: "dimming" },
+    "iron-man": { label: "Iron Man", icon: "◉", color: "#11171d", detail: "Stark HUD", effect: "reactor" },
+    "spider-man": { label: "Spider-Man", icon: "⌘", color: "#07152c", detail: "Web velocity", effect: "web" },
+    hulk: { label: "Hulk", icon: "✹", color: "#16121d", detail: "Gamma impact", effect: "impact" },
+    thor: { label: "Thor", icon: "ϟ", color: "#08162f", detail: "Asgardian current", effect: "lightning" },
+    "captain-america": { label: "Captain America", icon: "◌", color: "#081725", detail: "Tactical command", effect: "shield" },
+    thanos: { label: "Thanos", icon: "∞", color: "#110d1c", detail: "Cosmic order", effect: "reality" },
+    ultron: { label: "Ultron", icon: "◈", color: "#111316", detail: "Machine intelligence", effect: "scan" }
   };
 
-  const safeGet = () => { try { return localStorage.getItem(KEY); } catch (_) { return null; } };
+  const safeGet = () => { try { const saved = localStorage.getItem(KEY); return saved === "night" ? "dark" : saved; } catch (_) { return null; } };
   const safeSet = (value) => { try { localStorage.setItem(KEY, value); } catch (_) {} };
-  const preferred = () => matchMedia("(prefers-color-scheme: dark)").matches ? "night" : "light";
+  const preferred = () => matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   const current = () => document.documentElement.dataset.theme || preferred();
 
   function animateThemeChange(theme, origin) {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches || !origin) return;
     const sweep = document.createElement("span");
-    sweep.className = "theme-sweep";
+    sweep.className = `theme-sweep theme-sweep--${profiles[theme].effect}`;
     sweep.style.setProperty("--sweep-x", `${origin.x}px`);
     sweep.style.setProperty("--sweep-y", `${origin.y}px`);
     sweep.style.background = profiles[theme].color;
@@ -29,6 +33,7 @@
     const resolved = profiles[theme] ? theme : preferred();
     animateThemeChange(resolved, origin);
     document.documentElement.dataset.theme = resolved;
+    document.documentElement.dataset.themeEffect = profiles[resolved].effect;
     document.documentElement.style.colorScheme = resolved === "light" ? "light" : "dark";
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.content = profiles[resolved].color;
@@ -51,7 +56,7 @@
       <span class="theme-toggle__core" aria-hidden="true"><span class="theme-toggle__icon"></span></span><span class="theme-toggle__name"></span><span class="theme-toggle__chevron" aria-hidden="true">⌄</span>
     </button><div class="theme-menu" role="radiogroup" aria-label="Choose color theme" hidden>
       <div class="theme-menu__heading"><span>Appearance</span><small>Choose your atmosphere</small></div>${Object.entries(profiles).map(([id, p]) =>
-      `<button class="theme-option" type="button" role="radio" data-theme="${id}" aria-checked="false"><span class="theme-option__preview theme-option__preview--${id}" aria-hidden="true"><i></i></span><span class="theme-option__label">${p.label}<small>${id === "light" ? "Crisp daylight" : id === "night" ? "Focused after hours" : id === "arc" ? "Cool reactor blue" : id === "stealth" ? "Low-profile graphite" : "Violet signal"}</small></span><span class="theme-option__check" aria-hidden="true">✓</span></button>`).join("")}</div>`;
+      `<button class="theme-option" type="button" role="radio" data-theme="${id}" aria-checked="false"><span class="theme-option__preview theme-option__preview--${id}" aria-hidden="true"><i></i></span><span class="theme-option__label">${p.label}<small>${p.detail}</small></span><span class="theme-option__check" aria-hidden="true">✓</span></button>`).join("")}</div>`;
     document.body.appendChild(chooser);
     const toggle = chooser.querySelector(".theme-toggle");
     const menu = chooser.querySelector(".theme-menu");
@@ -89,6 +94,10 @@
     });
     apply(current(), false);
   }
+
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+    if (!safeGet()) apply(preferred(), false);
+  });
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount);
   else mount();
