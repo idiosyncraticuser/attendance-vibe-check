@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="100%" height="100%" aria-hidden="true" id="technical-markings">
+  <defs>
+    <style>
+      :root {
+        --im-steel-highlight: #4B5565;
+        --im-cyan-bright: #00F0FF;
+      }
+    </style>
+  </defs>
+
+  <!-- 1. PITCH LADDERS -->
+  <g id="pitch-ladders" stroke="var(--im-cyan-bright)" stroke-width="1.5" opacity="0.4" fill="none">
+    <path d="M 64,300 L 96,300 L 96,320" />
+    <path d="M 64,400 L 112,400 L 112,420" />
+    <path d="M 64,500 L 128,500 L 128,520" stroke="var(--im-steel-highlight)" />
+    <path d="M 64,600 L 112,600 L 112,620" />
+    <path d="M 64,700 L 96,700 L 96,720" />
+
+    <path d="M 960,300 L 928,300 L 928,320" />
+    <path d="M 960,400 L 912,400 L 912,420" />
+    <path d="M 960,500 L 896,500 L 896,520" stroke="var(--im-steel-highlight)" />
+    <path d="M 960,600 L 912,600 L 912,620" />
+    <path d="M 960,700 L 928,700 L 928,720" />
+  </g>
+
+  <!-- 2. CORNER COORDINATES -->
+  <g id="corner-coordinates" stroke="var(--im-cyan-bright)" stroke-width="1.5" opacity="0.5" fill="none">
+    <path d="M 128,128 L 160,128 M 128,128 L 128,160" />
+    <path d="M 896,128 L 864,128 M 896,128 L 896,160" />
+    <path d="M 128,896 L 160,896 M 128,896 L 128,864" />
+    <path d="M 896,896 L 864,896 M 896,896 L 896,864" />
+  </g>
+
+  <!-- 3. ANGLE TICKS -->
+  <g id="angle-ticks" stroke="var(--im-steel-highlight)" stroke-width="1" opacity="0.3" fill="none">
+    <circle cx="512" cy="512" r="490" stroke-dasharray="2 18" />
+  </g>
+</svg>

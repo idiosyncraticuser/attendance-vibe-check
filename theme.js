@@ -64,12 +64,81 @@
       document.body.classList.remove("theme-transitioning");
     }, 1320);
   }
+function ironManTransition(resolved, persist) {
+  const overlay = document.createElement("div");
+  overlay.className = "iron-transition";
+  overlay.setAttribute("aria-hidden", "true");
+
+  overlay.innerHTML = `
+    <div class="iron-transition__grid"></div>
+
+    <img
+      class="iron-transition__scan-rings"
+      src="assets/themes/iron-man/hud-scan-rings.svg"
+      alt=""
+    >
+
+    <img
+      class="iron-transition__reactor-rings"
+      src="assets/themes/iron-man/reactor-rings.svg"
+      alt=""
+    >
+
+    <img
+      class="iron-transition__reactor-core"
+      src="assets/themes/iron-man/reactor-core.svg"
+      alt=""
+    >
+
+    <img
+      class="iron-transition__reticle"
+      src="assets/themes/iron-man/hud-reticle.svg"
+      alt=""
+    >
+
+    <img
+      class="iron-transition__target"
+      src="assets/themes/iron-man/targeting-lock.svg"
+      alt=""
+    >
+
+    <img
+      class="iron-transition__burst"
+      src="assets/themes/iron-man/reactor-energy-burst.svg"
+      alt=""
+    >
+
+    <div class="iron-transition__scan-line"></div>
+  `;
+
+  document.body.classList.add("theme-transitioning");
+  document.body.appendChild(overlay);
+
+  requestAnimationFrame(() => {
+    overlay.classList.add("is-active");
+  });
+
+  window.setTimeout(() => {
+    commitTheme(resolved, persist);
+    overlay.classList.add("is-revealing");
+  }, 720);
+
+  window.setTimeout(() => {
+    overlay.remove();
+    document.body.classList.remove("theme-transitioning");
+  }, 1380);
+}
+    
 
   function apply(theme, persist = true, origin) {
     const resolved = profiles[theme] ? theme : preferred();
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (resolved === "captain-america" && current() !== resolved && origin && !reduced) {
       captainTransition(resolved, persist);
+      return;
+    }
+    if (resolved === "iron-man" && current() !== resolved && origin && !reduced) {
+      ironManTransition(resolved, persist);
       return;
     }
     animateThemeChange(resolved, origin);

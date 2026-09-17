@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="100%" height="100%" aria-hidden="true" id="reactor-energy-burst">
+  <defs>
+    <style>
+      :root {
+        --im-cyan-bright: #00F0FF;
+        --im-cyan-glow: #A0F7FF;
+        --im-core-white: #FFFFFF;
+      }
+    </style>
+    <radialGradient id="reb-shockwave" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="var(--im-core-white)" stop-opacity="1" />
+      <stop offset="30%" stop-color="var(--im-cyan-glow)" stop-opacity="0.8" />
+      <stop offset="70%" stop-color="var(--im-cyan-bright)" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="rgba(0,240,255,0)" />
+    </radialGradient>
+  </defs>
+
+  <!-- 1. RADIAL SHOCKWAVE -->
+  <g id="radial-shockwave">
+    <circle cx="512" cy="512" r="490" fill="url(#reb-shockwave)" />
+  </g>
+
+  <!-- 2. PLASMA RAYS -->
+  <g id="plasma-rays" stroke="var(--im-cyan-glow)" stroke-width="3" opacity="0.8">
+    <line x1="512" y1="512" x2="512" y2="0" />
+    <line x1="512" y1="512" x2="1024" y2="512" />
+    <line x1="512" y1="512" x2="512" y2="1024" />
+    <line x1="512" y1="512" x2="0" y2="512" />
+    <line x1="512" y1="512" x2="874" y2="150" />
+    <line x1="512" y1="512" x2="874" y2="874" />
+    <line x1="512" y1="512" x2="150" y2="874" />
+    <line x1="512" y1="512" x2="150" y2="150" />
+  </g>
+
+  <!-- 3. ENERGY RINGS -->
+  <g id="energy-rings" fill="none" stroke="var(--im-cyan-bright)">
+    <circle cx="512" cy="512" r="320" stroke-width="6" stroke-dasharray="40 20" />
+    <circle cx="512" cy="512" r="420" stroke-width="2" stroke-dasharray="10 10" />
+  </g>
+</svg>

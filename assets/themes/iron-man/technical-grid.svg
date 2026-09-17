@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="100%" height="100%" aria-hidden="true" id="technical-grid">
+  <defs>
+    <style>
+      :root {
+        --im-cyan-bright: #00F0FF;
+      }
+    </style>
+    <pattern id="grid-pattern-64" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M 64 0 L 0 0 0 64" fill="none" stroke="var(--im-cyan-bright)" stroke-width="1" opacity="0.12" />
+      <circle cx="0" cy="0" r="1.5" fill="var(--im-cyan-bright)" opacity="0.35" />
+    </pattern>
+  </defs>
+
+  <g id="grid-pattern-overlay">
+    <rect width="1024" height="1024" fill="url(#grid-pattern-64)" />
+  </g>
+</svg>

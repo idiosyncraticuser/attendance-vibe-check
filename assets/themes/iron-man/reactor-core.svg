@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%" aria-hidden="true" id="reactor-core">
+  <defs>
+    <style>
+      :root {
+        --im-titanium-dark: #0A0C0E;
+        --im-titanium-mid: #161A20;
+        --im-titanium-light: #2A313D;
+        --im-gunmetal: #1E232D;
+        --im-steel-highlight: #4B5565;
+        --im-cyan-bright: #00F0FF;
+        --im-cyan-glow: #A0F7FF;
+        --im-cyan-deep: #006699;
+        --im-core-white: #FFFFFF;
+      }
+    </style>
+
+    <radialGradient id="rc-core-plasma" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="var(--im-core-white)" />
+      <stop offset="25%" stop-color="var(--im-cyan-glow)" />
+      <stop offset="60%" stop-color="var(--im-cyan-bright)" />
+      <stop offset="85%" stop-color="var(--im-cyan-deep)" />
+      <stop offset="100%" stop-color="rgba(0,240,255,0)" />
+    </radialGradient>
+
+    <linearGradient id="rc-ring-bevel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="var(--im-steel-highlight)" />
+      <stop offset="50%" stop-color="var(--im-gunmetal)" />
+      <stop offset="100%" stop-color="var(--im-titanium-dark)" />
+    </linearGradient>
+  </defs>
+
+  <!-- 1. DEEP HOUSING BASE -->
+  <g id="housing">
+    <circle cx="256" cy="256" r="240" fill="var(--im-titanium-dark)" stroke="var(--im-steel-highlight)" stroke-width="2" />
+    <circle cx="256" cy="256" r="215" fill="none" stroke="url(#rc-ring-bevel)" stroke-width="12" />
+    <circle cx="256" cy="256" r="195" fill="none" stroke="var(--im-cyan-bright)" stroke-width="1.5" opacity="0.8" />
+  </g>
+
+  <!-- 2. MECHANICAL CAGE & CLAMPS -->
+  <g id="mechanical-cage">
+    <!-- Outer Glass Ring Segment Marks -->
+    <circle cx="256" cy="256" r="180" fill="none" stroke="url(#rc-ring-bevel)" stroke-width="8" />
+    <circle cx="256" cy="256" r="180" fill="none" stroke="var(--im-cyan-glow)" stroke-width="2" stroke-dasharray="24 10" />
+
+    <!-- Triangular Support Chassis -->
+    <g transform="translate(256,256)">
+      <polygon points="0,-160 138,80 -138,80" fill="none" stroke="url(#rc-ring-bevel)" stroke-width="6" stroke-linejoin="round" />
+      <polygon points="0,-160 138,80 -138,80" fill="none" stroke="var(--im-cyan-bright)" stroke-width="1.5" stroke-linejoin="round" />
+      <polygon points="0,160 -138,-80 138,-80" fill="none" stroke="url(#rc-ring-bevel)" stroke-width="4" stroke-linejoin="round" opacity="0.5" />
+    </g>
+  </g>
+
+  <!-- 3. PLASMA ENERGY CORE -->
+  <g id="energy-core">
+    <circle cx="256" cy="256" r="150" fill="url(#rc-core-plasma)" />
+    <circle cx="256" cy="256" r="95" fill="url(#rc-core-plasma)" />
+    <circle cx="256" cy="256" r="50" fill="var(--im-core-white)" />
+    <circle cx="256" cy="256" r="24" fill="#FFFFFF" />
+    <circle cx="256" cy="256" r="125" fill="none" stroke="var(--im-core-white)" stroke-width="2" stroke-dasharray="12 6" opacity="0.85" />
+  </g>
+
+  <!-- 4. LENS HIGHLIGHTS -->
+  <g id="highlights">
+    <path d="M 120,120 C 180,80 332,80 392,120 C 330,100 180,100 120,120 Z" fill="#FFFFFF" opacity="0.3" />
+    <circle cx="256" cy="256" r="230" fill="none" stroke="var(--im-steel-highlight)" stroke-width="1" opacity="0.5" />
+  </g>
+</svg>

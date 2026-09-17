@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 64" width="100%" height="100%" aria-hidden="true" id="status-indicators">
+  <defs>
+    <style>
+      :root {
+        --im-titanium-dark: #0A0C0E;
+        --im-titanium-mid: #161A20;
+        --im-steel-highlight: #4B5565;
+        --im-cyan-bright: #00F0FF;
+        --im-red-accent: #C41E3A;
+        --im-amber-warn: #FF9900;
+      }
+    </style>
+  </defs>
+
+  <!-- 1. INACTIVE POD (X: 32) -->
+  <g id="indicator-inactive">
+    <polygon points="32,12 48,22 48,42 32,52 16,42 16,22" fill="var(--im-titanium-dark)" stroke="var(--im-titanium-mid)" stroke-width="3" />
+    <circle cx="32" cy="32" r="5" fill="var(--im-titanium-mid)" />
+  </g>
+
+  <!-- 2. ACTIVE POD (X: 96) -->
+  <g id="indicator-active">
+    <polygon points="96,12 112,22 112,42 96,52 80,42 80,22" fill="var(--im-titanium-dark)" stroke="var(--im-cyan-bright)" stroke-width="3" />
+    <circle cx="96" cy="32" r="7" fill="var(--im-cyan-bright)" />
+  </g>
+
+  <!-- 3. WARNING POD (X: 160) -->
+  <g id="indicator-warning">
+    <polygon points="160,12 176,22 176,42 160,52 144,42 144,22" fill="var(--im-titanium-dark)" stroke="var(--im-amber-warn)" stroke-width="3" />
+    <polygon points="160,22 168,38 152,38" fill="var(--im-amber-warn)" />
+  </g>
+
+  <!-- 4. CRITICAL / ENERGY POD (X: 224) -->
+  <g id="indicator-critical">
+    <polygon points="224,12 240,22 240,42 224,52 208,42 208,22" fill="var(--im-titanium-dark)" stroke="var(--im-red-accent)" stroke-width="3" />
+    <circle cx="224" cy="32" r="8" fill="var(--im-red-accent)" />
+    <circle cx="224" cy="32" r="3" fill="#FFFFFF" />
+  </g>
+</svg>

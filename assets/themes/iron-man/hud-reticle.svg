@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%" aria-hidden="true" id="hud-reticle">
+  <defs>
+    <style>
+      :root {
+        --im-titanium-dark: #0A0C0E;
+        --im-steel-highlight: #4B5565;
+        --im-cyan-bright: #00F0FF;
+        --im-cyan-glow: #A0F7FF;
+        --im-red-accent: #C41E3A;
+      }
+    </style>
+  </defs>
+
+  <!-- 1. RETICLE OUTER RINGS -->
+  <g id="reticle-outer-ring">
+    <circle cx="256" cy="256" r="230" fill="none" stroke="var(--im-cyan-bright)" stroke-width="1.5" stroke-dasharray="40 20 10 20" opacity="0.8" />
+    <circle cx="256" cy="256" r="200" fill="none" stroke="var(--im-steel-highlight)" stroke-width="2" />
+    <circle cx="256" cy="256" r="170" fill="none" stroke="var(--im-cyan-bright)" stroke-width="1" opacity="0.5" />
+  </g>
+
+  <!-- 2. BRACKETS & TICKS -->
+  <g id="reticle-brackets" stroke="var(--im-cyan-bright)" stroke-width="2" fill="none">
+    <path d="M 256,16 L 256,46 M 256,466 L 256,496 M 16,256 L 46,256 M 466,256 L 496,256" />
+    
+    <!-- Titanium Framing Brackets -->
+    <path d="M 120,120 L 140,120 L 140,140" stroke="var(--im-steel-highlight)" stroke-width="3" />
+    <path d="M 392,120 L 372,120 L 372,140" stroke="var(--im-steel-highlight)" stroke-width="3" />
+    <path d="M 120,392 L 140,392 L 140,372" stroke="var(--im-steel-highlight)" stroke-width="3" />
+    <path d="M 392,392 L 372,392 L 372,372" stroke="var(--im-steel-highlight)" stroke-width="3" />
+  </g>
+
+  <!-- 3. PRECISION CROSSHAIRS -->
+  <g id="reticle-crosshairs" stroke="var(--im-cyan-bright)" stroke-width="1.5">
+    <line x1="256" y1="70" x2="256" y2="200" stroke-dasharray="8 4" />
+    <line x1="256" y1="312" x2="256" y2="442" stroke-dasharray="8 4" />
+    <line x1="70" y1="256" x2="200" y2="256" stroke-dasharray="8 4" />
+    <line x1="312" y1="256" x2="442" y2="256" stroke-dasharray="8 4" />
+  </g>
+
+  <!-- 4. CENTER LOCK NODE -->
+  <g id="reticle-center-lock">
+    <circle cx="256" cy="256" r="32" fill="none" stroke="var(--im-cyan-glow)" stroke-width="2" />
+    <circle cx="256" cy="256" r="6" fill="var(--im-red-accent)" />
+  </g>
+</svg>

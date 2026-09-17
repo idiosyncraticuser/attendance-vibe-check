@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="100%" height="100%" aria-hidden="true" id="hud-frame">
+  <defs>
+    <style>
+      :root {
+        --im-titanium-dark: #0A0C0E;
+        --im-titanium-mid: #161A20;
+        --im-gunmetal: #1E232D;
+        --im-steel-highlight: #4B5565;
+        --im-cyan-bright: #00F0FF;
+        --im-red-accent: #C41E3A;
+      }
+    </style>
+  </defs>
+
+  <!-- 1. OUTER ENVELOPE -->
+  <g id="outer-envelope">
+    <path d="M 96,32 L 928,32 L 992,96 L 992,928 L 928,992 L 96,992 L 32,928 L 32,96 Z" fill="none" stroke="var(--im-steel-highlight)" stroke-width="3" />
+    <path d="M 112,48 L 912,48 L 976,112 L 976,912 L 912,976 L 112,976 L 48,912 L 48,112 Z" fill="none" stroke="var(--im-cyan-bright)" stroke-width="1" opacity="0.4" />
+  </g>
+
+  <!-- 2. CORNER ARMOR PLATES -->
+  <g id="corner-armor" fill="var(--im-gunmetal)" stroke="var(--im-titanium-dark)" stroke-width="3">
+    <polygon points="32,96 128,32 32,32" />
+    <polygon points="992,96 896,32 992,32" />
+    <polygon points="992,928 896,992 992,992" />
+    <polygon points="32,928 128,992 32,992" />
+    
+    <!-- Red Corner Accents -->
+    <line x1="32" y1="96" x2="128" y2="32" stroke="var(--im-red-accent)" stroke-width="3" />
+    <line x1="992" y1="96" x2="896" y2="32" stroke="var(--im-red-accent)" stroke-width="3" />
+    <line x1="992" y1="928" x2="896" y2="992" stroke="var(--im-red-accent)" stroke-width="3" />
+    <line x1="32" y1="928" x2="128" y2="992" stroke="var(--im-red-accent)" stroke-width="3" />
+  </g>
+
+  <!-- 3. TELEMETRY LINES -->
+  <g id="telemetry-lines" stroke="var(--im-cyan-bright)" stroke-width="1.5">
+    <line x1="200" y1="32" x2="824" y2="32" stroke-dasharray="12 6" />
+    <line x1="200" y1="992" x2="824" y2="992" stroke-dasharray="12 6" />
+    <circle cx="512" cy="32" r="5" fill="var(--im-cyan-bright)" />
+    <circle cx="512" cy="992" r="5" fill="var(--im-cyan-bright)" />
+  </g>
+</svg>

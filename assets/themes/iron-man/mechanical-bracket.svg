@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="100%" height="100%" aria-hidden="true" id="mechanical-bracket">
+  <defs>
+    <style>
+      :root {
+        --im-titanium-dark: #0A0C0E;
+        --im-gunmetal: #1E232D;
+        --im-steel-highlight: #4B5565;
+        --im-cyan-bright: #00F0FF;
+        --im-red-accent: #C41E3A;
+      }
+    </style>
+    <linearGradient id="mb-steel-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="var(--im-steel-highlight)" />
+      <stop offset="100%" stop-color="var(--im-gunmetal)" />
+    </linearGradient>
+  </defs>
+
+  <!-- 1. BRACKET BODY -->
+  <g id="bracket-body">
+    <path d="M 8,120 L 8,36 L 36,8 L 120,8 L 120,24 L 48,24 L 24,48 L 24,120 Z" fill="url(#mb-steel-grad)" stroke="var(--im-titanium-dark)" stroke-width="2" />
+  </g>
+
+  <!-- 2. MACHINED BEVELS & RED STRIPE -->
+  <g id="machined-bevels">
+    <path d="M 28,112 L 28,52 L 52,28 L 112,28 L 112,20 L 44,20 L 20,44 L 20,112 Z" fill="var(--im-red-accent)" />
+  </g>
+
+  <!-- 3. SENSOR NODE -->
+  <g id="sensor-node">
+    <rect x="40" y="40" width="12" height="12" rx="2" fill="var(--im-cyan-bright)" />
+    <circle cx="14" cy="14" r="3" fill="var(--im-steel-highlight)" />
+  </g>
+</svg>
