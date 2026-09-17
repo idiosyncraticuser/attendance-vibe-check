@@ -3179,7 +3179,7 @@ html[data-theme="thanos"] .btn {
   position: relative;
   isolation: isolate;
 }
-
+/* 
 html[data-theme="thanos"] button::before,
 html[data-theme="thanos"] .btn::before {
   content: "";
@@ -3207,7 +3207,7 @@ html[data-theme="thanos"] .btn::after {
   opacity: 0;
   transform: scale(0.96);
   transition: opacity 180ms ease, transform 180ms ease;
-}
+} */
 
 html[data-theme="thanos"] button:hover::before,
 html[data-theme="thanos"] .btn:hover::before {
@@ -3297,6 +3297,974 @@ html[data-theme="thanos"] main::after {
   html[data-theme="thanos"] button::after,
   html[data-theme="thanos"] .btn::before,
   html[data-theme="thanos"] .btn::after {
+    transition: none;
+  }
+}
+
+/* =========================================================
+   THANOS — COMPLETE COSMIC UI
+   ========================================================= */
+
+/* ---------- PAGE ATMOSPHERE ---------- */
+
+html[data-theme="thanos"] body {
+  background:
+    url("assets/themes/thanos/celestial-markings.svg")
+      center / cover no-repeat fixed,
+    url("assets/themes/thanos/cosmic-grid.svg")
+      center / 1024px 1024px repeat,
+    var(--avc-bg);
+}
+
+/* Keep the atmosphere behind the application */
+html[data-theme="thanos"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 50% 25%,
+      rgba(186, 113, 244, 0.10),
+      transparent 38%
+    ),
+    radial-gradient(
+      circle at 85% 75%,
+      rgba(197, 160, 89, 0.045),
+      transparent 30%
+    );
+}
+
+/* ---------- MAIN HEADER ---------- */
+
+html[data-theme="thanos"] h1 {
+  text-shadow:
+    0 0 18px rgba(186, 113, 244, 0.18),
+    0 0 32px rgba(197, 160, 89, 0.08);
+}
+
+html[data-theme="thanos"] .subtitle {
+  color: var(--avc-muted);
+}
+
+/* ---------- MAIN INPUT PANEL ---------- */
+
+html[data-theme="thanos"] .input-panel {
+  position: relative;
+  isolation: isolate;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(33, 23, 52, 0.96),
+      rgba(17, 13, 28, 0.96)
+    ),
+    var(--avc-surface);
+  border-color: var(--avc-border);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.45),
+    0 0 35px rgba(186, 113, 244, 0.08);
+}
+
+html[data-theme="thanos"] .input-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    url("assets/themes/thanos/cosmic-frame.svg")
+    center / 100% 100% no-repeat;
+  opacity: 0.75;
+}
+
+/* ---------- TEXTAREA / INPUTS ---------- */
+
+html[data-theme="thanos"] textarea,
+html[data-theme="thanos"] input,
+html[data-theme="thanos"] select {
+  background-color: rgba(17, 13, 28, 0.82);
+  color: var(--avc-text);
+  border-color: var(--avc-border);
+}
+
+html[data-theme="thanos"] textarea:focus,
+html[data-theme="thanos"] input:focus,
+html[data-theme="thanos"] select:focus {
+  border-color: var(--thanos-gold);
+  box-shadow:
+    0 0 0 2px rgba(197, 160, 89, 0.10),
+    0 0 22px rgba(186, 113, 244, 0.12);
+}
+
+html[data-theme="thanos"] textarea::placeholder,
+html[data-theme="thanos"] input::placeholder {
+  color: var(--avc-faint);
+}
+
+/* ---------- AGGREGATE PANEL ---------- */
+
+html[data-theme="thanos"] .aggregate {
+  border-color: var(--avc-line);
+}
+
+html[data-theme="thanos"] .aggregate-title {
+  color: var(--thanos-gold);
+  text-shadow: 0 0 12px rgba(197, 160, 89, 0.18);
+}
+
+html[data-theme="thanos"] .aggregate-empty {
+  color: var(--avc-faint);
+}
+
+/* ---------- SECTION DIVIDER ---------- */
+
+html[data-theme="thanos"] .aggregate-title::after {
+  content: "";
+  display: block;
+  width: min(100%, 420px);
+  height: 32px;
+  margin: 5px auto 0;
+  background:
+    url("assets/themes/thanos/cosmic-divider.svg")
+    center / 100% 100% no-repeat;
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+/* ---------- SUBJECT CARDS ---------- */
+
+html[data-theme="thanos"] .card {
+  position: relative;
+  isolation: isolate;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(48, 34, 72, 0.95),
+      rgba(24, 16, 39, 0.97)
+    ),
+    var(--avc-surface);
+  border-color: var(--avc-border);
+  box-shadow:
+    0 16px 38px rgba(0, 0, 0, 0.38),
+    0 0 26px rgba(186, 113, 244, 0.06);
+}
+
+html[data-theme="thanos"] .card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    url("assets/themes/thanos/cosmic-frame.svg")
+    center / 100% 100% no-repeat;
+  opacity: 0.58;
+}
+
+html[data-theme="thanos"] .card:hover {
+  border-color: var(--thanos-gold);
+  box-shadow:
+    0 18px 44px rgba(0, 0, 0, 0.46),
+    0 0 30px rgba(186, 113, 244, 0.12);
+}
+
+/* ---------- CARD / ACTION BOXES ---------- */
+
+html[data-theme="thanos"] .action-box {
+  background:
+    rgba(17, 13, 28, 0.62);
+  border: 1px solid rgba(103, 74, 134, 0.55);
+}
+
+html[data-theme="thanos"] .action-box strong {
+  color: var(--avc-text);
+}
+
+html[data-theme="thanos"] .miss {
+  color: var(--avc-safe);
+}
+
+html[data-theme="thanos"] .catch {
+  color: var(--avc-danger);
+}
+
+/* ---------- BUTTONS ---------- */
+
+html[data-theme="thanos"] .input-actions button,
+html[data-theme="thanos"] .card button,
+html[data-theme="thanos"] .actions button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 0;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(59, 21, 102, 0.96),
+      rgba(26, 11, 46, 0.98)
+    );
+  color: var(--avc-text);
+  box-shadow:
+    0 5px 16px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(197, 160, 89, 0.35);
+}
+
+html[data-theme="thanos"] .input-actions button::before,
+html[data-theme="thanos"] .card button::before,
+html[data-theme="thanos"] .actions button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    url("assets/themes/thanos/infinity-button-frame.svg")
+    center / 100% 100% no-repeat;
+  opacity: 0.9;
+}
+
+html[data-theme="thanos"] .input-actions button::after,
+html[data-theme="thanos"] .card button::after,
+html[data-theme="thanos"] .actions button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    url("assets/themes/thanos/button-energy-active.svg")
+    center / 100% 100% no-repeat;
+  opacity: 0;
+  transform: scale(0.96);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+html[data-theme="thanos"] .input-actions button:hover,
+html[data-theme="thanos"] .card button:hover,
+html[data-theme="thanos"] .actions button:hover {
+  color: #fff;
+  box-shadow:
+    0 7px 22px rgba(0, 0, 0, 0.38),
+    0 0 22px rgba(186, 113, 244, 0.16);
+}
+
+html[data-theme="thanos"] .input-actions button:hover::after,
+html[data-theme="thanos"] .card button:hover::after,
+html[data-theme="thanos"] .actions button:hover::after {
+  opacity: 0.65;
+  transform: scale(1);
+}
+
+html[data-theme="thanos"] .input-actions button:active,
+html[data-theme="thanos"] .card button:active,
+html[data-theme="thanos"] .actions button:active {
+  transform: translateY(1px);
+}
+
+html[data-theme="thanos"] .input-actions button:focus-visible,
+html[data-theme="thanos"] .card button:focus-visible,
+html[data-theme="thanos"] .actions button:focus-visible {
+  outline: 2px solid var(--thanos-gold);
+  outline-offset: 2px;
+}
+
+/* ---------- SECONDARY BUTTON ---------- */
+
+html[data-theme="thanos"] .input-actions button.secondary {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(26, 11, 46, 0.98),
+      rgba(17, 13, 28, 0.98)
+    );
+  color: var(--avc-muted);
+}
+
+/* ---------- LEGEND ---------- */
+
+html[data-theme="thanos"] .legend {
+  position: relative;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(33, 23, 52, 0.9),
+      rgba(17, 13, 28, 0.94)
+    );
+  border-color: var(--avc-border);
+  color: var(--avc-muted);
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.28);
+}
+
+html[data-theme="thanos"] .legend b {
+  color: var(--thanos-gold);
+}
+
+/* ---------- SUMMARY / STATS ---------- */
+
+html[data-theme="thanos"] .summary {
+  filter: drop-shadow(0 0 18px rgba(186, 113, 244, 0.08));
+}
+
+html[data-theme="thanos"] .stat {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(48, 34, 72, 0.92),
+      rgba(24, 16, 39, 0.96)
+    );
+  border-color: var(--avc-border);
+}
+
+/* ---------- FUTURE PREDICTOR TARGET AREA ---------- */
+
+html[data-theme="thanos"] .target-box {
+  background:
+    rgba(17, 13, 28, 0.58);
+  border-color: var(--avc-line);
+}
+
+html[data-theme="thanos"] .target-label {
+  color: var(--thanos-gold);
+}
+
+html[data-theme="thanos"] .target-select,
+html[data-theme="thanos"] .custom-target {
+  background-color: rgba(17, 13, 28, 0.88);
+  border-color: var(--avc-border);
+  color: var(--avc-text);
+}
+
+/* ---------- THanos SYMBOL ON THE THEME TOGGLE ---------- */
+
+html[data-theme="thanos"] .theme-toggle__core {
+  background:
+    url("assets/themes/thanos/thanos-symbol.svg")
+      center / 72% 72% no-repeat,
+    radial-gradient(
+      circle,
+      rgba(197, 160, 89, 0.22),
+      rgba(59, 21, 102, 0.9)
+    );
+  border-color: var(--thanos-gold);
+  box-shadow:
+    0 0 18px rgba(186, 113, 244, 0.24),
+    inset 0 0 14px rgba(197, 160, 89, 0.12);
+}
+
+/* ---------- CELESTIAL MARKINGS ---------- */
+
+html[data-theme="thanos"] .container {
+  position: relative;
+}
+
+html[data-theme="thanos"] .container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    url("assets/themes/thanos/celestial-markings.svg")
+    center / 100% 100% no-repeat;
+  opacity: 0.10;
+}
+
+/* ---------- REDUCED MOTION ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="thanos"] .input-actions button::after,
+  html[data-theme="thanos"] .card button::after,
+  html[data-theme="thanos"] .actions button::after {
+    transition: none;
+  }
+}
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 700px) {
+  html[data-theme="thanos"] .input-panel::before,
+  html[data-theme="thanos"] .card::before {
+    opacity: 0.42;
+  }
+
+  html[data-theme="thanos"] .container::after {
+    opacity: 0.06;
+  }
+}
+
+/* =========================================================
+   THANOS — ASSET FIT / BUTTON FRAME FIX
+   ========================================================= */
+
+html[data-theme="thanos"]
+.input-actions button,
+html[data-theme="thanos"]
+.card button,
+html[data-theme="thanos"]
+.actions button {
+
+  /* Keep the actual button dimensions authoritative */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Frame must occupy the COMPLETE button box */
+html[data-theme="thanos"]
+.input-actions button::before,
+html[data-theme="thanos"]
+.card button::before,
+html[data-theme="thanos"]
+.actions button::before {
+
+  inset: 0;
+  width: 100%;
+  height: 100%;
+
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  transform: none;
+}
+
+/* Energy layer must ALSO occupy the complete button */
+html[data-theme="thanos"]
+.input-actions button::after,
+html[data-theme="thanos"]
+.card button::after,
+html[data-theme="thanos"]
+.actions button::after {
+
+  inset: 0;
+  width: 100%;
+  height: 100%;
+
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  transform: none;
+}
+
+/* Don't let old button pseudo-elements create weird offsets */
+html[data-theme="thanos"]
+.input-actions button::before,
+html[data-theme="thanos"]
+.input-actions button::after,
+html[data-theme="thanos"]
+.card button::before,
+html[data-theme="thanos"]
+.card button::after,
+html[data-theme="thanos"]
+.actions button::before,
+html[data-theme="thanos"]
+.actions button::after {
+
+  box-sizing: border-box;
+  margin: 0;
+}
+
+/* Hover energy should stay aligned with the button */
+html[data-theme="thanos"]
+.input-actions button:hover::after,
+html[data-theme="thanos"]
+.card button:hover::after,
+html[data-theme="thanos"]
+.actions button:hover::after {
+
+  opacity: 0.75;
+  transform: none;
+}
+
+/* =========================================================
+   THANOS — UNIVERSAL BUTTON FRAME
+   ========================================================= */
+
+html[data-theme="thanos"] .panel > button:not(.theme-toggle),
+html[data-theme="thanos"] .run {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 0 !important;
+  background:
+    linear-gradient(
+      135deg,
+      #3b1566 0%,
+      #241438 52%,
+      #170d25 100%
+    ) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(197,160,89,.55),
+    0 6px 18px rgba(0,0,0,.32),
+    0 0 18px rgba(186,113,244,.10) !important;
+}
+
+/* Actual metallic frame */
+html[data-theme="thanos"] .panel > button:not(.theme-toggle)::before,
+html[data-theme="thanos"] .run::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  background-image:
+    url("assets/themes/thanos/infinity-button-frame.svg");
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+
+  /* Compensates for the small transparent margin inside the SVG */
+  transform: scale(1.045);
+  transform-origin: center;
+}
+
+/* Active energy */
+html[data-theme="thanos"] .panel > button:not(.theme-toggle)::after,
+html[data-theme="thanos"] .run::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  background-image:
+    url("assets/themes/thanos/button-energy-active.svg");
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+
+  transform: scale(1.045);
+  opacity: 0;
+  transition:
+    opacity .2s ease,
+    transform .2s ease;
+}
+
+/* Hover */
+html[data-theme="thanos"] .panel > button:not(.theme-toggle):hover,
+html[data-theme="thanos"] .run:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 0 0 1px rgba(197,160,89,.85),
+    0 8px 22px rgba(0,0,0,.4),
+    0 0 26px rgba(186,113,244,.18) !important;
+}
+
+html[data-theme="thanos"] .panel > button:not(.theme-toggle):hover::after,
+html[data-theme="thanos"] .run:hover::after {
+  opacity: .72;
+  transform: scale(1.045);
+}
+
+/* Press */
+html[data-theme="thanos"] .panel > button:not(.theme-toggle):active,
+html[data-theme="thanos"] .run:active {
+  transform: translateY(1px) scale(.985);
+}
+
+/* Keyboard focus */
+html[data-theme="thanos"] .panel > button:not(.theme-toggle):focus-visible,
+html[data-theme="thanos"] .run:focus-visible {
+  outline: 2px solid var(--thanos-gold);
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   THANOS — SKIP SIMULATOR
+   ========================================================= */
+
+html[data-theme="thanos"] .subject-info .stat {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(48,34,72,.95),
+      rgba(24,16,39,.96)
+    ) !important;
+  border: 1px solid rgba(146,112,181,.65);
+}
+
+html[data-theme="thanos"] .subject-info .stat::after {
+  content: "";
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  right: -18px;
+  bottom: -18px;
+  border: 1px solid rgba(197,160,89,.22);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+html[data-theme="thanos"] .subject-info .stat small {
+  color: var(--thanos-gold) !important;
+}
+
+html[data-theme="thanos"] .subject-info .stat b {
+  color: var(--avc-text);
+  text-shadow: 0 0 12px rgba(186,113,244,.15);
+}
+
+html[data-theme="thanos"] .result {
+  border: 1px solid rgba(146,112,181,.65);
+  box-shadow:
+    0 15px 38px rgba(0,0,0,.3),
+    0 0 25px rgba(186,113,244,.08);
+}
+
+html[data-theme="thanos"] .result.safe {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(25,70,62,.95),
+      rgba(18,45,40,.95)
+    ) !important;
+}
+
+html[data-theme="thanos"] .result.danger {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(89,34,63,.95),
+      rgba(53,20,38,.95)
+    ) !important;
+}
+
+html[data-theme="thanos"] #aggregateImpact {
+  border-color: var(--avc-line) !important;
+}
+
+
+/* =========================================================
+   THANOS — FUTURE PREDICTOR
+   ========================================================= */
+
+/* ---------- Calendar ---------- */
+
+html[data-theme="thanos"] .calendar .day {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(33,23,52,.96),
+      rgba(17,13,28,.98)
+    ) !important;
+  color: var(--avc-text) !important;
+  border-color: rgba(103,74,134,.65) !important;
+  transition:
+    transform .15s ease,
+    border-color .15s ease,
+    box-shadow .15s ease,
+    background-color .15s ease;
+}
+
+html[data-theme="thanos"] .calendar .day span {
+  color: var(--avc-text) !important;
+}
+
+html[data-theme="thanos"] .calendar .day:hover:not(.disabled):not(.holiday):not(.exam) {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(59,21,102,.95),
+      rgba(33,18,54,.98)
+    ) !important;
+  border-color: var(--thanos-gold) !important;
+  box-shadow:
+    0 0 14px rgba(186,113,244,.16);
+  transform: translateY(-1px);
+}
+
+html[data-theme="thanos"] .calendar .day.today {
+  box-shadow:
+    inset 0 0 0 2px var(--thanos-gold),
+    0 0 15px rgba(197,160,89,.12);
+}
+
+/* Selected vacation day */
+html[data-theme="thanos"] .calendar .day.selected,
+html[data-theme="thanos"] .calendar .day.selected span {
+  background:
+    linear-gradient(
+      135deg,
+      #c79a3e,
+      #805baf
+    ) !important;
+  color: #fff !important;
+  border-color: var(--thanos-gold) !important;
+  box-shadow:
+    0 0 18px rgba(186,113,244,.20);
+}
+
+/* Locked */
+html[data-theme="thanos"] .calendar .day.disabled,
+html[data-theme="thanos"] .calendar .day.disabled span {
+  background: rgba(17,13,28,.72) !important;
+  color: var(--avc-faint) !important;
+}
+
+/* Holiday */
+html[data-theme="thanos"] .calendar .day.holiday,
+html[data-theme="thanos"] .calendar .day.holiday span {
+  background: rgba(84,68,26,.65) !important;
+  color: var(--thanos-yellow) !important;
+  border-color: rgba(197,160,89,.55) !important;
+}
+
+/* Exam */
+html[data-theme="thanos"] .calendar .day.exam,
+html[data-theme="thanos"] .calendar .day.exam span {
+  background: rgba(89,34,63,.75) !important;
+  color: var(--avc-danger) !important;
+  border-color: rgba(255,158,198,.45) !important;
+}
+
+/* ---------- Calendar navigation ---------- */
+
+html[data-theme="thanos"] .month-buttons button {
+  width: 36px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid rgba(197,160,89,.45) !important;
+  border-radius: 7px;
+  background:
+    linear-gradient(
+      135deg,
+      #3b1566,
+      #1a0b2e
+    ) !important;
+  color: var(--thanos-gold) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(186,113,244,.12),
+    0 4px 12px rgba(0,0,0,.25);
+}
+
+html[data-theme="thanos"] .month-buttons button:hover {
+  border-color: var(--thanos-gold) !important;
+  box-shadow:
+    0 0 16px rgba(186,113,244,.18);
+}
+
+/* ---------- Weekday headings ---------- */
+
+html[data-theme="thanos"] .weekdays div {
+  color: var(--thanos-gold) !important;
+  letter-spacing: .08em;
+}
+
+/* ---------- Holiday information ---------- */
+
+html[data-theme="thanos"] .holiday-box {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(48,34,72,.82),
+      rgba(24,16,39,.92)
+    ) !important;
+  border-color: rgba(197,160,89,.38) !important;
+}
+
+html[data-theme="thanos"] .holiday-box b {
+  color: var(--thanos-gold);
+}
+
+/* ---------- Selected vacation list ---------- */
+
+html[data-theme="thanos"] .selected-date {
+  border-color: var(--avc-line) !important;
+}
+
+html[data-theme="thanos"] .selected-date span:first-child {
+  color: var(--avc-text) !important;
+}
+
+/* ---------- Predictor stats ---------- */
+
+html[data-theme="thanos"] .hero .stat {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(48,34,72,.95),
+      rgba(24,16,39,.97)
+    ) !important;
+  border-color: rgba(146,112,181,.65) !important;
+}
+
+html[data-theme="thanos"] .hero .stat small {
+  color: var(--thanos-gold) !important;
+}
+
+html[data-theme="thanos"] .hero .stat b {
+  color: var(--avc-text);
+}
+
+/* ---------- Predictor cards ---------- */
+
+html[data-theme="thanos"] .cards .card {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(48,34,72,.95),
+      rgba(20,13,31,.98)
+    ) !important;
+  border-color: rgba(146,112,181,.7) !important;
+}
+
+html[data-theme="thanos"] .cards .card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    url("assets/themes/thanos/cosmic-frame.svg")
+    center / 100% 100% no-repeat;
+  opacity: .48;
+}
+
+html[data-theme="thanos"] .cards .code {
+  color: var(--thanos-gold) !important;
+}
+
+html[data-theme="thanos"] .cards .type {
+  color: var(--avc-muted) !important;
+}
+
+html[data-theme="thanos"] .cards .chart-row {
+  border-color: var(--avc-line) !important;
+}
+
+html[data-theme="thanos"] .cards .metric span {
+  color: var(--avc-muted) !important;
+}
+
+html[data-theme="thanos"] .cards .action-box {
+  background:
+    rgba(17,13,28,.72) !important;
+  border-color: rgba(103,74,134,.5);
+}
+
+/* ---------- Predictor status / roast ---------- */
+
+html[data-theme="thanos"] .status {
+  border: 1px solid rgba(146,112,181,.45);
+  box-shadow:
+    inset 3px 0 var(--thanos-gold),
+    0 0 15px rgba(186,113,244,.05);
+}
+
+html[data-theme="thanos"] .roast {
+  box-shadow:
+    0 8px 22px rgba(0,0,0,.28),
+    0 0 18px rgba(186,113,244,.10);
+}
+
+/* ---------- Predictor empty state ---------- */
+
+html[data-theme="thanos"] .empty {
+  color: var(--avc-faint) !important;
+}
+
+/* =========================================================
+   THANOS — THEME MENU BUTTON FRAME
+   ========================================================= */
+
+html[data-theme="thanos"] .theme-option {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(59, 21, 102, 0.96),
+      rgba(26, 11, 46, 0.98)
+    ) !important;
+
+  border: 0 !important;
+}
+
+/* Metallic Infinity frame */
+html[data-theme="thanos"] .theme-option::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+
+  background-image:
+    url("assets/themes/thanos/infinity-button-frame.svg");
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+
+  pointer-events: none;
+  transform: scale(1.04);
+}
+
+/* Energy layer */
+html[data-theme="thanos"] .theme-option::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+
+  background-image:
+    url("assets/themes/thanos/button-energy-active.svg");
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+/* Keep actual menu content above the SVG */
+html[data-theme="thanos"] .theme-option > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hover */
+html[data-theme="thanos"] .theme-option:hover::after {
+  opacity: 0.55;
+}
+
+/* Selected */
+html[data-theme="thanos"] .theme-option[aria-checked="true"]::after {
+  opacity: 0.35;
+}
+
+html[data-theme="thanos"] .theme-option[aria-checked="true"] {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(59, 21, 102, 0.98),
+      rgba(48, 30, 72, 0.98)
+    ) !important;
+  color: var(--avc-text);
+}
+
+/* Don't let the menu animation/hover transform distort the frame */
+html[data-theme="thanos"] .theme-option:hover {
+  transform: translateX(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="thanos"] .theme-option::after {
     transition: none;
   }
 }
