@@ -7,6 +7,8 @@
   <link rel="icon" type="image/png" href="icon-512.png">
   <link rel="apple-touch-icon" href="icon-512.png">
   <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#f4f7fb">
+  <script>!function(){try{var t=localStorage.getItem("attendanceVibeTheme")}catch(e){}document.documentElement.dataset.theme=t||((matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"night":"light")}();</script>
   <style>
     *{box-sizing:border-box}
     body{
@@ -213,7 +215,8 @@
         h1{font-size:26px}
         .summary{width:100%}.stat{flex:1;min-width:110px}
     }
-</style>
+ </style>
+  <link rel="stylesheet" href="theme.css">
  </head>
  <body>
   <div class="container">
@@ -262,6 +265,7 @@ Example:
     <b>How the attendance lore works:</b> “Free pass” = maximum future hours you can skip while staying at or above your target. “LOCK TF IN” = minimum future hours you need to attend to reach your target. Labs must individually stay at target; lectures only become individually debarred when aggregate is below target. Pick your target, drop the report, and let the math cook. No cap 😭.
    </div>
   </div>
+  <script src="theme.js"></script>
   <script>
 let subjects = [];
 const savedTarget=localStorage.getItem("attendanceVibeTarget");

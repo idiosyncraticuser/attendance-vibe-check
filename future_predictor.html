@@ -10,6 +10,7 @@
     <meta name="theme-color" content="#172033" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <script>!function(){try{var t=localStorage.getItem("attendanceVibeTheme")}catch(e){}document.documentElement.dataset.theme=t||((matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"night":"light")}();</script>
     <style>
       * {
         box-sizing: border-box;
@@ -575,6 +576,7 @@
     background:#ff7187;
 }
     </style>
+    <link rel="stylesheet" href="theme.css" />
   </head>
   <body>
     <div class="container">
@@ -676,6 +678,7 @@
       <div id="result" class="result"></div>
     </div>
 
+    <script src="theme.js"></script>
     <script>
       // ================================
       // EDIT THIS LIST WHEN COLLEGE ADDS
