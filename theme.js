@@ -29,9 +29,7 @@
     sweep.addEventListener("animationend", () => sweep.remove(), { once: true });
   }
 
-  function apply(theme, persist = true, origin) {
-    const resolved = profiles[theme] ? theme : preferred();
-    animateThemeChange(resolved, origin);
+  function commitTheme(resolved, persist) {
     document.documentElement.dataset.theme = resolved;
     document.documentElement.dataset.themeEffect = profiles[resolved].effect;
     document.documentElement.style.colorScheme = resolved === "light" ? "light" : "dark";
@@ -47,6 +45,35 @@
         option.setAttribute("aria-checked", String(option.dataset.theme === resolved));
       });
     }
+  }
+
+  function captainTransition(resolved, persist) {
+    const overlay = document.createElement("div");
+    overlay.className = "captain-transition";
+    overlay.setAttribute("aria-hidden", "true");
+    overlay.innerHTML = `<div class="captain-transition__grid"></div><div class="captain-transition__rings"><i></i><i></i><i></i></div><div class="captain-transition__trails"></div><img class="captain-transition__shield" src="assets/themes/captain/master-shield.svg" alt=""><div class="captain-transition__impact"></div>`;
+    document.body.classList.add("theme-transitioning");
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => overlay.classList.add("is-active"));
+    window.setTimeout(() => {
+      commitTheme(resolved, persist);
+      overlay.classList.add("is-revealing");
+    }, 760);
+    window.setTimeout(() => {
+      overlay.remove();
+      document.body.classList.remove("theme-transitioning");
+    }, 1320);
+  }
+
+  function apply(theme, persist = true, origin) {
+    const resolved = profiles[theme] ? theme : preferred();
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (resolved === "captain-america" && current() !== resolved && origin && !reduced) {
+      captainTransition(resolved, persist);
+      return;
+    }
+    animateThemeChange(resolved, origin);
+    commitTheme(resolved, persist);
   }
 
   function mount() {
