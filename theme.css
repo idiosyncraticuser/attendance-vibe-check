@@ -3106,3 +3106,197 @@ body.theme-transitioning > :not(.captain-transition):not(.iron-transition) {
     animation: none !important;
   }
 }
+/* =========================================================
+   THANOS — COSMIC UI ASSET LAYER
+   ========================================================= */
+
+/* ---------- Cosmic background ---------- */
+
+html[data-theme="thanos"] body {
+  background:
+    url("assets/themes/thanos/celestial-markings.svg") center / cover no-repeat fixed,
+    url("assets/themes/thanos/cosmic-grid.svg") center / 1024px 1024px repeat,
+    var(--avc-bg);
+}
+
+html[data-theme="thanos"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(186, 113, 244, 0.08),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 20% 80%,
+      rgba(197, 160, 89, 0.035),
+      transparent 32%
+    );
+}
+
+/* ---------- Cosmic frame around major panels ---------- */
+
+html[data-theme="thanos"] .panel {
+  position: relative;
+  isolation: isolate;
+}
+
+html[data-theme="thanos"] .panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    url("assets/themes/thanos/cosmic-frame.svg")
+    center / 100% 100% no-repeat;
+  opacity: 0.72;
+}
+
+/* ---------- Section divider ---------- */
+
+html[data-theme="thanos"] .section-title::after {
+  content: "";
+  display: block;
+  width: min(100%, 560px);
+  height: 32px;
+  margin: 8px auto 0;
+  background:
+    url("assets/themes/thanos/cosmic-divider.svg")
+    center / 100% 100% no-repeat;
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+/* ---------- Buttons ---------- */
+
+html[data-theme="thanos"] button,
+html[data-theme="thanos"] .btn {
+  position: relative;
+  isolation: isolate;
+}
+
+html[data-theme="thanos"] button::before,
+html[data-theme="thanos"] .btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    url("assets/themes/thanos/infinity-button-frame.svg")
+    center / 100% 100% no-repeat;
+  opacity: 0.7;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+html[data-theme="thanos"] button::after,
+html[data-theme="thanos"] .btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    url("assets/themes/thanos/button-energy-active.svg")
+    center / 100% 100% no-repeat;
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+html[data-theme="thanos"] button:hover::before,
+html[data-theme="thanos"] .btn:hover::before {
+  opacity: 0.95;
+  transform: scale(1.015);
+}
+
+html[data-theme="thanos"] button:hover::after,
+html[data-theme="thanos"] .btn:hover::after {
+  opacity: 0.55;
+  transform: scale(1);
+}
+
+html[data-theme="thanos"] button:focus-visible::after,
+html[data-theme="thanos"] .btn:focus-visible::after {
+  opacity: 0.75;
+  transform: scale(1);
+}
+
+/* ---------- Theme control ---------- */
+
+html[data-theme="thanos"] .theme-toggle__core {
+  background:
+    url("assets/themes/thanos/thanos-symbol.svg")
+    center / 70% 70% no-repeat,
+    radial-gradient(
+      circle,
+      rgba(197, 160, 89, 0.25),
+      rgba(59, 21, 102, 0.8)
+    );
+  border-color: var(--thanos-gold);
+  box-shadow:
+    0 0 18px rgba(186, 113, 244, 0.25),
+    inset 0 0 14px rgba(197, 160, 89, 0.12);
+}
+
+/* ---------- Subtle Thanos symbol decoration ---------- */
+
+html[data-theme="thanos"] .theme-menu__heading::before {
+  content: "";
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  margin-right: 8px;
+  vertical-align: -6px;
+  background:
+    url("assets/themes/thanos/thanos-symbol.svg")
+    center / contain no-repeat;
+  opacity: 0.85;
+}
+
+/* ---------- Cosmic ambient markings ---------- */
+
+html[data-theme="thanos"] main::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    url("assets/themes/thanos/celestial-markings.svg")
+    center / cover no-repeat;
+  opacity: 0.16;
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 700px) {
+  html[data-theme="thanos"] .panel::before {
+    opacity: 0.5;
+  }
+
+  html[data-theme="thanos"] .section-title::after {
+    width: 92%;
+  }
+
+  html[data-theme="thanos"] button::before,
+  html[data-theme="thanos"] .btn::before {
+    opacity: 0.55;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="thanos"] button::before,
+  html[data-theme="thanos"] button::after,
+  html[data-theme="thanos"] .btn::before,
+  html[data-theme="thanos"] .btn::after {
+    transition: none;
+  }
+}
