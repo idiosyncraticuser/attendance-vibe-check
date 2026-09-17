@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%" aria-hidden="true" id="gauntlet-energy">
+  <defs>
+    <style>
+      :root {
+        --thanos-violet: #1A0B2E;
+        --thanos-purple: #3B1566;
+        --thanos-gold: #C5A059;
+        --thanos-white: #FFFFFF;
+        --thanos-power: #A020F0;
+        --thanos-blue: #00BFFF;
+        --thanos-red: #FF2400;
+        --thanos-yellow: #FFD700;
+        --thanos-green: #00FF7F;
+        --thanos-orange: #FF7F00;
+      }
+    </style>
+    <linearGradient id="ge-metal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="var(--thanos-gold)" />
+      <stop offset="50%" stop-color="var(--thanos-purple)" />
+      <stop offset="100%" stop-color="var(--thanos-violet)" />
+    </linearGradient>
+  </defs>
+
+  <g id="carapace">
+    <!-- Main Hand Plate -->
+    <path d="M 160,200 L 352,200 L 380,320 L 330,440 L 182,440 L 132,320 Z" fill="url(#ge-metal)" stroke="var(--thanos-gold)" stroke-width="3" />
+    <!-- Wrist Guard -->
+    <path d="M 150,440 L 362,440 L 380,500 L 132,500 Z" fill="var(--thanos-violet)" stroke="var(--thanos-gold)" stroke-width="2" />
+  </g>
+
+  <g id="articulations" stroke="var(--thanos-gold)" stroke-width="2" fill="none">
+    <!-- Finger Segment Structures -->
+    <path d="M 160,200 L 150,110 L 175,100 L 190,195" />
+    <path d="M 210,195 L 210,80 L 235,80 L 240,195" />
+    <path d="M 260,195 L 265,70 L 290,70 L 290,195" />
+    <path d="M 310,195 L 320,90 L 345,95 L 340,200" />
+    <!-- Thumb Segment -->
+    <path d="M 132,320 L 60,280 L 50,305 L 120,350" />
+  </g>
+
+  <g id="stone-sockets">
+    <!-- Back of Hand: Mind Stone (Yellow) -->
+    <polygon points="256,290 280,320 256,350 232,320" fill="var(--thanos-yellow)" stroke="var(--thanos-white)" stroke-width="1.5" />
+    <!-- Knuckle Sockets: Power, Space, Reality, Time -->
+    <circle cx="175" cy="180" r="10" fill="var(--thanos-power)" stroke="var(--thanos-white)" stroke-width="1" />
+    <circle cx="225" cy="175" r="10" fill="var(--thanos-blue)" stroke="var(--thanos-white)" stroke-width="1" />
+    <circle cx="275" cy="175" r="10" fill="var(--thanos-red)" stroke="var(--thanos-white)" stroke-width="1" />
+    <circle cx="325" cy="180" r="10" fill="var(--thanos-green)" stroke="var(--thanos-white)" stroke-width="1" />
+    <!-- Thumb Socket: Soul -->
+    <circle cx="80" cy="300" r="10" fill="var(--thanos-orange)" stroke="var(--thanos-white)" stroke-width="1" />
+  </g>
+
+  <g id="energy-aura" fill="none" stroke="var(--thanos-white)" stroke-width="1.5" opacity="0.6">
+    <path d="M 140,200 C 100,250 100,350 120,440" stroke-dasharray="4 4" />
+    <path d="M 372,200 C 412,250 412,350 392,440" stroke-dasharray="4 4" />
+  </g>
+</svg>

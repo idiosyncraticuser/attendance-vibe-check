@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" width="100%" height="100%" aria-hidden="true" id="infinity-button-frame">
+  <defs>
+    <style>
+      :root {
+        --thanos-space: #07050E;
+        --thanos-violet: #1A0B2E;
+        --thanos-purple: #3B1566;
+        --thanos-gold: #C5A059;
+      }
+    </style>
+    <linearGradient id="ibf-metal" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="var(--thanos-gold)" />
+      <stop offset="50%" stop-color="var(--thanos-purple)" />
+      <stop offset="100%" stop-color="var(--thanos-violet)" />
+    </linearGradient>
+  </defs>
+
+  <g id="chassis">
+    <path d="M 40,16 L 760,16 L 784,40 L 784,160 L 760,184 L 40,184 L 16,160 L 16,40 Z" fill="var(--thanos-space)" stroke="url(#ibf-metal)" stroke-width="4" />
+    <path d="M 48,28 L 752,28 L 772,48 L 772,152 L 752,172 L 48,172 L 28,152 L 28,48 Z" fill="var(--thanos-violet)" stroke="var(--thanos-purple)" stroke-width="2" />
+  </g>
+
+  <g id="bezel-gold" stroke="var(--thanos-gold)" stroke-width="2" fill="none">
+    <path d="M 40,16 L 80,16 M 760,16 L 720,16 M 40,184 L 80,184 M 760,184 L 720,184" />
+  </g>
+
+  <g id="corner-clasps" fill="var(--thanos-gold)">
+    <polygon points="16,40 32,16 32,48" />
+    <polygon points="784,40 768,16 768,48" />
+    <polygon points="16,160 32,184 32,152" />
+    <polygon points="784,160 768,184 768,152" />
+  </g>
+</svg>

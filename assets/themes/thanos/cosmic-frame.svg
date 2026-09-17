@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="100%" height="100%" aria-hidden="true" id="cosmic-frame">
+  <defs>
+    <style>
+      :root {
+        --thanos-violet: #1A0B2E;
+        --thanos-purple: #3B1566;
+        --thanos-gold: #C5A059;
+        --thanos-white: #FFFFFF;
+      }
+    </style>
+  </defs>
+
+  <g id="frame-border" fill="none" stroke="var(--thanos-purple)" stroke-width="2">
+    <rect x="32" y="32" width="960" height="960" rx="8" />
+    <rect x="48" y="48" width="928" height="928" rx="4" stroke="var(--thanos-gold)" stroke-width="1" opacity="0.4" stroke-dasharray="20 10" />
+  </g>
+
+  <g id="corner-plates" fill="var(--thanos-violet)" stroke="var(--thanos-gold)" stroke-width="2">
+    <polygon points="32,96 96,32 32,32" />
+    <polygon points="992,96 928,32 992,32" />
+    <polygon points="32,928 96,992 32,992" />
+    <polygon points="992,928 928,992 992,992" />
+  </g>
+
+  <g id="gold-filigree" stroke="var(--thanos-gold)" stroke-width="2" fill="none">
+    <path d="M 120,32 L 200,32 M 32,120 L 32,200" />
+    <path d="M 904,32 L 824,32 M 992,120 L 992,200" />
+    <path d="M 120,992 L 200,992 M 32,904 L 32,824" />
+    <path d="M 904,992 L 824,992 M 992,904 L 992,824" />
+  </g>
+
+  <g id="energy-accents" fill="var(--thanos-white)">
+    <circle cx="96" cy="32" r="3" />
+    <circle cx="928" cy="32" r="3" />
+    <circle cx="96" cy="992" r="3" />
+    <circle cx="928" cy="992" r="3" />
+  </g>
+</svg>

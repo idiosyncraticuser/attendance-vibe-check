@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="100%" height="100%" aria-hidden="true" id="cosmic-ring">
+  <defs>
+    <style>
+      :root {
+        --thanos-violet: #1A0B2E;
+        --thanos-purple: #3B1566;
+        --thanos-gold: #C5A059;
+        --thanos-white: #FFFFFF;
+      }
+    </style>
+  </defs>
+
+  <g id="ring-base" fill="none">
+    <circle cx="512" cy="512" r="400" stroke="var(--thanos-purple)" stroke-width="12" opacity="0.4" />
+    <circle cx="512" cy="512" r="400" stroke="var(--thanos-gold)" stroke-width="2" stroke-dasharray="40 20 5 20" />
+    <circle cx="512" cy="512" r="380" stroke="var(--thanos-violet)" stroke-width="6" />
+    <circle cx="512" cy="512" r="370" stroke="var(--thanos-gold)" stroke-width="1" stroke-dasharray="4 8" />
+  </g>
+
+  <g id="energy-ticks" stroke="var(--thanos-gold)" stroke-width="2" opacity="0.75">
+    <path d="M 512,100 L 512,124 M 512,900 L 512,924 M 100,512 L 124,512 M 900,512 L 924,512" />
+    <path d="M 220,220 L 238,238 M 804,804 L 786,786 M 220,804 L 238,786 M 804,220 L 786,238" />
+  </g>
+
+  <g id="radial-rays" stroke="var(--thanos-purple)" stroke-width="1" opacity="0.5">
+    <line x1="512" y1="512" x2="512" y2="130" stroke-dasharray="10 10" />
+    <line x1="512" y1="512" x2="894" y2="512" stroke-dasharray="10 10" />
+    <line x1="512" y1="512" x2="512" y2="894" stroke-dasharray="10 10" />
+    <line x1="512" y1="512" x2="130" y2="512" stroke-dasharray="10 10" />
+  </g>
+
+  <g id="celestial-nodes" fill="var(--thanos-white)">
+    <circle cx="512" cy="112" r="5" />
+    <circle cx="912" cy="512" r="5" />
+    <circle cx="512" cy="912" r="5" />
+    <circle cx="112" cy="512" r="5" />
+  </g>
+</svg>

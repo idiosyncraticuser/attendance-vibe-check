@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="100%" height="100%" aria-hidden="true" id="snap-shockwave">
+  <defs>
+    <style>
+      :root {
+        --thanos-purple: #3B1566;
+        --thanos-gold: #C5A059;
+        --thanos-white: #FFFFFF;
+      }
+    </style>
+    <radialGradient id="sw-core" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="var(--thanos-white)" />
+      <stop offset="20%" stop-color="var(--thanos-gold)" />
+      <stop offset="60%" stop-color="var(--thanos-purple)" opacity="0.6" />
+      <stop offset="100%" stop-color="rgba(0,0,0,0)" />
+    </radialGradient>
+  </defs>
+
+  <g id="impact-core">
+    <circle cx="512" cy="512" r="180" fill="url(#sw-core)" />
+    <circle cx="512" cy="512" r="30" fill="var(--thanos-white)" />
+  </g>
+
+  <g id="inner-shockwave" fill="none" stroke="var(--thanos-white)" stroke-width="4">
+    <circle cx="512" cy="512" r="280" />
+    <polygon points="512,200 540,480 824,512 540,544 512,824 484,544 200,512 484,480" fill="none" stroke="var(--thanos-gold)" stroke-width="2" />
+  </g>
+
+  <g id="outer-fracture-rings" fill="none" stroke="var(--thanos-purple)" stroke-width="3">
+    <path d="M 112,512 A 400,400 0 0,1 912,512" stroke-dasharray="120 20 40 20" />
+    <path d="M 912,512 A 400,400 0 0,1 112,512" stroke-dasharray="80 30 100 30" />
+    <circle cx="512" cy="512" r="470" stroke="var(--thanos-gold)" stroke-width="1.5" stroke-dasharray="6 12" />
+  </g>
+
+  <g id="ejected-spikes" stroke="var(--thanos-white)" stroke-width="2">
+    <line x1="512" y1="512" x2="990" y2="120" />
+    <line x1="512" y1="512" x2="90" y2="900" />
+    <line x1="512" y1="512" x2="900" y2="900" />
+    <line x1="512" y1="512" x2="120" y2="120" />
+  </g>
+</svg>

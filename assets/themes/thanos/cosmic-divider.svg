@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 64" width="100%" height="100%" aria-hidden="true" id="cosmic-divider">
+  <defs>
+    <style>
+      :root {
+        --thanos-purple: #3B1566;
+        --thanos-gold: #C5A059;
+        --thanos-white: #FFFFFF;
+      }
+    </style>
+    <linearGradient id="cd-fade-left" x1="100%" y1="0%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="var(--thanos-gold)" />
+      <stop offset="100%" stop-color="var(--thanos-purple)" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="cd-fade-right" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="var(--thanos-gold)" />
+      <stop offset="100%" stop-color="var(--thanos-purple)" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <g id="divider-lines" stroke-width="2">
+    <line x1="40" y1="32" x2="360" y2="32" stroke="url(#cd-fade-left)" />
+    <line x1="440" y1="32" x2="760" y2="32" stroke="url(#cd-fade-right)" />
+    <line x1="120" y1="24" x2="360" y2="24" stroke="var(--thanos-purple)" stroke-width="1" opacity="0.6" />
+    <line x1="440" y1="24" x2="680" y2="24" stroke="var(--thanos-purple)" stroke-width="1" opacity="0.6" />
+  </g>
+
+  <g id="center-emblem">
+    <polygon points="400,12 420,32 400,52 380,32" fill="var(--thanos-purple)" stroke="var(--thanos-gold)" stroke-width="2" />
+    <circle cx="400" cy="32" r="5" fill="var(--thanos-white)" />
+  </g>
+
+  <g id="accent-nodes" fill="var(--thanos-gold)">
+    <circle cx="360" cy="32" r="3" />
+    <circle cx="440" cy="32" r="3" />
+  </g>
+</svg>

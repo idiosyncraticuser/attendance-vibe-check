@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="100%" height="100%" aria-hidden="true" id="thanos-symbol">
+  <defs>
+    <style>
+      :root {
+        --thanos-violet: #1A0B2E;
+        --thanos-purple: #3B1566;
+        --thanos-gold: #C5A059;
+        --thanos-white: #FFFFFF;
+      }
+    </style>
+  </defs>
+
+  <g id="symbol-frame" fill="none" stroke="var(--thanos-gold)" stroke-width="2">
+    <circle cx="128" cy="128" r="112" />
+    <circle cx="128" cy="128" r="96" stroke-dasharray="12 6" opacity="0.6" />
+  </g>
+
+  <g id="balance-crests" fill="var(--thanos-violet)" stroke="var(--thanos-gold)" stroke-width="2">
+    <!-- Top Apex Crest -->
+    <polygon points="128,32 168,100 88,100" />
+    <!-- Bottom Inverted Crest -->
+    <polygon points="128,224 168,156 88,156" fill="var(--thanos-purple)" />
+  </g>
+
+  <g id="core-gem">
+    <polygon points="128,110 146,128 128,146 110,128" fill="var(--thanos-gold)" stroke="var(--thanos-white)" stroke-width="1.5" />
+    <circle cx="128" cy="128" r="3" fill="var(--thanos-white)" />
+  </g>
+</svg>

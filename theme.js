@@ -128,6 +128,82 @@ function ironManTransition(resolved, persist) {
     document.body.classList.remove("theme-transitioning");
   }, 1380);
 }
+function thanosTransition(resolved, persist) {
+  const overlay = document.createElement("div");
+  overlay.className = "thanos-transition";
+  overlay.setAttribute("aria-hidden", "true");
+
+  overlay.innerHTML = `
+    <div class="thanos-transition__particles"></div>
+
+    <img
+      class="thanos-transition__distortion"
+      src="assets/themes/thanos/reality-distortion.svg"
+      alt=""
+    >
+
+    <img
+      class="thanos-transition__orbit"
+      src="assets/themes/thanos/infinity-orbit.svg"
+      alt=""
+    >
+
+    <img
+      class="thanos-transition__ring"
+      src="assets/themes/thanos/cosmic-ring.svg"
+      alt=""
+    >
+
+    <img
+      class="thanos-transition__stones"
+      src="assets/themes/thanos/infinity-stones.svg"
+      alt=""
+    >
+
+    <img
+      class="thanos-transition__gauntlet"
+      src="assets/themes/thanos/gauntlet-energy.svg"
+      alt=""
+    >
+
+    <img
+      class="thanos-transition__focus"
+      src="assets/themes/thanos/snap-focus.svg"
+      alt=""
+    >
+
+    <img
+      class="thanos-transition__shockwave"
+      src="assets/themes/thanos/snap-shockwave.svg"
+      alt=""
+    >
+
+    <img
+      class="thanos-transition__crack"
+      src="assets/themes/thanos/reality-crack.svg"
+      alt=""
+    >
+
+    <div class="thanos-transition__flash"></div>
+  `;
+
+  document.body.classList.add("theme-transitioning");
+  document.body.appendChild(overlay);
+
+  requestAnimationFrame(() => {
+    overlay.classList.add("is-active");
+  });
+
+  window.setTimeout(() => {
+    commitTheme(resolved, persist);
+    overlay.classList.add("is-revealing");
+  }, 900);
+
+  window.setTimeout(() => {
+    overlay.remove();
+    document.body.classList.remove("theme-transitioning");
+  }, 1500);
+}
     
 
   function apply(theme, persist = true, origin) {
@@ -141,6 +217,10 @@ function ironManTransition(resolved, persist) {
       ironManTransition(resolved, persist);
       return;
     }
+    if (resolved === "thanos" && current() !== resolved && origin && !reduced) {
+  thanosTransition(resolved, persist);
+  return;
+}
     animateThemeChange(resolved, origin);
     commitTheme(resolved, persist);
   }

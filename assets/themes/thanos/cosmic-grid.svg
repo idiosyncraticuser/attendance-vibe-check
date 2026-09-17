@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="100%" height="100%" aria-hidden="true" id="cosmic-grid">
+  <defs>
+    <style>
+      :root {
+        --thanos-purple: #3B1566;
+      }
+    </style>
+    <pattern id="cg-tile" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M 64 0 L 0 0 0 64" fill="none" stroke="var(--thanos-purple)" stroke-width="1" opacity="0.1" />
+      <path d="M 0 0 L 64 64" fill="none" stroke="var(--thanos-purple)" stroke-width="0.5" opacity="0.05" />
+    </pattern>
+  </defs>
+
+  <g id="grid-pattern-layer">
+    <rect width="1024" height="1024" fill="url(#cg-tile)" />
+  </g>
+</svg>

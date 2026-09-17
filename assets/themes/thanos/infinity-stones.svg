@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%" aria-hidden="true" id="infinity-stones">
+  <defs>
+    <style>
+      :root {
+        --thanos-space: #07050E;
+        --thanos-violet: #1A0B2E;
+        --thanos-purple: #3B1566;
+        --thanos-gold: #C5A059;
+        --thanos-power: #A020F0;
+        --thanos-blue: #00BFFF;
+        --thanos-red: #FF2400;
+        --thanos-yellow: #FFD700;
+        --thanos-green: #00FF7F;
+        --thanos-orange: #FF7F00;
+        --thanos-white: #FFFFFF;
+      }
+    </style>
+    <radialGradient id="is-core-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="var(--thanos-white)" />
+      <stop offset="40%" stop-color="var(--thanos-gold)" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="var(--thanos-violet)" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Central Celestial Structure -->
+  <g id="central-lattice" stroke="var(--thanos-gold)" stroke-width="1.5" fill="none" opacity="0.6">
+    <circle cx="256" cy="256" r="160" stroke-dasharray="8 4" />
+    <polygon points="256,96 394,176 394,336 256,416 118,336 118,176" />
+    <polygon points="256,120 373,326 139,326" stroke-dasharray="4 4" />
+    <circle cx="256" cy="256" r="60" fill="url(#is-core-glow)" stroke="var(--thanos-gold)" stroke-width="2" />
+  </g>
+
+  <!-- Stone 1: Power (Purple) - Top (256, 96) -->
+  <g id="stone-power" transform="translate(256, 96)">
+    <circle cx="0" cy="0" r="28" fill="var(--thanos-power)" opacity="0.3" />
+    <polygon points="0,-18 14,-6 10,14 -10,14 -14,-6" fill="var(--thanos-power)" stroke="var(--thanos-white)" stroke-width="1.5" />
+    <polygon points="0,-10 8,-3 5,8 -5,8 -8,-3" fill="var(--thanos-white)" opacity="0.7" />
+  </g>
+
+  <!-- Stone 2: Space (Blue) - Top Right (394, 176) -->
+  <g id="stone-space" transform="translate(394, 176)">
+    <circle cx="0" cy="0" r="28" fill="var(--thanos-blue)" opacity="0.3" />
+    <polygon points="0,-16 16,0 0,16 -16,0" fill="var(--thanos-blue)" stroke="var(--thanos-white)" stroke-width="1.5" />
+    <polygon points="0,-8 8,0 0,8 -8,0" fill="var(--thanos-white)" opacity="0.7" />
+  </g>
+
+  <!-- Stone 3: Reality (Red) - Bottom Right (394, 336) -->
+  <g id="stone-reality" transform="translate(394, 336)">
+    <circle cx="0" cy="0" r="28" fill="var(--thanos-red)" opacity="0.3" />
+    <polygon points="-12,-12 12,-12 16,12 -16,12" fill="var(--thanos-red)" stroke="var(--thanos-white)" stroke-width="1.5" />
+    <polygon points="-6,-6 6,-6 8,6 -8,6" fill="var(--thanos-white)" opacity="0.7" />
+  </g>
+
+  <!-- Stone 4: Mind (Yellow) - Bottom (256, 416) -->
+  <g id="stone-mind" transform="translate(256, 416)">
+    <circle cx="0" cy="0" r="32" fill="var(--thanos-yellow)" opacity="0.3" />
+    <polygon points="0,-22 16,-8 10,18 -10,18 -16,-8" fill="var(--thanos-yellow)" stroke="var(--thanos-white)" stroke-width="1.5" />
+    <polygon points="0,-12 8,-4 5,10 -5,10 -8,-4" fill="var(--thanos-white)" opacity="0.8" />
+  </g>
+
+  <!-- Stone 5: Time (Green) - Bottom Left (118, 336) -->
+  <g id="stone-time" transform="translate(118, 336)">
+    <circle cx="0" cy="0" r="28" fill="var(--thanos-green)" opacity="0.3" />
+    <circle cx="0" cy="0" r="14" fill="var(--thanos-green)" stroke="var(--thanos-white)" stroke-width="1.5" />
+    <polygon points="0,-10 10,0 0,10 -10,0" fill="var(--thanos-white)" opacity="0.7" />
+  </g>
+
+  <!-- Stone 6: Soul (Orange) - Top Left (118, 176) -->
+  <g id="stone-soul" transform="translate(118, 176)">
+    <circle cx="0" cy="0" r="28" fill="var(--thanos-orange)" opacity="0.3" />
+    <polygon points="0,-16 14,-8 14,8 0,16 -14,8 -14,-8" fill="var(--thanos-orange)" stroke="var(--thanos-white)" stroke-width="1.5" />
+    <polygon points="0,-8 7,-4 7,4 0,8 -7,4 -7,-4" fill="var(--thanos-white)" opacity="0.7" />
+  </g>
+</svg>

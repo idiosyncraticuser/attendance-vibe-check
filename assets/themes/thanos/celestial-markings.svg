@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="100%" height="100%" aria-hidden="true" id="celestial-markings">
+  <defs>
+    <style>
+      :root {
+        --thanos-gold: #C5A059;
+        --thanos-purple: #3B1566;
+      }
+    </style>
+  </defs>
+
+  <g id="coordinate-ticks" stroke="var(--thanos-gold)" stroke-width="1" opacity="0.4" fill="none">
+    <!-- Top-Left Celestial Coordinates -->
+    <path d="M 64,64 L 128,64 M 64,64 L 64,128" />
+    <circle cx="64" cy="64" r="3" fill="var(--thanos-gold)" />
+    <!-- Bottom-Right Coordinates -->
+    <path d="M 960,960 L 896,960 M 960,960 L 960,896" />
+    <circle cx="960" cy="960" r="3" fill="var(--thanos-gold)" />
+  </g>
+
+  <g id="celestial-glyphs" fill="none" stroke="var(--thanos-purple)" stroke-width="1.5" opacity="0.5">
+    <!-- Abstract Ancient Rune/Glyph 1 -->
+    <path d="M 80,500 L 100,480 L 120,500 L 100,520 Z M 100,460 L 100,540" />
+    <!-- Abstract Ancient Rune/Glyph 2 -->
+    <path d="M 920,500 L 900,480 L 880,500 L 900,520 Z M 900,460 L 900,540" />
+  </g>
+
+  <g id="alignment-crosses" stroke="var(--thanos-gold)" stroke-width="1" opacity="0.3">
+    <path d="M 504,64 L 520,64 M 512,56 L 512,72" />
+    <path d="M 504,960 L 520,960 M 512,952 L 512,968" />
+  </g>
+</svg>

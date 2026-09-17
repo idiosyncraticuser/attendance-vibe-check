@@ -201,6 +201,27 @@ html[data-theme="thanos"] {
   --avc-glow: rgba(186, 113, 244, 0.34);
   --avc-decor: rgba(199, 154, 62, 0.14);
 }
+/* =========================================================
+   THANOS — COSMIC DESIGN TOKENS
+   ========================================================= */
+
+html[data-theme="thanos"] {
+  --thanos-space: #07050e;
+  --thanos-violet: #1a0b2e;
+  --thanos-purple: #3b1566;
+  --thanos-gold: #c5a059;
+
+  --thanos-power: #a020f0;
+  --thanos-blue: #00bfff;
+  --thanos-red: #ff2400;
+  --thanos-yellow: #ffd700;
+  --thanos-green: #00ff7f;
+  --thanos-orange: #ff7f00;
+
+  --thanos-white: #ffffff;
+  --thanos-glow: rgba(186, 113, 244, 0.35);
+  --thanos-gold-glow: rgba(197, 160, 89, 0.28);
+}
 html[data-theme="ultron"] {
   --avc-bg: #111316;
   --avc-surface: #1a1e22;
@@ -2646,5 +2667,442 @@ body.theme-transitioning > :not(.captain-transition):not(.iron-transition) {
 
   .iron-transition {
     transition: opacity .12s ease !important;
+  }
+}
+
+/* =========================================================
+   THANOS — SNAP TRANSITION
+   ========================================================= */
+
+.thanos-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(186, 113, 244, 0.12),
+      transparent 32%
+    ),
+    #07050e;
+  opacity: 0;
+}
+
+.thanos-transition.is-active {
+  animation: thanos-transition-enter 1.5s ease forwards;
+}
+
+/* ---------- Ambient layers ---------- */
+
+.thanos-transition__particles {
+  position: absolute;
+  inset: -10%;
+  background:
+    url("assets/themes/thanos/cosmic-particles.svg")
+    center / cover no-repeat;
+  opacity: 0;
+  animation: thanos-particles 1.45s ease forwards;
+}
+
+.thanos-transition__distortion {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 125vmax;
+  height: 125vmax;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  animation: thanos-distortion 1.45s ease forwards;
+}
+
+/* ---------- Cosmic orbital system ---------- */
+
+.thanos-transition__orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(110vmin, 1000px);
+  height: min(110vmin, 1000px);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  animation: thanos-orbit 1.2s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+.thanos-transition__ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(82vmin, 780px);
+  height: min(82vmin, 780px);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  animation: thanos-ring 1.15s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+/* ---------- Infinity Stones ---------- */
+
+.thanos-transition__stones {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(58vmin, 560px);
+  height: min(58vmin, 560px);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  animation: thanos-stones 1.15s cubic-bezier(.15,.8,.2,1) forwards;
+}
+
+/* ---------- Gauntlet ---------- */
+
+.thanos-transition__gauntlet {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(48vmin, 500px);
+  height: min(48vmin, 500px);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  animation: thanos-gauntlet 1.05s cubic-bezier(.15,.8,.2,1) forwards;
+}
+
+/* ---------- Snap focus ---------- */
+
+.thanos-transition__focus {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(45vmin, 440px);
+  height: min(45vmin, 440px);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  animation: thanos-focus 1s cubic-bezier(.15,.85,.2,1) forwards;
+}
+
+/* ---------- SNAP IMPACT ---------- */
+
+.thanos-transition__shockwave {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 120vmax;
+  height: 120vmax;
+  transform: translate(-50%, -50%) scale(.05);
+  opacity: 0;
+  animation: thanos-snap 1.5s ease forwards;
+}
+
+/* ---------- Reality fracture ---------- */
+
+.thanos-transition__crack {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 115vmax;
+  height: 115vmax;
+  transform: translate(-50%, -50%) scale(.75);
+  opacity: 0;
+  animation: thanos-crack 1.45s ease forwards;
+}
+
+/* ---------- White/purple snap flash ---------- */
+
+.thanos-transition__flash {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(197, 160, 89, 0.7) 5%,
+      rgba(186, 113, 244, 0.35) 18%,
+      transparent 45%
+    );
+  opacity: 0;
+  animation: thanos-flash 1.5s ease forwards;
+}
+
+/* =========================================================
+   THANOS ANIMATIONS
+   ========================================================= */
+
+@keyframes thanos-transition-enter {
+  0% {
+    opacity: 0;
+  }
+
+  8% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes thanos-particles {
+  0% {
+    opacity: 0;
+    transform: scale(1.15);
+  }
+
+  18% {
+    opacity: .55;
+  }
+
+  100% {
+    opacity: .3;
+    transform: scale(1);
+  }
+}
+
+@keyframes thanos-distortion {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.65);
+  }
+
+  40% {
+    opacity: .18;
+  }
+
+  100% {
+    opacity: .28;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+@keyframes thanos-orbit {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.45) rotate(-90deg);
+  }
+
+  28% {
+    opacity: .8;
+  }
+
+  100% {
+    opacity: .65;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes thanos-ring {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.35) rotate(45deg);
+  }
+
+  32% {
+    opacity: .9;
+  }
+
+  100% {
+    opacity: .65;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes thanos-stones {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.25) rotate(-20deg);
+    filter: brightness(.4);
+  }
+
+  32% {
+    opacity: 1;
+  }
+
+  62% {
+    transform: translate(-50%, -50%) scale(1.08) rotate(5deg);
+    filter: brightness(1.8);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    filter: brightness(1);
+  }
+}
+
+@keyframes thanos-gauntlet {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.4) translateY(40px);
+    filter: brightness(.5);
+  }
+
+  40% {
+    opacity: .95;
+  }
+
+  68% {
+    transform: translate(-50%, -50%) scale(1.04) translateY(0);
+    filter: brightness(1.5);
+  }
+
+  100% {
+    opacity: .9;
+    transform: translate(-50%, -50%) scale(1) translateY(0);
+    filter: brightness(1);
+  }
+}
+
+@keyframes thanos-focus {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.5);
+  }
+
+  42% {
+    opacity: .4;
+  }
+
+  62% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(.72);
+  }
+
+  72% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(.42);
+  }
+
+  78% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.18);
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes thanos-snap {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.05);
+  }
+
+  76% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.05);
+  }
+
+  78% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(.12);
+  }
+
+  84% {
+    opacity: .95;
+    transform: translate(-50%, -50%) scale(.75);
+  }
+
+  94% {
+    opacity: .35;
+    transform: translate(-50%, -50%) scale(1.15);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.4);
+  }
+}
+
+@keyframes thanos-crack {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.65);
+  }
+
+  78% {
+    opacity: 0;
+  }
+
+  83% {
+    opacity: .9;
+    transform: translate(-50%, -50%) scale(.9);
+  }
+
+  94% {
+    opacity: .7;
+    transform: translate(-50%, -50%) scale(1.04);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.12);
+  }
+}
+
+@keyframes thanos-flash {
+  0% {
+    opacity: 0;
+  }
+
+  76% {
+    opacity: 0;
+  }
+
+  79% {
+    opacity: .95;
+  }
+
+  82% {
+    opacity: .25;
+  }
+
+  88% {
+    opacity: .08;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+/* =========================================================
+   THANOS — RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+  .thanos-transition__orbit {
+    width: 125vmin;
+    height: 125vmin;
+  }
+
+  .thanos-transition__ring {
+    width: 95vmin;
+    height: 95vmin;
+  }
+
+  .thanos-transition__stones {
+    width: 68vmin;
+    height: 68vmin;
+  }
+
+  .thanos-transition__gauntlet {
+    width: 58vmin;
+    height: 58vmin;
+  }
+
+  .thanos-transition__focus {
+    width: 58vmin;
+    height: 58vmin;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thanos-transition {
+    opacity: 1;
+    animation: none !important;
+  }
+
+  .thanos-transition * {
+    animation: none !important;
   }
 }

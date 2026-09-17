@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="100%" height="100%" aria-hidden="true" id="cosmic-particles">
+  <defs>
+    <style>
+      :root {
+        --thanos-gold: #C5A059;
+        --thanos-purple: #3B1566;
+        --thanos-white: #FFFFFF;
+      }
+    </style>
+  </defs>
+
+  <g id="dust-fine" fill="var(--thanos-purple)" opacity="0.6">
+    <circle cx="120" cy="140" r="2" /><circle cx="340" cy="80" r="1.5" /><circle cx="780" cy="220" r="2" />
+    <circle cx="900" cy="110" r="1.5" /><circle cx="150" cy="670" r="2" /><circle cx="450" cy="900" r="1.5" />
+    <circle cx="820" cy="730" r="2" /><circle cx="940" cy="850" r="1.5" /><circle cx="50" cy="400" r="2" />
+  </g>
+
+  <g id="stars-bright" fill="var(--thanos-white)">
+    <circle cx="250" cy="300" r="3" opacity="0.9" /><circle cx="680" cy="150" r="2.5" opacity="0.8" />
+    <circle cx="850" cy="420" r="3.5" opacity="0.95" /><circle cx="310" cy="780" r="2" opacity="0.85" />
+    <circle cx="620" cy="860" r="3" opacity="0.9" /><circle cx="180" cy="910" r="2.5" opacity="0.75" />
+  </g>
+
+  <g id="cosmic-embers" fill="var(--thanos-gold)" opacity="0.8">
+    <polygon points="500,200 503,206 500,212 497,206" />
+    <polygon points="180,450 184,456 180,462 176,456" />
+    <polygon points="750,600 754,608 750,616 746,608" />
+    <polygon points="880,280 883,285 880,290 877,285" />
+  </g>
+</svg>

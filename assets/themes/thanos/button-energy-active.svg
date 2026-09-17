@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" width="100%" height="100%" aria-hidden="true" id="button-energy-active">
+  <defs>
+    <style>
+      :root {
+        --thanos-purple: #3B1566;
+        --thanos-gold: #C5A059;
+        --thanos-white: #FFFFFF;
+      }
+    </style>
+    <linearGradient id="bea-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(197,160,89,0)" />
+      <stop offset="30%" stop-color="var(--thanos-purple)" stop-opacity="0.6" />
+      <stop offset="50%" stop-color="var(--thanos-gold)" stop-opacity="0.8" />
+      <stop offset="70%" stop-color="var(--thanos-purple)" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="rgba(197,160,89,0)" />
+    </linearGradient>
+  </defs>
+
+  <g id="energy-field">
+    <path d="M 40,16 L 760,16 L 784,40 L 784,160 L 760,184 L 40,184 L 16,160 L 16,40 Z" fill="url(#bea-glow)" />
+  </g>
+
+  <g id="plasma-arcs" fill="none" stroke="var(--thanos-white)" stroke-width="2">
+    <path d="M 40,16 L 760,16" stroke-dasharray="120 40 20 40" />
+    <path d="M 40,184 L 760,184" stroke-dasharray="80 40 60 40" />
+  </g>
+
+  <g id="focus-nodes" fill="var(--thanos-white)">
+    <circle cx="400" cy="16" r="4" />
+    <circle cx="400" cy="184" r="4" />
+  </g>
+</svg>
