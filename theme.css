@@ -4268,3 +4268,963 @@ html[data-theme="thanos"] .theme-option:hover {
     transition: none;
   }
 }
+/* =========================================================
+   THEME BOOT — REVEAL AFTER THE SELECTED UNIVERSE INITIALIZES
+   ========================================================= */
+html.theme-booting body > :not(.captain-transition):not(.iron-transition):not(.thanos-transition):not(.simple-entry) {
+  visibility: hidden !important;
+}
+html.theme-booting body {
+  overflow-x: hidden;
+}
+html[data-theme="iron-man"] .header::after {
+  background-image: url("assets/themes/iron-man/reactor-core.svg");
+  filter: drop-shadow(0 0 10px rgba(88,221,245,.28));
+}
+html[data-theme="thanos"] .header::after {
+  width: 88px;
+  height: 88px;
+  top: -12px;
+  background-image: url("assets/themes/thanos/gauntlet-energy.svg");
+  filter: drop-shadow(0 0 12px rgba(186,113,244,.26));
+}
+html[data-theme="iron-man"] .container::after { background-image:url("assets/themes/iron-man/reactor-core.svg"); filter:drop-shadow(0 0 9px rgba(88,221,245,.28)); }
+html[data-theme="thanos"] .container::after { background-image:url("assets/themes/thanos/gauntlet-energy.svg"); filter:drop-shadow(0 0 9px rgba(186,113,244,.25)); }
+
+/* =========================================================
+   IRON MAN — COMPLETE ACTION COVERAGE
+   Existing armored SVG system is preserved; these selectors
+   extend it to utility-page actions and navigation links.
+   ========================================================= */
+html[data-theme="iron-man"] .back,
+html[data-theme="iron-man"] .skip-link,
+html[data-theme="iron-man"] .predictor-link,
+html[data-theme="iron-man"] .month-buttons button,
+html[data-theme="iron-man"] .input-actions button,
+html[data-theme="iron-man"] .panel > button:not(.theme-toggle),
+html[data-theme="iron-man"] .run {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid #647178 !important;
+  border-radius: 3px !important;
+  color: var(--im-white, #f5f8fa) !important;
+  background: linear-gradient(180deg,#394249 0%,#202a30 44%,#0d1216 100%) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.22), inset 0 -3px rgba(0,0,0,.55), 0 4px 0 #070a0d, 0 8px 16px rgba(0,0,0,.34) !important;
+  transition: transform .16s cubic-bezier(.2,.8,.2,1), border-color .18s ease, box-shadow .18s ease, filter .18s ease !important;
+}
+html[data-theme="iron-man"] .skip-link,
+html[data-theme="iron-man"] .predictor-link { text-decoration:none; }
+html[data-theme="iron-man"] .back::before,
+html[data-theme="iron-man"] .skip-link::before,
+html[data-theme="iron-man"] .predictor-link::before,
+html[data-theme="iron-man"] .month-buttons button::before {
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:url("assets/themes/iron-man/armored-button-frame.svg") center/100% 100% no-repeat; opacity:.72;
+}
+html[data-theme="iron-man"] .back::after,
+html[data-theme="iron-man"] .skip-link::after,
+html[data-theme="iron-man"] .predictor-link::after,
+html[data-theme="iron-man"] .month-buttons button::after {
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:url("assets/themes/iron-man/button-energy-active.svg") center/100% 100% no-repeat;
+  opacity:0; transform:scale(.96); transition:opacity .18s ease,transform .2s cubic-bezier(.2,.8,.2,1);
+}
+html[data-theme="iron-man"] .back > *,
+html[data-theme="iron-man"] .skip-link > *,
+html[data-theme="iron-man"] .predictor-link > *,
+html[data-theme="iron-man"] .month-buttons button > * { position:relative; z-index:1; }
+html[data-theme="iron-man"] .back:hover,
+html[data-theme="iron-man"] .skip-link:hover,
+html[data-theme="iron-man"] .predictor-link:hover,
+html[data-theme="iron-man"] .month-buttons button:hover,
+html[data-theme="iron-man"] .input-actions button:hover,
+html[data-theme="iron-man"] .panel > button:not(.theme-toggle):hover,
+html[data-theme="iron-man"] .run:hover {
+  transform:translateY(-2px); border-color:var(--im-cyan,#58ddf5) !important;
+  box-shadow:inset 0 1px rgba(255,255,255,.32),inset 0 -3px rgba(0,0,0,.5),0 6px 0 #070a0d,0 11px 20px rgba(0,0,0,.42),0 0 0 1px rgba(88,221,245,.2) !important;
+}
+html[data-theme="iron-man"] .back:hover::after,
+html[data-theme="iron-man"] .skip-link:hover::after,
+html[data-theme="iron-man"] .predictor-link:hover::after,
+html[data-theme="iron-man"] .month-buttons button:hover::after,
+html[data-theme="iron-man"] .input-actions button:hover::after,
+html[data-theme="iron-man"] .panel > button:not(.theme-toggle):hover::after,
+html[data-theme="iron-man"] .run:hover::after { opacity:.62; transform:scale(1); }
+html[data-theme="iron-man"] .back:active,
+html[data-theme="iron-man"] .skip-link:active,
+html[data-theme="iron-man"] .predictor-link:active,
+html[data-theme="iron-man"] .month-buttons button:active,
+html[data-theme="iron-man"] .input-actions button:active,
+html[data-theme="iron-man"] .panel > button:not(.theme-toggle):active,
+html[data-theme="iron-man"] .run:active { transform:translateY(3px) scale(.985); box-shadow:inset 0 4px 9px rgba(0,0,0,.72),0 1px 0 #070a0d,0 0 12px rgba(88,221,245,.22) !important; }
+html[data-theme="iron-man"] .back:focus-visible,
+html[data-theme="iron-man"] .skip-link:focus-visible,
+html[data-theme="iron-man"] .predictor-link:focus-visible,
+html[data-theme="iron-man"] button:focus-visible { outline:2px solid var(--im-cyan-bright,#00f0ff); outline-offset:3px; }
+html[data-theme="iron-man"] .month-buttons button { padding:7px 12px !important; min-height:34px; }
+html[data-theme="iron-man"] button:disabled { filter:grayscale(.75); opacity:.42; cursor:not-allowed; transform:none !important; }
+
+/* =========================================================
+   THANOS — COMPLETE ACTION COVERAGE
+   ========================================================= */
+html[data-theme="thanos"] .back,
+html[data-theme="thanos"] .skip-link,
+html[data-theme="thanos"] .predictor-link,
+html[data-theme="thanos"] .month-buttons button,
+html[data-theme="thanos"] .input-actions button,
+html[data-theme="thanos"] .panel > button:not(.theme-toggle),
+html[data-theme="thanos"] .run {
+  position:relative; isolation:isolate; overflow:hidden; border:0 !important;
+  border-radius:5px !important; color:#fbf4ff !important;
+  background:linear-gradient(145deg,#3b1566 0%,#241438 54%,#100a18 100%) !important;
+  box-shadow:inset 0 0 0 1px rgba(197,160,89,.58),inset 0 1px rgba(255,255,255,.1),0 5px 0 #090610,0 10px 22px rgba(0,0,0,.38),0 0 18px rgba(186,113,244,.1) !important;
+  transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .18s ease,filter .18s ease !important;
+}
+html[data-theme="thanos"] .skip-link,
+html[data-theme="thanos"] .predictor-link { text-decoration:none; }
+html[data-theme="thanos"] .back::before,
+html[data-theme="thanos"] .skip-link::before,
+html[data-theme="thanos"] .predictor-link::before,
+html[data-theme="thanos"] .month-buttons button::before {
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:url("assets/themes/thanos/infinity-button-frame.svg") center/100% 100% no-repeat; transform:scale(1.04); opacity:.9;
+}
+html[data-theme="thanos"] .back::after,
+html[data-theme="thanos"] .skip-link::after,
+html[data-theme="thanos"] .predictor-link::after,
+html[data-theme="thanos"] .month-buttons button::after {
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:url("assets/themes/thanos/button-energy-active.svg") center/100% 100% no-repeat; opacity:0; transform:scale(1.02); transition:opacity .2s ease,transform .2s ease;
+}
+html[data-theme="thanos"] .back:hover,
+html[data-theme="thanos"] .skip-link:hover,
+html[data-theme="thanos"] .predictor-link:hover,
+html[data-theme="thanos"] .month-buttons button:hover,
+html[data-theme="thanos"] .input-actions button:hover,
+html[data-theme="thanos"] .panel > button:not(.theme-toggle):hover,
+html[data-theme="thanos"] .run:hover { transform:translateY(-2px); box-shadow:inset 0 0 0 1px rgba(243,216,111,.9),0 7px 0 #090610,0 13px 25px rgba(0,0,0,.44),0 0 22px rgba(186,113,244,.22) !important; }
+html[data-theme="thanos"] .back:hover::after,
+html[data-theme="thanos"] .skip-link:hover::after,
+html[data-theme="thanos"] .predictor-link:hover::after,
+html[data-theme="thanos"] .month-buttons button:hover::after,
+html[data-theme="thanos"] .input-actions button:hover::after,
+html[data-theme="thanos"] .panel > button:not(.theme-toggle):hover::after,
+html[data-theme="thanos"] .run:hover::after { opacity:.6; transform:scale(1); }
+html[data-theme="thanos"] .back:active,
+html[data-theme="thanos"] .skip-link:active,
+html[data-theme="thanos"] .predictor-link:active,
+html[data-theme="thanos"] .month-buttons button:active,
+html[data-theme="thanos"] .input-actions button:active,
+html[data-theme="thanos"] .panel > button:not(.theme-toggle):active,
+html[data-theme="thanos"] .run:active { transform:translateY(3px) scale(.985); box-shadow:inset 0 4px 12px rgba(0,0,0,.72),0 1px 0 #090610,0 0 16px rgba(186,113,244,.3) !important; }
+html[data-theme="thanos"] .back:focus-visible,
+html[data-theme="thanos"] .skip-link:focus-visible,
+html[data-theme="thanos"] .predictor-link:focus-visible,
+html[data-theme="thanos"] button:focus-visible { outline:2px solid var(--thanos-gold); outline-offset:3px; }
+html[data-theme="thanos"] .month-buttons button { padding:7px 12px !important; min-height:34px; }
+html[data-theme="thanos"] button:disabled { opacity:.38; filter:saturate(.4); cursor:not-allowed; transform:none !important; }
+@media (max-width:700px) { html[data-theme="iron-man"] .header::after,html[data-theme="thanos"] .header::after{width:58px;height:58px} html[data-theme="iron-man"] .header,html[data-theme="thanos"] .header{padding-right:82px} }
+
+/* =========================================================
+   CORRECTION PASS — THEMED BUTTONS / CAPTAIN UTILITY ACTIONS
+   Keep existing theme designs; only remove the fixed-size
+   decorative-button layer and extend Captain coverage.
+   ========================================================= */
+
+/* Iron Man / Thanos: the frame is part of the button itself.
+   The SVG therefore scales with each element's real dimensions. */
+html[data-theme="iron-man"] .back,
+html[data-theme="iron-man"] .skip-link,
+html[data-theme="iron-man"] .predictor-link,
+html[data-theme="iron-man"] .month-buttons button,
+html[data-theme="iron-man"] .input-actions button,
+html[data-theme="iron-man"] .panel > button:not(.theme-toggle),
+html[data-theme="iron-man"] .run {
+  background-image:
+    url("assets/themes/iron-man/armored-button-frame.svg"),
+    linear-gradient(180deg, #394249 0%, #202a30 44%, #0d1216 100%) !important;
+  background-position: center, center !important;
+  background-repeat: no-repeat, no-repeat !important;
+  background-size: 100% 100%, 100% 100% !important;
+}
+
+html[data-theme="iron-man"] .back::before,
+html[data-theme="iron-man"] .skip-link::before,
+html[data-theme="iron-man"] .predictor-link::before,
+html[data-theme="iron-man"] .month-buttons button::before,
+html[data-theme="iron-man"] .input-actions button::before,
+html[data-theme="iron-man"] .panel > button:not(.theme-toggle)::before,
+html[data-theme="iron-man"] .run::before {
+  content: none !important;
+  display: none !important;
+}
+
+html[data-theme="iron-man"] .back::after,
+html[data-theme="iron-man"] .skip-link::after,
+html[data-theme="iron-man"] .predictor-link::after,
+html[data-theme="iron-man"] .month-buttons button::after,
+html[data-theme="iron-man"] .input-actions button::after,
+html[data-theme="iron-man"] .panel > button:not(.theme-toggle)::after,
+html[data-theme="iron-man"] .run::after {
+  inset: 0 !important;
+  background-size: 100% 100% !important;
+  transform: scale(.985) !important;
+  transform-origin: center !important;
+}
+html[data-theme="iron-man"] .back:hover::after,
+html[data-theme="iron-man"] .skip-link:hover::after,
+html[data-theme="iron-man"] .predictor-link:hover::after,
+html[data-theme="iron-man"] .month-buttons button:hover::after,
+html[data-theme="iron-man"] .input-actions button:hover::after,
+html[data-theme="iron-man"] .panel > button:not(.theme-toggle):hover::after,
+html[data-theme="iron-man"] .run:hover::after {
+  transform: scale(1) !important;
+}
+
+html[data-theme="thanos"] .back,
+html[data-theme="thanos"] .skip-link,
+html[data-theme="thanos"] .predictor-link,
+html[data-theme="thanos"] .month-buttons button,
+html[data-theme="thanos"] .input-actions button,
+html[data-theme="thanos"] .panel > button:not(.theme-toggle),
+html[data-theme="thanos"] .run {
+  background-image:
+    url("assets/themes/thanos/infinity-button-frame.svg"),
+    linear-gradient(145deg, #3b1566 0%, #241438 54%, #100a18 100%) !important;
+  background-position: center, center !important;
+  background-repeat: no-repeat, no-repeat !important;
+  background-size: 100% 100%, 100% 100% !important;
+}
+
+html[data-theme="thanos"] .back::before,
+html[data-theme="thanos"] .skip-link::before,
+html[data-theme="thanos"] .predictor-link::before,
+html[data-theme="thanos"] .month-buttons button::before,
+html[data-theme="thanos"] .input-actions button::before,
+html[data-theme="thanos"] .panel > button:not(.theme-toggle)::before,
+html[data-theme="thanos"] .run::before {
+  content: none !important;
+  display: none !important;
+}
+
+html[data-theme="thanos"] .back::after,
+html[data-theme="thanos"] .skip-link::after,
+html[data-theme="thanos"] .predictor-link::after,
+html[data-theme="thanos"] .month-buttons button::after,
+html[data-theme="thanos"] .input-actions button::after,
+html[data-theme="thanos"] .panel > button:not(.theme-toggle)::after,
+html[data-theme="thanos"] .run::after {
+  inset: 0 !important;
+  background-size: 100% 100% !important;
+  transform: scale(.985) !important;
+  transform-origin: center !important;
+}
+html[data-theme="thanos"] .back:hover::after,
+html[data-theme="thanos"] .skip-link:hover::after,
+html[data-theme="thanos"] .predictor-link:hover::after,
+html[data-theme="thanos"] .month-buttons button:hover::after,
+html[data-theme="thanos"] .input-actions button:hover::after,
+html[data-theme="thanos"] .panel > button:not(.theme-toggle):hover::after,
+html[data-theme="thanos"] .run:hover::after {
+  transform: scale(1) !important;
+}
+
+/* Captain America: extend the already-approved button language to
+   utility-page navigation and calendar controls only. Existing
+   homepage button rules above remain untouched. */
+html[data-theme="captain-america"] .back,
+html[data-theme="captain-america"] .skip-link,
+html[data-theme="captain-america"] .predictor-link,
+html[data-theme="captain-america"] .month-buttons button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 40px;
+  padding: 10px 18px !important;
+  border: 1px solid var(--cap-silver) !important;
+  border-radius: 2px !important;
+  clip-path: polygon(
+    7px 0,
+    100% 0,
+    100% calc(100% - 7px),
+    calc(100% - 7px) 100%,
+    0 100%,
+    0 7px
+  );
+  color: var(--cap-white) !important;
+  text-decoration: none;
+  background: linear-gradient(
+    180deg,
+    #233f66 0 7%,
+    #0b1a34 8% 88%,
+    #061124 100%
+  ) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(248, 249, 250, 0.42),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.55),
+    0 4px 0 #030814,
+    0 8px 14px rgba(0, 0, 0, 0.34) !important;
+  transform: translateY(0);
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.16s ease,
+    border-color 0.16s ease !important;
+}
+
+html[data-theme="captain-america"] .back::before,
+html[data-theme="captain-america"] .skip-link::before,
+html[data-theme="captain-america"] .predictor-link::before,
+html[data-theme="captain-america"] .month-buttons button::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 4px;
+  border-left: 3px solid var(--cap-red);
+  border-top: 1px solid rgba(248, 249, 250, 0.35);
+  border-right: 1px solid rgba(0, 240, 255, 0.3);
+  pointer-events: none;
+}
+
+html[data-theme="captain-america"] .back::after,
+html[data-theme="captain-america"] .skip-link::after,
+html[data-theme="captain-america"] .predictor-link::after,
+html[data-theme="captain-america"] .month-buttons button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    108deg,
+    transparent 28%,
+    rgba(248, 249, 250, 0.4) 46%,
+    rgba(0, 240, 255, 0.18) 51%,
+    transparent 66%
+  ) !important;
+  transform: translateX(-125%);
+  transition: transform 0.42s ease;
+}
+
+html[data-theme="captain-america"] .back:hover,
+html[data-theme="captain-america"] .skip-link:hover,
+html[data-theme="captain-america"] .predictor-link:hover,
+html[data-theme="captain-america"] .month-buttons button:hover {
+  border-color: var(--cap-silver-light) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(248, 249, 250, 0.55),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.48),
+    0 6px 0 #030814,
+    0 11px 17px rgba(0, 0, 0, 0.37),
+    0 0 0 1px rgba(0, 240, 255, 0.35) !important;
+  transform: translateY(-2px);
+}
+
+html[data-theme="captain-america"] .back:hover::after,
+html[data-theme="captain-america"] .skip-link:hover::after,
+html[data-theme="captain-america"] .predictor-link:hover::after,
+html[data-theme="captain-america"] .month-buttons button:hover::after {
+  transform: translateX(125%);
+}
+
+html[data-theme="captain-america"] .back:active,
+html[data-theme="captain-america"] .skip-link:active,
+html[data-theme="captain-america"] .predictor-link:active,
+html[data-theme="captain-america"] .month-buttons button:active {
+  transform: translateY(3px) scale(0.985);
+  box-shadow:
+    inset 0 2px 7px rgba(0, 0, 0, 0.65),
+    0 1px 0 #030814,
+    0 0 12px rgba(0, 240, 255, 0.32) !important;
+}
+
+html[data-theme="captain-america"] .back:focus-visible,
+html[data-theme="captain-america"] .skip-link:focus-visible,
+html[data-theme="captain-america"] .predictor-link:focus-visible,
+html[data-theme="captain-america"] .month-buttons button:focus-visible {
+  outline: 2px solid var(--cap-silver-light);
+  outline-offset: 3px;
+}
+
+html[data-theme="captain-america"] .month-buttons button {
+  min-height: 34px;
+  padding: 7px 12px !important;
+}
+
+html[data-theme="captain-america"] .month-buttons button:disabled {
+  filter: grayscale(1);
+  opacity: 0.48;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="captain-america"] .back,
+  html[data-theme="captain-america"] .skip-link,
+  html[data-theme="captain-america"] .predictor-link,
+  html[data-theme="captain-america"] .month-buttons button {
+    transition: none !important;
+  }
+  html[data-theme="captain-america"] .back::after,
+  html[data-theme="captain-america"] .skip-link::after,
+  html[data-theme="captain-america"] .predictor-link::after,
+  html[data-theme="captain-america"] .month-buttons button::after {
+    transition: none !important;
+  }
+}
+
+/* Only the header identity remains for Iron Man. The fixed duplicate
+   identity that appeared at the top of .container is intentionally removed. */
+html[data-theme="iron-man"] .container::after {
+  content: none !important;
+  display: none !important;
+}
+html[data-theme="iron-man"] body:has(.back) .container {
+  position: relative;
+  padding-right: 112px;
+}
+html[data-theme="iron-man"] body:has(.back) .container::after {
+  background-image: url("assets/themes/iron-man/reactor-core.svg");
+  filter: drop-shadow(0 0 10px rgba(88,221,245,.28));
+}
+html[data-theme="thanos"] body:has(.back) .container {
+  position: relative;
+  padding-right: 118px;
+}
+html[data-theme="thanos"] body:has(.back) .container::after {
+  width: 88px;
+  height: 88px;
+  top: 10px;
+  background-image: url("assets/themes/thanos/gauntlet-energy.svg");
+  filter: drop-shadow(0 0 12px rgba(186,113,244,.26));
+}
+html[data-theme="captain-america"] body:has(.back) .container {
+  position: relative;
+  padding-right: 108px;
+}
+html[data-theme="captain-america"] body:has(.back) .container::after {
+  background-image: url("assets/themes/captain/master-shield.svg");
+  filter: drop-shadow(0 8px 12px rgba(0,0,0,.34));
+}
+
+/* On pages with a real header, the header identity is the single identity.
+   This removes the duplicate container mark without changing the header. */
+html[data-theme="iron-man"] body:not(:has(.back)) .container::after,
+html[data-theme="thanos"] body:not(:has(.back)) .container::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Natural utility-page back-button geometry. The frame belongs to the
+   button itself instead of a fixed decorative box. */
+html[data-theme="iron-man"] .back,
+html[data-theme="thanos"] .back {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: fit-content !important;
+  max-width: 100%;
+  min-height: 38px;
+  padding: 9px 14px !important;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+html[data-theme="iron-man"] .back {
+  background-image:
+    url("assets/themes/iron-man/armored-button-frame.svg"),
+    linear-gradient(180deg,#394249 0%,#202a30 44%,#0d1216 100%) !important;
+  background-position: center, center !important;
+  background-repeat: no-repeat, no-repeat !important;
+  background-size: 100% 100%, 100% 100% !important;
+}
+html[data-theme="thanos"] .back {
+  background-image:
+    url("assets/themes/thanos/infinity-button-frame.svg"),
+    linear-gradient(145deg,#3b1566 0%,#241438 54%,#100a18 100%) !important;
+  background-position: center, center !important;
+  background-repeat: no-repeat, no-repeat !important;
+  background-size: 100% 100%, 100% 100% !important;
+}
+html[data-theme="iron-man"] .back::before,
+html[data-theme="thanos"] .back::before {
+  display: none !important;
+}
+html[data-theme="iron-man"] .back::after,
+html[data-theme="thanos"] .back::after {
+  inset: 0 !important;
+  transform: none !important;
+  background-size: 100% 100% !important;
+}
+html[data-theme="iron-man"] .back:hover::after,
+html[data-theme="thanos"] .back:hover::after {
+  transform: scale(1) !important;
+}
+
+/* Light/Dark back controls: complete natural-sized components without
+   introducing a decorative overlay system. */
+html[data-theme="light"] .back,
+html[data-theme="dark"] .back {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: fit-content !important;
+  max-width: 100%;
+  min-height: 38px;
+  padding: 9px 14px !important;
+  box-sizing: border-box;
+  border: 1px solid var(--avc-border) !important;
+  border-radius: 10px !important;
+  background: var(--avc-surface) !important;
+  color: var(--avc-text) !important;
+  text-decoration: none !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08) !important;
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease !important;
+}
+html[data-theme="light"] .back:hover,
+html[data-theme="dark"] .back:hover {
+  transform: translateY(-2px);
+  border-color: var(--avc-accent) !important;
+  box-shadow: 0 7px 16px rgba(0,0,0,.12), 0 0 0 1px var(--avc-glow) !important;
+}
+html[data-theme="light"] .back:active,
+html[data-theme="dark"] .back:active {
+  transform: translateY(2px) scale(.985);
+}
+html[data-theme="light"] .back:focus-visible,
+html[data-theme="dark"] .back:focus-visible {
+  outline: 2px solid var(--avc-accent);
+  outline-offset: 3px;
+}
+
+/* Captain America utility-page back button: leave the existing visual
+   implementation untouched; only ensure its container can host the shield. */
+
+/* Theme control: theme-specific component treatment. Thanos's existing
+   excellent menu remains untouched. */
+html[data-theme="light"] .theme-toggle {
+  background: #fff !important;
+  border-color: #d7dde6 !important;
+  color: #172033 !important;
+  box-shadow: 0 8px 22px rgba(16,24,40,.12), 0 1px 0 #fff inset !important;
+}
+html[data-theme="light"] .theme-toggle:hover {
+  border-color: #9aa8ba !important;
+}
+html[data-theme="light"] .theme-toggle__core {
+  background: radial-gradient(circle,#fff 0 20%,#f5b93c 22% 55%,#e9edf2 57% 100%) !important;
+  color: #172033;
+  box-shadow: 0 0 0 1px #d7dde6 inset, 0 3px 10px rgba(16,24,40,.14) !important;
+}
+
+html[data-theme="dark"] .theme-toggle {
+  background: linear-gradient(180deg,#182131,#0d1420) !important;
+  border-color: #3b485c !important;
+  box-shadow: 0 10px 26px rgba(0,0,0,.34), inset 0 1px rgba(255,255,255,.08) !important;
+}
+html[data-theme="dark"] .theme-toggle__core {
+  background: radial-gradient(circle,#dce7ff 0 15%,#7187b5 17% 42%,#26344b 44% 100%) !important;
+  box-shadow: 0 0 0 1px #52637c inset, 0 0 14px rgba(129,159,209,.22) !important;
+}
+
+html[data-theme="iron-man"] .theme-toggle {
+  position: relative;
+  border-radius: 4px !important;
+  border-color: #65747c !important;
+  background: linear-gradient(180deg,#343e44,#151b20) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.18), inset 0 -3px rgba(0,0,0,.5), 0 5px 0 #070a0d, 0 10px 20px rgba(0,0,0,.38) !important;
+}
+html[data-theme="iron-man"] .theme-toggle:hover {
+  transform: translateY(-2px) !important;
+  border-color: #58ddf5 !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.25), inset 0 -3px rgba(0,0,0,.5), 0 7px 0 #070a0d, 0 13px 24px rgba(0,0,0,.42), 0 0 0 1px rgba(88,221,245,.2) !important;
+}
+html[data-theme="iron-man"] .theme-toggle:active {
+  transform: translateY(3px) scale(.985) !important;
+  box-shadow: inset 0 4px 9px rgba(0,0,0,.7), 0 1px 0 #070a0d !important;
+}
+html[data-theme="iron-man"] .theme-toggle__core {
+  border-radius: 3px !important;
+}
+
+html[data-theme="captain-america"] .theme-toggle {
+  border-radius: 6px !important;
+  border-color: rgba(192,192,192,.55) !important;
+  background: linear-gradient(180deg,#16395d,#0a1b30) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.16), inset 0 -3px rgba(0,0,0,.38), 0 5px 0 #030814, 0 10px 22px rgba(0,0,0,.34) !important;
+}
+html[data-theme="captain-america"] .theme-toggle:hover {
+  transform: translateY(-2px) !important;
+  border-color: #c0c0c0 !important;
+}
+html[data-theme="captain-america"] .theme-toggle:active {
+  transform: translateY(3px) scale(.985) !important;
+  box-shadow: inset 0 4px 8px rgba(0,0,0,.62), 0 1px 0 #030814 !important;
+}
+html[data-theme="captain-america"] .theme-toggle__core {
+  border: 1px solid rgba(231,244,250,.6);
+  box-shadow: 0 0 0 3px rgba(201,47,58,.45), 0 0 0 6px rgba(231,244,250,.5) inset, 0 0 14px rgba(0,240,255,.2) !important;
+}
+
+/* Iron Man calendar readability: only normal working-day text gets the
+   dedicated readable token; semantic states remain distinct. */
+html[data-theme="iron-man"] .calendar .day:not(.disabled):not(.holiday):not(.exam):not(.selected) {
+  color: #f2f6f8 !important;
+  background: #151c22 !important;
+}
+html[data-theme="iron-man"] .calendar .day:not(.disabled):not(.holiday):not(.exam):not(.selected) span {
+  color: #f2f6f8 !important;
+}
+html[data-theme="iron-man"] .calendar .day:not(.disabled):not(.holiday):not(.exam):not(.selected):hover {
+  color: #ffffff !important;
+  border-color: #58ddf5 !important;
+  box-shadow: 0 0 0 2px rgba(88,221,245,.12), 0 0 14px rgba(88,221,245,.12) !important;
+}
+html[data-theme="iron-man"] .calendar .day:not(.disabled):not(.holiday):not(.exam):not(.selected):focus-visible {
+  outline: 2px solid #00f0ff;
+  outline-offset: 2px;
+}
+
+@media (max-width: 700px) {
+  html[data-theme="iron-man"] body:has(.back) .container,
+  html[data-theme="thanos"] body:has(.back) .container,
+  html[data-theme="captain-america"] body:has(.back) .container {
+    padding-right: 20px;
+  }
+  html[data-theme="iron-man"] body:has(.back) .container::after,
+  html[data-theme="thanos"] body:has(.back) .container::after,
+  html[data-theme="captain-america"] body:has(.back) .container::after {
+    position: relative;
+    display: block;
+    right: auto;
+    top: auto;
+    margin: 0 0 10px auto;
+    width: 58px;
+    height: 58px;
+  }
+  html[data-theme="thanos"] body:has(.back) .container::after {
+    width: 64px;
+    height: 64px;
+  }
+  html[data-theme="iron-man"] .back,
+  html[data-theme="thanos"] .back,
+  html[data-theme="light"] .back,
+  html[data-theme="dark"] .back {
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="light"] .back,
+  html[data-theme="dark"] .back,
+  html[data-theme="iron-man"] .back,
+  html[data-theme="thanos"] .back,
+  html[data-theme="iron-man"] .theme-toggle,
+  html[data-theme="captain-america"] .theme-toggle {
+    transition: none !important;
+  }
+}
+
+/* =========================================================
+   FINAL UI FIX — LOCKED CROSS-PAGE THEME IDENTITY
+   Utility pages use the same viewport coordinates as the
+   established homepage identity. The homepage header identity
+   itself is untouched.
+   ========================================================= */
+
+html[data-theme="iron-man"] body:has(.back) .container::after,
+html[data-theme="thanos"] body:has(.back) .container::after,
+html[data-theme="captain-america"] body:has(.back) .container::after {
+  content: "" !important;
+  position: fixed !important;
+  z-index: 15 !important;
+  pointer-events: none !important;
+  display: block !important;
+  right: max(24px, calc((100vw - 1250px) / 2 + 24px)) !important;
+  margin: 0 !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+  opacity: .96 !important;
+}
+
+html[data-theme="iron-man"] body:has(.back) .container::after {
+  top: 20px !important;
+  width: 78px !important;
+  height: 78px !important;
+  right: max(30px, calc((100vw - 1250px) / 2 + 30px)) !important;
+  background-image: url("assets/themes/iron-man/reactor-core.svg") !important;
+  filter: drop-shadow(0 0 10px rgba(88,221,245,.28));
+}
+
+html[data-theme="thanos"] body:has(.back) .container::after {
+  top: 16px !important;
+  width: 88px !important;
+  height: 88px !important;
+  right: max(30px, calc((100vw - 1250px) / 2 + 30px)) !important;
+  background-image: url("assets/themes/thanos/gauntlet-energy.svg") !important;
+  filter: drop-shadow(0 0 12px rgba(186,113,244,.26));
+}
+
+html[data-theme="captain-america"] body:has(.back) .container::after {
+  top: 25px !important;
+  width: 82px !important;
+  height: 82px !important;
+  right: max(24px, calc((100vw - 1250px) / 2 + 24px)) !important;
+  background-image: url("assets/themes/captain/master-shield.svg") !important;
+  filter: drop-shadow(0 8px 12px rgba(0,0,0,.34));
+}
+
+/* Make room for the fixed identity without changing its coordinates. */
+html[data-theme="iron-man"] body:has(.back) .container,
+html[data-theme="thanos"] body:has(.back) .container,
+html[data-theme="captain-america"] body:has(.back) .container {
+  padding-top: 112px !important;
+}
+
+/* =========================================================
+   FINAL UI FIX — THEME MENU COMPONENTS
+   Each theme gets its own menu-button construction. Thanos's
+   existing treatment remains the reference and is preserved.
+   ========================================================= */
+
+/* Base geometry: all menu options are real, naturally sized
+   controls. Decorative artwork is contained by the option itself. */
+html[data-theme="light"] .theme-option,
+html[data-theme="dark"] .theme-option,
+html[data-theme="iron-man"] .theme-option,
+html[data-theme="captain-america"] .theme-option {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  min-height: 54px;
+  box-sizing: border-box;
+  transform: translateZ(0);
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease !important;
+}
+
+/* ---------- LIGHT — clean daylight control ---------- */
+html[data-theme="light"] .theme-menu {
+  border-color: #d7dde6;
+  background: rgba(255,255,255,.96);
+  box-shadow: 0 20px 44px rgba(16,24,40,.16), inset 0 1px #fff;
+}
+html[data-theme="light"] .theme-option {
+  border: 1px solid #e1e6ee !important;
+  border-radius: 11px !important;
+  background: linear-gradient(180deg,#ffffff,#f5f7fa) !important;
+  color: #172033 !important;
+  box-shadow: inset 0 1px #fff;
+}
+html[data-theme="light"] .theme-option:hover,
+html[data-theme="light"] .theme-option[aria-checked="true"] {
+  border-color: #8d9cf0 !important;
+  background: linear-gradient(180deg,#ffffff,#eef2ff) !important;
+  box-shadow: 0 5px 12px rgba(73,91,180,.10), inset 0 1px #fff;
+  transform: translateX(-2px);
+}
+html[data-theme="light"] .theme-option:active {
+  transform: translateX(0) translateY(2px) scale(.985);
+}
+html[data-theme="light"] .theme-option:focus-visible {
+  outline: 2px solid #687bf0;
+  outline-offset: 2px;
+}
+
+/* ---------- DARK — restrained system hardware ---------- */
+html[data-theme="dark"] .theme-menu {
+  border-color: #39475d;
+  background: linear-gradient(145deg,#151e2c,#0c121c);
+  box-shadow: 0 22px 50px rgba(0,0,0,.42), inset 0 1px rgba(255,255,255,.07);
+}
+html[data-theme="dark"] .theme-option {
+  border: 1px solid #2d394b !important;
+  border-radius: 8px !important;
+  background: linear-gradient(180deg,#182231,#101722) !important;
+  color: #e8eef8 !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.06), inset 0 -2px rgba(0,0,0,.24);
+}
+html[data-theme="dark"] .theme-option:hover,
+html[data-theme="dark"] .theme-option[aria-checked="true"] {
+  border-color: #7187b5 !important;
+  background: linear-gradient(180deg,#202d40,#121a27) !important;
+  box-shadow: 0 6px 14px rgba(0,0,0,.26), 0 0 0 1px rgba(129,159,209,.10);
+  transform: translateX(-2px);
+}
+html[data-theme="dark"] .theme-option:active {
+  transform: translateY(2px) scale(.985);
+  box-shadow: inset 0 3px 8px rgba(0,0,0,.55);
+}
+html[data-theme="dark"] .theme-option:focus-visible {
+  outline: 2px solid #8ea7d4;
+  outline-offset: 2px;
+}
+
+/* ---------- IRON MAN — Stark machined selector ---------- */
+html[data-theme="iron-man"] .theme-menu {
+  border-color: rgba(88,221,245,.38);
+  background: linear-gradient(145deg,rgba(30,39,46,.98),rgba(10,12,14,.98));
+  box-shadow: 0 24px 55px rgba(0,0,0,.5), inset 0 1px rgba(255,255,255,.07);
+}
+html[data-theme="iron-man"] .theme-option {
+  border: 1px solid #536168 !important;
+  border-radius: 4px !important;
+  background:
+    linear-gradient(180deg,#303a40,#182126) !important;
+  color: #f2f6f8 !important;
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.16),
+    inset 0 -2px rgba(0,0,0,.48),
+    0 2px 0 #070a0d;
+}
+html[data-theme="iron-man"] .theme-option::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url("assets/themes/iron-man/armored-button-frame.svg") center/100% 100% no-repeat;
+  opacity: .78;
+}
+html[data-theme="iron-man"] .theme-option::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: url("assets/themes/iron-man/button-energy-active.svg") center/100% 100% no-repeat;
+  opacity: 0;
+  transform: scale(.96);
+  transition: opacity .18s ease, transform .2s ease;
+}
+html[data-theme="iron-man"] .theme-option > * {
+  position: relative;
+  z-index: 1;
+}
+html[data-theme="iron-man"] .theme-option:hover,
+html[data-theme="iron-man"] .theme-option[aria-checked="true"] {
+  border-color: #58ddf5 !important;
+  transform: translateX(-2px);
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.24),
+    inset 0 -2px rgba(0,0,0,.48),
+    0 4px 0 #070a0d,
+    0 8px 18px rgba(0,0,0,.34),
+    0 0 0 1px rgba(88,221,245,.14);
+}
+html[data-theme="iron-man"] .theme-option:hover::after { opacity: .58; transform: scale(1); }
+html[data-theme="iron-man"] .theme-option[aria-checked="true"]::after { opacity: .34; transform: scale(1); }
+html[data-theme="iron-man"] .theme-option:active {
+  transform: translateY(3px) scale(.985);
+  box-shadow: inset 0 3px 8px rgba(0,0,0,.7), 0 1px 0 #070a0d;
+}
+html[data-theme="iron-man"] .theme-option:focus-visible {
+  outline: 2px solid #00f0ff;
+  outline-offset: 3px;
+}
+
+/* ---------- CAPTAIN AMERICA — tactical selector ---------- */
+html[data-theme="captain-america"] .theme-menu {
+  border-color: rgba(192,192,192,.5);
+  background: linear-gradient(145deg,#102847,#071426);
+  box-shadow: 0 22px 50px rgba(0,0,0,.44), inset 0 1px rgba(248,249,250,.10);
+}
+html[data-theme="captain-america"] .theme-option {
+  border: 1px solid rgba(192,192,192,.48) !important;
+  border-radius: 3px !important;
+  background: linear-gradient(180deg,#173a60,#091a32) !important;
+  color: var(--cap-white,#f8f9fa) !important;
+  box-shadow:
+    inset 0 1px rgba(248,249,250,.18),
+    inset 0 -2px rgba(0,0,0,.48),
+    0 3px 0 #030814;
+  clip-path: polygon(5px 0,100% 0,100% calc(100% - 5px),calc(100% - 5px) 100%,0 100%,0 5px);
+}
+html[data-theme="captain-america"] .theme-option::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  z-index: -1;
+  pointer-events: none;
+  border-left: 3px solid var(--cap-red,#c92f3a);
+  border-top: 1px solid rgba(248,249,250,.30);
+  border-right: 1px solid rgba(0,240,255,.24);
+}
+html[data-theme="captain-america"] .theme-option::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(108deg,transparent 28%,rgba(248,249,250,.38) 46%,rgba(0,240,255,.16) 51%,transparent 66%);
+  transform: translateX(-125%);
+  transition: transform .42s ease;
+}
+html[data-theme="captain-america"] .theme-option > * { position: relative; z-index: 1; }
+html[data-theme="captain-america"] .theme-option:hover,
+html[data-theme="captain-america"] .theme-option[aria-checked="true"] {
+  border-color: #c0c0c0 !important;
+  transform: translateX(-2px);
+  box-shadow:
+    inset 0 1px rgba(248,249,250,.30),
+    inset 0 -2px rgba(0,0,0,.45),
+    0 5px 0 #030814,
+    0 9px 16px rgba(0,0,0,.34),
+    0 0 0 1px rgba(0,240,255,.16);
+}
+html[data-theme="captain-america"] .theme-option:hover::after { transform: translateX(125%); }
+html[data-theme="captain-america"] .theme-option:active {
+  transform: translateY(3px) scale(.985);
+  box-shadow: inset 0 3px 8px rgba(0,0,0,.66), 0 1px 0 #030814;
+}
+html[data-theme="captain-america"] .theme-option:focus-visible {
+  outline: 2px solid #c0c0c0;
+  outline-offset: 3px;
+}
+html[data-theme="captain-america"] .theme-option[aria-checked="true"] .theme-option__check {
+  color: #00f0ff;
+  text-shadow: 0 0 8px rgba(0,240,255,.45);
+}
+
+/* Keep Thanos's existing menu treatment intact; only give it the same
+   interaction geometry as the other options where necessary. */
+html[data-theme="thanos"] .theme-option {
+  min-height: 54px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="light"] .theme-option,
+  html[data-theme="dark"] .theme-option,
+  html[data-theme="iron-man"] .theme-option,
+  html[data-theme="captain-america"] .theme-option {
+    transition: none !important;
+  }
+  html[data-theme="iron-man"] .theme-option::after,
+  html[data-theme="captain-america"] .theme-option::after {
+    transition: none !important;
+  }
+}
+
+/* Utility identity stays locked on small screens too; never move it into
+   document flow, which was the source of the shifted-logo behavior. */
+@media (max-width: 700px) {
+  html[data-theme="iron-man"] body:has(.back) .container,
+  html[data-theme="thanos"] body:has(.back) .container,
+  html[data-theme="captain-america"] body:has(.back) .container {
+    padding-top: 108px !important;
+    padding-right: 20px !important;
+  }
+  html[data-theme="iron-man"] body:has(.back) .container::after,
+  html[data-theme="thanos"] body:has(.back) .container::after,
+  html[data-theme="captain-america"] body:has(.back) .container::after {
+    position: fixed !important;
+    display: block !important;
+    margin: 0 !important;
+  }
+}
+
+

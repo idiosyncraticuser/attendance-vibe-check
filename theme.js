@@ -1,20 +1,19 @@
 /* Shared, dependency-free theme controller for Attendance Vibe Check. */
 (() => {
   const KEY = "attendanceVibeTheme";
+  const ENTRY_KEY = "attendanceVibeInitialEntryShown";
   const profiles = {
     light: { label: "Light", icon: "☀", color: "#f4f7fb", detail: "Crisp daylight", effect: "daylight" },
     dark: { label: "Dark", icon: "☾", color: "#0b1020", detail: "Deep night", effect: "dimming" },
     "iron-man": { label: "Iron Man", icon: "◉", color: "#11171d", detail: "Stark HUD", effect: "reactor" },
-    "spider-man": { label: "Spider-Man", icon: "⌘", color: "#07152c", detail: "Web velocity", effect: "web" },
-    hulk: { label: "Hulk", icon: "✹", color: "#16121d", detail: "Gamma impact", effect: "impact" },
-    thor: { label: "Thor", icon: "ϟ", color: "#08162f", detail: "Asgardian current", effect: "lightning" },
     "captain-america": { label: "Captain America", icon: "◌", color: "#081725", detail: "Tactical command", effect: "shield" },
     thanos: { label: "Thanos", icon: "∞", color: "#110d1c", detail: "Cosmic order", effect: "reality" },
-    ultron: { label: "Ultron", icon: "◈", color: "#111316", detail: "Machine intelligence", effect: "scan" }
-  };
+};
 
-  const safeGet = () => { try { const saved = localStorage.getItem(KEY); return saved === "night" ? "dark" : saved; } catch (_) { return null; } };
+  const safeGet = () => { try { const saved = localStorage.getItem(KEY); const normalized = saved === "night" ? "dark" : saved; return profiles[normalized] ? normalized : null; } catch (_) { return null; } };
   const safeSet = (value) => { try { localStorage.setItem(KEY, value); } catch (_) {} };
+  const entryShown = () => { try { return sessionStorage.getItem(ENTRY_KEY) === "1"; } catch (_) { return false; } };
+  const markEntryShown = () => { try { sessionStorage.setItem(ENTRY_KEY, "1"); } catch (_) {} };
   const preferred = () => matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   const current = () => document.documentElement.dataset.theme || preferred();
 
@@ -47,7 +46,7 @@
     }
   }
 
-  function captainTransition(resolved, persist) {
+  function captainTransition(resolved, persist, initial = false) {
     const overlay = document.createElement("div");
     overlay.className = "captain-transition";
     overlay.setAttribute("aria-hidden", "true");
@@ -62,9 +61,10 @@
     window.setTimeout(() => {
       overlay.remove();
       document.body.classList.remove("theme-transitioning");
+      if (initial) document.documentElement.classList.remove("theme-booting");
     }, 1320);
   }
-function ironManTransition(resolved, persist) {
+function ironManTransition(resolved, persist, initial = false) {
   const overlay = document.createElement("div");
   overlay.className = "iron-transition";
   overlay.setAttribute("aria-hidden", "true");
@@ -126,9 +126,10 @@ function ironManTransition(resolved, persist) {
   window.setTimeout(() => {
     overlay.remove();
     document.body.classList.remove("theme-transitioning");
+    if (initial) document.documentElement.classList.remove("theme-booting");
   }, 1380);
 }
-function thanosTransition(resolved, persist) {
+function thanosTransition(resolved, persist, initial = false) {
   const overlay = document.createElement("div");
   overlay.className = "thanos-transition";
   overlay.setAttribute("aria-hidden", "true");
@@ -202,13 +203,58 @@ function thanosTransition(resolved, persist) {
   window.setTimeout(() => {
     overlay.remove();
     document.body.classList.remove("theme-transitioning");
+    if (initial) document.documentElement.classList.remove("theme-booting");
   }, 1500);
 }
     
 
-  function apply(theme, persist = true, origin) {
+
+
+  function simpleEntry(resolved, persist, initial = false) {
+    const overlay = document.createElement("div");
+    overlay.className = `simple-entry simple-entry--${resolved}`;
+    overlay.setAttribute("aria-hidden", "true");
+    document.body.classList.add("theme-transitioning");
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => overlay.classList.add("is-active"));
+    window.setTimeout(() => {
+      commitTheme(resolved, persist);
+      overlay.classList.add("is-revealing");
+    }, 80);
+    window.setTimeout(() => {
+      overlay.remove();
+      document.body.classList.remove("theme-transitioning");
+      if (initial) document.documentElement.classList.remove("theme-booting");
+    }, 420);
+  }
+
+
+  function apply(theme, persist = true, origin, initial = false) {
     const resolved = profiles[theme] ? theme : preferred();
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (initial) {
+      // The cinematic entry belongs to the first page opened in a browser session,
+      // not to every page navigation/reload within that session.
+      if (entryShown()) {
+        commitTheme(resolved, persist);
+        document.documentElement.classList.remove("theme-booting");
+        return;
+      }
+
+      markEntryShown();
+
+      if (reduced) {
+        commitTheme(resolved, persist);
+        document.documentElement.classList.remove("theme-booting");
+        return;
+      }
+      if (resolved === "captain-america") return captainTransition(resolved, persist, true);
+      if (resolved === "iron-man") return ironManTransition(resolved, persist, true);
+      if (resolved === "thanos") return thanosTransition(resolved, persist, true);
+      return simpleEntry(resolved, persist, true);
+    }
+
     if (resolved === "captain-america" && current() !== resolved && origin && !reduced) {
       captainTransition(resolved, persist);
       return;
@@ -218,9 +264,9 @@ function thanosTransition(resolved, persist) {
       return;
     }
     if (resolved === "thanos" && current() !== resolved && origin && !reduced) {
-  thanosTransition(resolved, persist);
-  return;
-}
+      thanosTransition(resolved, persist);
+      return;
+    }
     animateThemeChange(resolved, origin);
     commitTheme(resolved, persist);
   }
@@ -268,7 +314,7 @@ function thanosTransition(resolved, persist) {
       toggle.style.setProperty("--energy-x", `${event.clientX - box.left}px`);
       toggle.style.setProperty("--energy-y", `${event.clientY - box.top}px`);
     });
-    apply(current(), false);
+    apply(current(), false, null, true);
   }
 
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {

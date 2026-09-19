@@ -8,7 +8,7 @@
   <link rel="apple-touch-icon" href="icon-512.png">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#f4f7fb">
-  <script>!function(){try{var t=localStorage.getItem("attendanceVibeTheme");if(t==="night")t="dark"}catch(e){}document.documentElement.dataset.theme=t||((matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light")}();</script>
+  <script>!function(){try{var t=localStorage.getItem("attendanceVibeTheme");if(t==="night")t="dark";if(!["light","dark","iron-man","captain-america","thanos"].includes(t))t=null}catch(e){}document.documentElement.dataset.theme=t||((matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.classList.add("theme-booting")}();</script>
   <style>
     *{box-sizing:border-box}
     body{
