@@ -1,586 +1,993 @@
 <!doctype html>
 <html lang="en">
- <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Attendance Vibe Check</title>
-  <link rel="icon" type="image/png" href="icon-512.png">
-  <link rel="apple-touch-icon" href="icon-512.png">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#f4f7fb">
-  <script>!function(){try{var t=localStorage.getItem("attendanceVibeTheme");if(t==="night")t="dark";if(!["light","dark","iron-man","captain-america","thanos"].includes(t))t=null}catch(e){}document.documentElement.dataset.theme=t||((matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light");document.documentElement.classList.add("theme-booting")}();</script>
-  <style>
-    *{box-sizing:border-box}
-    body{
-        margin:0;
-        font-family:Inter,Segoe UI,Arial,sans-serif;
-        background:#f4f7fb;
-        color:#172033;
-    }
-    .container{max-width:1250px;margin:auto;padding:28px 20px 45px}
-    .header{
-        display:flex;justify-content:space-between;align-items:flex-end;
-        gap:20px;margin-bottom:25px;flex-wrap:wrap
-    }
-    h1{margin:0;font-size:32px}
-    .subtitle{margin:7px 0 0;color:#667085;max-width:720px}
-    .summary{display:flex;gap:12px;flex-wrap:wrap}
-    .stat{
-        background:white;border:1px solid #e4e9f0;border-radius:14px;
-        padding:13px 17px;min-width:145px;box-shadow:0 3px 12px rgba(16,24,40,.05)
-    }
-    .stat span{display:block;color:#667085;font-size:12px}
-    .stat strong{font-size:21px}
-    .input-panel{
-        background:white;border:1px solid #e4e9f0;border-radius:18px;
-        padding:18px;margin-bottom:22px;box-shadow:0 5px 18px rgba(16,24,40,.06)
-    }
-    .input-layout{
-        display:grid;grid-template-columns:minmax(0,1fr) 280px;
-        gap:22px;align-items:center
-    }
-    .aggregate{
-        min-height:220px;display:flex;flex-direction:column;
-        align-items:center;justify-content:center;border-left:1px solid #edf0f3;
-        padding-left:22px
-    }
-    .aggregate-title{font-size:14px;font-weight:700;margin-bottom:12px}
-    .aggregate-donut{
-        width:145px;height:145px;border-radius:50%;position:relative;
-        background:conic-gradient(#22a85a var(--aggregate-pct),#e9edf2 0);
-        display:flex;align-items:center;justify-content:center
-    }
-    .aggregate-donut:after{
-        content:"";position:absolute;inset:18px;background:white;border-radius:50%
-    }
-    .aggregate-value{position:relative;z-index:2;font-size:25px;font-weight:800}
-    .aggregate-sub{margin-top:10px;color:#667085;font-size:12px;text-align:center}
-    .aggregate-action{
-        margin-top:12px;padding:10px 14px;border-radius:11px;
-        text-align:center;font-size:13px;font-weight:700
-    }
-    .aggregate-action.safe{background:#e8f7ee;color:#138a45}
-    .aggregate-action.danger{background:#fdecec;color:#c62828}
-    .aggregate-empty{color:#98a2b3;font-size:13px;text-align:center;padding:20px}
-    .target-box{width:100%;margin-top:12px;padding:10px 12px;background:#f7f9fb;border:1px solid #e4e9f0;border-radius:12px}
-    .target-label{font-size:11px;color:#667085;font-weight:700;display:block;margin-bottom:5px}
-    .target-select{width:100%;border:0;background:transparent;color:#172033;font:700 13px Inter,Segoe UI,Arial,sans-serif;outline:none;cursor:pointer}
-    .custom-target{display:none;margin-top:7px;width:100%;padding:8px;border:1px solid #d7dde6;border-radius:8px}
-    .roast{margin-top:10px;padding:10px 12px;border-radius:11px;background:#172033;color:white;font-size:12px;font-weight:700;line-height:1.35;text-align:center}
-    .subject-roast{margin-top:8px;font-size:11px;color:#667085;line-height:1.3;min-height:29px}
- 
-    .input-panel label{display:block;margin-bottom:9px}
-    textarea{
-        width:100%;min-height:190px;resize:vertical;border:1px solid #d7dde6;
-        border-radius:12px;padding:13px;font:13px Consolas,monospace;
-        color:#172033;background:#fbfcfe;outline:none
-    }
-    textarea:focus{border-color:#6b8afd;box-shadow:0 0 0 3px rgba(107,138,253,.12)}
-    .input-actions{display:flex;gap:9px;margin-top:11px}
-    button{
-        border:0;border-radius:10px;padding:10px 16px;background:#172033;
-        color:white;font-weight:700;cursor:pointer
-    }
-    button:hover{opacity:.9}
-    button.secondary{background:#eef1f5;color:#344054}
-    .skip-link{
-        display:inline-flex;align-items:center;justify-content:center;
-        border-radius:10px;padding:10px 16px;background:#e8f7ee;color:#138a45;
-        font-weight:700;text-decoration:none;font-size:13px
-    }
-    .skip-link:hover{background:#d9f1e3}
-    .predictor-link{background:#eef0ff;color:#4c55a8}
-    .predictor-link:hover{background:#e3e6ff}
-    .error{color:#c62828;font-size:13px;margin-top:9px;display:none}
-    .cards{
-        display:grid;
-        grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
-        gap:18px;
-        align-items:stretch
-    }
-    .card{
-        background:white;border:1px solid #e4e9f0;border-radius:18px;
-        padding:20px;box-shadow:0 5px 18px rgba(16,24,40,.06);
-        display:grid;
-        grid-template-rows:150px 220px auto;
-        min-height:425px;
-        overflow:hidden
-    }
-    .top{
-        display:grid;
-        grid-template-columns:minmax(0,1fr) auto;
-        align-items:start;
-        gap:10px;
-        min-width:0;
-        overflow:hidden
-    }
-    .top > div:first-child{min-width:0}
-    .code{font-size:12px;color:#667085;font-weight:700}
-    .name{
-        font-size:17px;font-weight:700;margin-top:4px;line-height:1.3;
-        height:88px;
-        overflow:hidden;
-        display:-webkit-box;
-        -webkit-line-clamp:4;
-        -webkit-box-orient:vertical
-    }
-    .type{font-size:12px;color:#667085;margin-top:5px}
-    .badge{
-        letter-spacing:.1px;height:max-content;padding:6px 9px;border-radius:999px;
-        font-size:12px;font-weight:700;white-space:nowrap
-    }
-    .safe{background:#e8f7ee;color:#138a45}
-    .danger{background:#fdecec;color:#c62828}
-    .chart-row{
-        display:grid;
-        grid-template-columns:140px minmax(0,1fr);
-        align-items:center;
-        gap:18px;
-        margin:0;
-        height:220px;
-        border-top:1px solid #edf0f3;
-        border-bottom:1px solid #edf0f3;
-        overflow:hidden
-    }
-    .donut{
-        width:136px;height:136px;border-radius:50%;
-        position:relative;flex:none;
-        background:conic-gradient(var(--chart-color) var(--pct),#e9edf2 0)
-    }
-    .donut:after{
-        content:"";position:absolute;inset:16px;background:white;border-radius:50%
-    }
-    .donut-text{
-        position:absolute;inset:0;
-        display:flex;align-items:center;justify-content:center;
-        z-index:2;
-        font-size:17px;
-        font-weight:800;
-        white-space:nowrap;
-        letter-spacing:-.4px;
-        line-height:1
-    }
-    .metrics{
-        min-width:0;
-        width:100%
-    }
-    .metric{
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        gap:8px;
-        margin:8px 0;
-        font-size:13px
-    }
-    .metric span{
-        color:#667085;
-        white-space:nowrap
-    }
-    .metric b{white-space:nowrap}
-    .progress{
-        height:8px;background:#edf0f3;border-radius:20px;
-        overflow:hidden;margin-top:11px
-    }
-    .progress > div{height:100%;background:#22a85a;border-radius:20px}
-    .danger-bar .progress > div{background:#e5484d}
-    .subject-roast{
-        margin-top:8px;font-size:11px;color:#667085;
-        line-height:1.3;min-height:29px
-    }
-    .action{
-        padding-top:15px;
-        display:grid;grid-template-columns:1fr 1fr;gap:10px
-    }
-    .action-box{
-        padding:11px;border-radius:12px;background:#f7f9fb;min-width:0;
-        min-height:67px
-    }
-    .action-box small{
-        display:block;color:#667085;font-size:11px;
-        margin-bottom:4px;line-height:1.25
-    }
-    .action-box strong{font-size:16px}
-    .miss{color:#138a45}.catch{color:#c62828}
-    .legend{
-        margin-top:25px;padding:15px 18px;background:white;border:1px solid #e4e9f0;
-        border-radius:14px;color:#667085;font-size:13px
-    }
-    .legend b{color:#172033}
-    @media(max-width:700px){
-        .input-layout{grid-template-columns:1fr}
-        .aggregate{border-left:0;border-top:1px solid #edf0f3;padding:18px 0 0}
-    }
-    @media(max-width:600px){
-        .container{padding:20px 13px 35px}
-        h1{font-size:26px}
-        .summary{width:100%}.stat{flex:1;min-width:110px}
-    }
- </style>
-  <link rel="stylesheet" href="theme.css">
- </head>
- <body>
-  <div class="container">
-   <div class="header">
-    <div>
-     <h1>Attendance Vibe Check 💀</h1>
-     <p class="subtitle">Paste your latest attendance report and let’s see if your attendance is <b>giving</b> or you’re absolutely <b>cooked</b>.</p>
-    </div>
-    <div class="summary" id="summary"></div>
-   </div>
-   <section class="input-panel">
-    <div class="input-layout">
-     <div>
-      <label for="report"><b>Drop the attendance report 📋</b></label> <textarea id="report" placeholder="Paste your latest attendance report here...
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Attendance Vibe Check</title>
+    <link rel="icon" type="image/png" href="icon-512.png" />
+    <link rel="apple-touch-icon" href="icon-512.png" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#f4f7fb" />
+    <script>
+      !(function () {
+        try {
+          var t = localStorage.getItem("attendanceVibeTheme");
+          if (t === "night") t = "dark";
+          if (
+            ![
+              "light",
+              "dark",
+              "iron-man",
+              "captain-america",
+              "thanos",
+            ].includes(t)
+          )
+            t = null;
+        } catch (e) {}
+        document.documentElement.dataset.theme =
+          t ||
+          (matchMedia && matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light");
+        document.documentElement.classList.add("theme-booting");
+      })();
+    </script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family:
+          Inter,
+          Segoe UI,
+          Arial,
+          sans-serif;
+        background: #f4f7fb;
+        color: #172033;
+      }
+      .container {
+        max-width: 1250px;
+        margin: auto;
+        padding: 28px 20px 45px;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 20px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+      }
+      h1 {
+        margin: 0;
+        font-size: 32px;
+      }
+      .subtitle {
+        margin: 7px 0 0;
+        color: #667085;
+        max-width: 720px;
+      }
+      .summary {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .stat {
+        background: white;
+        border: 1px solid #e4e9f0;
+        border-radius: 14px;
+        padding: 13px 17px;
+        min-width: 145px;
+        box-shadow: 0 3px 12px rgba(16, 24, 40, 0.05);
+      }
+      .stat span {
+        display: block;
+        color: #667085;
+        font-size: 12px;
+      }
+      .stat strong {
+        font-size: 21px;
+      }
+      .input-panel {
+        background: white;
+        border: 1px solid #e4e9f0;
+        border-radius: 18px;
+        padding: 18px;
+        margin-bottom: 22px;
+        box-shadow: 0 5px 18px rgba(16, 24, 40, 0.06);
+      }
+      .input-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 280px;
+        gap: 22px;
+        align-items: center;
+      }
+      .aggregate {
+        min-height: 220px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-left: 1px solid #edf0f3;
+        padding-left: 22px;
+      }
+      .aggregate-title {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+      .aggregate-donut {
+        width: 145px;
+        height: 145px;
+        border-radius: 50%;
+        position: relative;
+        background: conic-gradient(#22a85a var(--aggregate-pct), #e9edf2 0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .aggregate-donut:after {
+        content: "";
+        position: absolute;
+        inset: 18px;
+        background: white;
+        border-radius: 50%;
+      }
+      .aggregate-value {
+        position: relative;
+        z-index: 2;
+        font-size: 25px;
+        font-weight: 800;
+      }
+      .aggregate-sub {
+        margin-top: 10px;
+        color: #667085;
+        font-size: 12px;
+        text-align: center;
+      }
+      .aggregate-action {
+        margin-top: 12px;
+        padding: 10px 14px;
+        border-radius: 11px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .aggregate-action.safe {
+        background: #e8f7ee;
+        color: #138a45;
+      }
+      .aggregate-action.danger {
+        background: #fdecec;
+        color: #c62828;
+      }
+      .aggregate-empty {
+        color: #98a2b3;
+        font-size: 13px;
+        text-align: center;
+        padding: 20px;
+      }
+      .target-box {
+        width: 100%;
+        margin-top: 12px;
+        padding: 10px 12px;
+        background: #f7f9fb;
+        border: 1px solid #e4e9f0;
+        border-radius: 12px;
+      }
+      .target-label {
+        font-size: 11px;
+        color: #667085;
+        font-weight: 700;
+        display: block;
+        margin-bottom: 5px;
+      }
+      .target-select {
+        width: 100%;
+        border: 0;
+        background: transparent;
+        color: #172033;
+        font:
+          700 13px Inter,
+          Segoe UI,
+          Arial,
+          sans-serif;
+        outline: none;
+        cursor: pointer;
+      }
+      .custom-target {
+        display: none;
+        margin-top: 7px;
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #d7dde6;
+        border-radius: 8px;
+      }
+      .roast {
+        margin-top: 10px;
+        padding: 10px 12px;
+        border-radius: 11px;
+        background: #172033;
+        color: white;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1.35;
+        text-align: center;
+      }
+      .subject-roast {
+        margin-top: 8px;
+        font-size: 11px;
+        color: #667085;
+        line-height: 1.3;
+        min-height: 29px;
+      }
+
+      .input-panel label {
+        display: block;
+        margin-bottom: 9px;
+      }
+      textarea {
+        width: 100%;
+        min-height: 190px;
+        resize: vertical;
+        border: 1px solid #d7dde6;
+        border-radius: 12px;
+        padding: 13px;
+        font:
+          13px Consolas,
+          monospace;
+        color: #172033;
+        background: #fbfcfe;
+        outline: none;
+      }
+      textarea:focus {
+        border-color: #6b8afd;
+        box-shadow: 0 0 0 3px rgba(107, 138, 253, 0.12);
+      }
+      .input-actions {
+        display: flex;
+        gap: 9px;
+        margin-top: 11px;
+      }
+      button {
+        border: 0;
+        border-radius: 10px;
+        padding: 10px 16px;
+        background: #172033;
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      button:hover {
+        opacity: 0.9;
+      }
+      button.secondary {
+        background: #eef1f5;
+        color: #344054;
+      }
+      .skip-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        padding: 10px 16px;
+        background: #e8f7ee;
+        color: #138a45;
+        font-weight: 700;
+        text-decoration: none;
+        font-size: 13px;
+      }
+      .skip-link:hover {
+        background: #d9f1e3;
+      }
+      .predictor-link {
+        background: #eef0ff;
+        color: #4c55a8;
+      }
+      .predictor-link:hover {
+        background: #e3e6ff;
+      }
+      .error {
+        color: #c62828;
+        font-size: 13px;
+        margin-top: 9px;
+        display: none;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: 18px;
+        align-items: stretch;
+      }
+      .card {
+        background: white;
+        border: 1px solid #e4e9f0;
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: 0 5px 18px rgba(16, 24, 40, 0.06);
+        display: grid;
+        grid-template-rows: 150px 220px auto;
+        min-height: 425px;
+        overflow: hidden;
+      }
+      .top {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+        gap: 10px;
+        min-width: 0;
+        overflow: hidden;
+      }
+      .top > div:first-child {
+        min-width: 0;
+      }
+      .code {
+        font-size: 12px;
+        color: #667085;
+        font-weight: 700;
+      }
+      .name {
+        font-size: 17px;
+        font-weight: 700;
+        margin-top: 4px;
+        line-height: 1.3;
+        height: 88px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+      }
+      .type {
+        font-size: 12px;
+        color: #667085;
+        margin-top: 5px;
+      }
+      .badge {
+        letter-spacing: 0.1px;
+        height: max-content;
+        padding: 6px 9px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .safe {
+        background: #e8f7ee;
+        color: #138a45;
+      }
+      .danger {
+        background: #fdecec;
+        color: #c62828;
+      }
+      .chart-row {
+        display: grid;
+        grid-template-columns: 140px minmax(0, 1fr);
+        align-items: center;
+        gap: 18px;
+        margin: 0;
+        height: 220px;
+        border-top: 1px solid #edf0f3;
+        border-bottom: 1px solid #edf0f3;
+        overflow: hidden;
+      }
+      .donut {
+        width: 136px;
+        height: 136px;
+        border-radius: 50%;
+        position: relative;
+        flex: none;
+        background: conic-gradient(var(--chart-color) var(--pct), #e9edf2 0);
+      }
+      .donut:after {
+        content: "";
+        position: absolute;
+        inset: 16px;
+        background: white;
+        border-radius: 50%;
+      }
+      .donut-text {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+        font-size: 17px;
+        font-weight: 800;
+        white-space: nowrap;
+        letter-spacing: -0.4px;
+        line-height: 1;
+      }
+      .metrics {
+        min-width: 0;
+        width: 100%;
+      }
+      .metric {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        margin: 8px 0;
+        font-size: 13px;
+      }
+      .metric span {
+        color: #667085;
+        white-space: nowrap;
+      }
+      .metric b {
+        white-space: nowrap;
+      }
+      .progress {
+        height: 8px;
+        background: #edf0f3;
+        border-radius: 20px;
+        overflow: hidden;
+        margin-top: 11px;
+      }
+      .progress > div {
+        height: 100%;
+        background: #22a85a;
+        border-radius: 20px;
+      }
+      .danger-bar .progress > div {
+        background: #e5484d;
+      }
+      .subject-roast {
+        margin-top: 8px;
+        font-size: 11px;
+        color: #667085;
+        line-height: 1.3;
+        min-height: 29px;
+      }
+      .action {
+        padding-top: 15px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .action-box {
+        padding: 11px;
+        border-radius: 12px;
+        background: #f7f9fb;
+        min-width: 0;
+        min-height: 67px;
+      }
+      .action-box small {
+        display: block;
+        color: #667085;
+        font-size: 11px;
+        margin-bottom: 4px;
+        line-height: 1.25;
+      }
+      .action-box strong {
+        font-size: 16px;
+      }
+      .miss {
+        color: #138a45;
+      }
+      .catch {
+        color: #c62828;
+      }
+      .legend {
+        margin-top: 25px;
+        padding: 15px 18px;
+        background: white;
+        border: 1px solid #e4e9f0;
+        border-radius: 14px;
+        color: #667085;
+        font-size: 13px;
+      }
+      .legend b {
+        color: #172033;
+      }
+      @media (max-width: 700px) {
+        .input-layout {
+          grid-template-columns: 1fr;
+        }
+        .aggregate {
+          border-left: 0;
+          border-top: 1px solid #edf0f3;
+          padding: 18px 0 0;
+        }
+      }
+      @media (max-width: 600px) {
+        .container {
+          padding: 20px 13px 35px;
+        }
+        h1 {
+          font-size: 26px;
+        }
+        .summary {
+          width: 100%;
+        }
+        .stat {
+          flex: 1;
+          min-width: 110px;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="theme.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div>
+          <h1>Attendance Vibe Check 💀</h1>
+          <p class="subtitle">
+            Paste your latest attendance report and let’s see if your attendance
+            is <b>giving</b> or you’re absolutely <b>cooked</b>.
+          </p>
+        </div>
+        <div class="summary" id="summary"></div>
+      </div>
+      <section class="input-panel">
+        <div class="input-layout">
+          <div>
+            <label for="report"><b>Drop the attendance report 📋</b></label>
+            <textarea
+              id="report"
+              placeholder="Paste your latest attendance report here...
  
 Example:
 # Subject Code    Subject    Subject Type    Present    OD    Makeup    Absent    Percentage
 1    CEUL560.1    Climate Change Science    Lecture    6    0    0    5    54.55
-2    CRT    Campus Recruitment Training    Lab    24    0    0    0    100.00"></textarea>
-      <div class="input-actions">
-       <button onclick="parseReport()">Run the vibe check ⚡</button>
-       <button class="secondary" onclick="clearReport()">Reset the lore 🗑️</button>
-       <a href="skip_simulator.html" class="skip-link">🧪 Skip Simulator</a> <a href="future_predictor.html?v=3" class="skip-link predictor-link">🔮 Future Predictor</a>
+2    CRT    Campus Recruitment Training    Lab    24    0    0    0    100.00"
+            ></textarea>
+            <div class="input-actions">
+              <button onclick="parseReport()">Run the vibe check ⚡</button>
+              <button class="secondary" onclick="clearReport()">
+                Reset the lore 🗑️
+              </button>
+              <a href="skip_simulator.html" class="skip-link"
+                >🧪 Skip Simulator</a
+              >
+              <a
+                href="future_predictor.html?v=3"
+                class="skip-link predictor-link"
+                >🔮 Future Predictor</a
+              >
+            </div>
+            <div id="error" class="error"></div>
+          </div>
+          <div class="aggregate">
+            <div class="aggregate-title">How cooked are we? 💀</div>
+            <div id="aggregateChart">
+              <div class="aggregate-empty">
+                Drop your report to unlock
+                <br />
+                the attendance tea ☕
+              </div>
+            </div>
+            <div id="aggregateSub" class="aggregate-sub"></div>
+            <div class="target-box">
+              <span class="target-label">Pick your survival level 🎯</span>
+              <select
+                id="targetSelect"
+                class="target-select"
+                onchange="render()"
+              >
+                <option value="75">75% — Bare minimum 🗿</option>
+                <option value="80">80% — Playing it safe 😮‍💨</option>
+                <option value="85">85% — Attendance merchant</option>
+                <option value="90">90% — Teacher's favourite 💀</option>
+                <option value="95">95% — Touch grass bro</option>
+                <option value="100">100% — Bro IS the timetable</option>
+                <option value="custom">Custom — I'm built different</option>
+              </select>
+              <input
+                id="customTarget"
+                class="custom-target"
+                type="number"
+                min="1"
+                max="100"
+                step="0.5"
+                placeholder="Custom target %"
+                oninput="render()"
+              />
+            </div>
+            <div id="aggregateRoast"></div>
+          </div>
+        </div>
+      </section>
+      <div class="cards" id="cards"></div>
+      <div class="legend">
+        <b>How the attendance lore works:</b> “Free pass” = maximum future hours
+        you can skip while staying at or above your target. “LOCK TF IN” =
+        minimum future hours you need to attend to reach your target. Labs must
+        individually stay at target; lectures only become individually debarred
+        when aggregate is below target. Pick your target, drop the report, and
+        let the math cook. No cap 😭.
       </div>
-      <div id="error" class="error"></div>
-     </div>
-     <div class="aggregate">
-      <div class="aggregate-title">How cooked are we? 💀</div>
-      <div id="aggregateChart">
-       <div class="aggregate-empty">
-        Drop your report to unlock
-        <br>
-        the attendance tea ☕
-       </div>
-      </div>
-      <div id="aggregateSub" class="aggregate-sub"></div>
-      <div class="target-box">
-       <span class="target-label">Pick your survival level 🎯</span> <select id="targetSelect" class="target-select" onchange="render()"> <option value="75">75% — Bare minimum 🗿</option> <option value="80">80% — Playing it safe 😮‍💨</option> <option value="85">85% — Attendance merchant</option> <option value="90">90% — Teacher's favourite 💀</option> <option value="95">95% — Touch grass bro</option> <option value="100">100% — Bro IS the timetable</option> <option value="custom">Custom — I'm built different</option> </select> <input id="customTarget" class="custom-target" type="number" min="1" max="100" step="0.5" placeholder="Custom target %" oninput="render()">
-      </div>
-      <div id="aggregateRoast"></div>
-     </div>
     </div>
-   </section>
-   <div class="cards" id="cards"></div>
-   <div class="legend">
-    <b>How the attendance lore works:</b> “Free pass” = maximum future hours you can skip while staying at or above your target. “LOCK TF IN” = minimum future hours you need to attend to reach your target. Labs must individually stay at target; lectures only become individually debarred when aggregate is below target. Pick your target, drop the report, and let the math cook. No cap 😭.
-   </div>
-  </div>
-  <script src="theme.js"></script>
-  <script>
-let subjects = [];
-const savedTarget=localStorage.getItem("attendanceVibeTarget");
-if(savedTarget){
-    const targetSelect=document.getElementById("targetSelect");
-    if(targetSelect){
-        const option=[...targetSelect.options].find(o=>o.value===savedTarget);
-        if(option) targetSelect.value=savedTarget;
-    }
-}
- 
-function parseReport(){
-    const raw=document.getElementById("report").value.trim();
-    const error=document.getElementById("error");
- 
-    if(!raw){
-        error.textContent="Bro, paste the report first 😭";
-        error.style.display="block";
-        return;
-    }
- 
-    const lines=raw.split(/\r?\n/).filter(line=>line.trim());
-    const parsed=[];
- 
-    for(const line of lines){
-        if(/subject code|percentage|attendance report/i.test(line)) continue;
- 
-        // Handles tabs, multiple spaces, and table text copied from a webpage.
-        let parts=line.includes("\t")
-            ? line.split("\t").map(x=>x.trim()).filter(Boolean)
-            : line.split(/\s{2,}/).map(x=>x.trim()).filter(Boolean);
- 
-        // Fallback for reports copied with single spaces:
-        // identify the numeric tail: Present, OD, Makeup, Absent, Percentage.
-        const nums=line.match(/(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+(?:\.\d+)?)(?:\s*)$/);
- 
-        if(nums){
-            const idx=nums.index;
-            const prefix=line.slice(0,idx).trim();
-            const number=prefix.match(/^(\d+)\s+/);
-            if(!number) continue;
- 
-            let fields=prefix.slice(number[0].length).trim().split(/\s{2,}/).filter(Boolean);
- 
+    <script src="theme.js"></script>
+    <script>
+      let subjects = [];
+      const savedTarget = localStorage.getItem("attendanceVibeTarget");
+      if (savedTarget) {
+        const targetSelect = document.getElementById("targetSelect");
+        if (targetSelect) {
+          const option = [...targetSelect.options].find(
+            (o) => o.value === savedTarget,
+          );
+          if (option) targetSelect.value = savedTarget;
+        }
+      }
+
+      function parseReport() {
+        const raw = document.getElementById("report").value.trim();
+        const error = document.getElementById("error");
+
+        if (!raw) {
+          error.textContent = "Bro, paste the report first 😭";
+          error.style.display = "block";
+          return;
+        }
+
+        const lines = raw.split(/\r?\n/).filter((line) => line.trim());
+        const parsed = [];
+
+        for (const line of lines) {
+          if (/subject code|percentage|attendance report/i.test(line)) continue;
+
+          // Handles tabs, multiple spaces, and table text copied from a webpage.
+          let parts = line.includes("\t")
+            ? line
+                .split("\t")
+                .map((x) => x.trim())
+                .filter(Boolean)
+            : line
+                .split(/\s{2,}/)
+                .map((x) => x.trim())
+                .filter(Boolean);
+
+          // Fallback for reports copied with single spaces:
+          // identify the numeric tail: Present, OD, Makeup, Absent, Percentage.
+          const nums = line.match(
+            /(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+(?:\.\d+)?)(?:\s*)$/,
+          );
+
+          if (nums) {
+            const idx = nums.index;
+            const prefix = line.slice(0, idx).trim();
+            const number = prefix.match(/^(\d+)\s+/);
+            if (!number) continue;
+
+            let fields = prefix
+              .slice(number[0].length)
+              .trim()
+              .split(/\s{2,}/)
+              .filter(Boolean);
+
             // If spacing was lost, use known subject-code pattern to split.
-            if(fields.length<3){
-                const m=prefix.slice(number[0].length).match(/^(\S+)\s+(.+?)\s+(Lecture|Lab)\s*$/i);
-                if(!m) continue;
-                fields=[m[1],m[2],m[3]];
+            if (fields.length < 3) {
+              const m = prefix
+                .slice(number[0].length)
+                .match(/^(\S+)\s+(.+?)\s+(Lecture|Lab)\s*$/i);
+              if (!m) continue;
+              fields = [m[1], m[2], m[3]];
             }
- 
-            if(fields.length>=3){
-                parsed.push({
-                    code:fields[0],
-                    name:fields[1],
-                    type:fields[2],
-                    present:Number(nums[1]),
-                    od:Number(nums[2]),
-                    makeup:Number(nums[3]),
-                    absent:Number(nums[4])
-                });
-                continue;
+
+            if (fields.length >= 3) {
+              parsed.push({
+                code: fields[0],
+                name: fields[1],
+                type: fields[2],
+                present: Number(nums[1]),
+                od: Number(nums[2]),
+                makeup: Number(nums[3]),
+                absent: Number(nums[4]),
+              });
+              continue;
             }
-        }
- 
-        // Standard tab-separated row.
-        if(parts.length>=8 && /^\d+$/.test(parts[0])){
+          }
+
+          // Standard tab-separated row.
+          if (parts.length >= 8 && /^\d+$/.test(parts[0])) {
             parsed.push({
-                code:parts[1],
-                name:parts[2],
-                type:parts[3],
-                present:Number(parts[4])||0,
-                od:Number(parts[5])||0,
-                makeup:Number(parts[6])||0,
-                absent:Number(parts[7])||0
+              code: parts[1],
+              name: parts[2],
+              type: parts[3],
+              present: Number(parts[4]) || 0,
+              od: Number(parts[5]) || 0,
+              makeup: Number(parts[6]) || 0,
+              absent: Number(parts[7]) || 0,
             });
+          }
         }
-    }
- 
-    if(!parsed.length){
-        error.textContent="Couldn’t read that report 💀. Paste the full table with Subject Code, Present, OD, Makeup, Absent and Percentage.";
-        error.style.display="block";
-        return;
-    }
- 
-    subjects=parsed;
-    error.style.display="none";
-    localStorage.setItem("attendanceVibeSubjects",JSON.stringify(subjects));
-    render();
-}
- 
-function clearReport(){
-    document.getElementById("report").value="";
-    document.getElementById("error").style.display="none";
-    subjects=[];
-    document.getElementById("cards").innerHTML="";
-    document.getElementById("summary").innerHTML="";
-    document.getElementById("aggregateChart").innerHTML='<div class="aggregate-empty">Drop your report to unlock<br>the attendance tea ☕</div>';
-    document.getElementById("aggregateSub").textContent="";
-    document.getElementById("aggregateRoast").innerHTML="";
-}
- 
-function getTarget(){
-    const select=document.getElementById("targetSelect");
-    if(!select) return 75;
-    if(select.value==="custom"){
-        const value=Number(document.getElementById("customTarget")?.value);
-        return value>0&&value<=100?value:75;
-    }
-    return Number(select.value);
-}
- 
-function isLab(s){return /lab/i.test(s.type);}
-function isDebarred(s,overall){
-    const pct=getStats(s).pct;
-    const target=getTarget();
-    return isLab(s) ? pct<target : (overall<target && pct<target);
-}
-function getStats(s){
-    const attended=s.present+s.od+s.makeup;
-    const total=s.present+s.od+s.absent;
-    const pct=total?attended/total*100:0;
-    const target=getTarget();
-    const ratio=target/100;
- 
-    const canMiss=Math.max(0,Math.floor(attended/ratio-total+1e-9));
-    const needAttend=pct>=target?0:Math.ceil((ratio*total-attended)/(1-ratio)-1e-9);
- 
-    return {attended,total,pct,canMiss,needAttend,target};
-}
- 
-const ROASTS={
-    perfect:[
-        "WHO ARE YOU 😭 Bro IS the timetable.",
-        "100%. Bro has apparently moved into the classroom 💀",
-        "Attendance so clean it's suspicious 🗿",
-        "Bro attends classes like rent is due 😭"
-    ],
-    excellent:[
-        "Attendance looking illegally good 💀",
-        "Bro is farming attendance. Don't get too confident 😮‍💨",
-        "This is getting teacher's-favourite suspicious 👀",
-        "Bro really said attendance comes first 😭"
-    ],
-    good:[
-        "Attendance merchant spotted 🫡",
-        "You're chilling. Don't fumble the bag 😮‍💨",
-        "We got breathing room. Please don't waste it 💀",
-        "Lowkey cooking. Keep it together 🗿"
-    ],
-    safe:[
-        "Bare minimum secured 🗿 Don't test your luck.",
-        "75% gang has entered the chat 😭",
-        "Technically surviving. We take those 😮‍💨",
-        "You're alive. That's what matters 💀"
-    ],
-    danger:[
-        "LOCK. TF. IN. 🔒🫡 You're one bad week from cooked.",
-        "Bro is walking the attendance tightrope 😭",
-        "One more L and it's over 💀",
-        "The 75% committee is watching you 👀"
-    ],
-    bad:[
-        "Bro attends classes in spirit only 💀",
-        "At this point you're on a long-distance relationship with the classroom 😭",
-        "Attendance has officially entered the danger zone 🚨",
-        "Academic comeback loading... maybe 🫠"
-    ],
-    cooked:[
-        "This attendance has LEFT THE CHAT 😭",
-        "Bro is collecting absences like achievements 💀",
-        "The classroom hasn't seen you in ages 😭",
-        "Attendance status: cooked beyond repair 🫠"
-    ]
-};
- 
-function randomFrom(list){
-    return list[Math.floor(Math.random()*list.length)];
-}
- 
-function getRoast(pct,target,overall,lab=false){
-    if(lab && pct<target) return randomFrom([
-        "LAB SHORTAGE ALERT 🚨 You're actually cooked.",
-        "Bro the lab attendance police are outside 💀",
-        "Lab below target = instant academic jump scare 😭"
-    ]);
-    if(overall<target && pct<target) return randomFrom([
-        "Aggregate is cooked, and this subject is caught in the crossfire 💀",
-        "Overall below target. This subject is NOT getting a free pass 😭",
-        "The aggregate said no and took this subject down with it 🫠"
-    ]);
-    if(pct>=100) return randomFrom(ROASTS.perfect);
-    if(pct>=95) return randomFrom(ROASTS.excellent);
-    if(pct>=85) return randomFrom(ROASTS.good);
-    if(pct>=target) return randomFrom(ROASTS.safe);
-    if(pct>=70) return randomFrom(ROASTS.danger);
-    if(pct>=60) return randomFrom(ROASTS.bad);
-    return randomFrom(ROASTS.cooked);
-}
- 
-function subjectRoast(s,pct){
-    const name=s.name.toLowerCase();
-    if(pct>=100){
-        if(name.includes("machine learning")) return randomFrom([
-            "Machine learned how to attend 😭",
-            "Bro trained the attendance model to 100% 💀"
-        ]);
-        if(name.includes("algorithm")||name.includes("daa")) return randomFrom([
-            "Solved attendance before solving DAA 🗿",
-            "Algorithm for attendance: show up. Bro mastered it 😭"
-        ]);
-        if(name.includes("devops")) return randomFrom([
-            "Attendance deployed successfully 🚀",
-            "CI/CD pipeline for showing up is undefeated 💀"
-        ]);
-        return randomFrom([
+
+        if (!parsed.length) {
+          error.textContent =
+            "Couldn’t read that report 💀. Paste the full table with Subject Code, Present, OD, Makeup, Absent and Percentage.";
+          error.style.display = "block";
+          return;
+        }
+
+        subjects = parsed;
+        error.style.display = "none";
+        localStorage.setItem(
+          "attendanceVibeSubjects",
+          JSON.stringify(subjects),
+        );
+        render();
+      }
+
+      function clearReport() {
+        document.getElementById("report").value = "";
+        document.getElementById("error").style.display = "none";
+        subjects = [];
+        document.getElementById("cards").innerHTML = "";
+        document.getElementById("summary").innerHTML = "";
+        document.getElementById("aggregateChart").innerHTML =
+          '<div class="aggregate-empty">Drop your report to unlock<br>the attendance tea ☕</div>';
+        document.getElementById("aggregateSub").textContent = "";
+        document.getElementById("aggregateRoast").innerHTML = "";
+      }
+
+      function getTarget() {
+        const select = document.getElementById("targetSelect");
+        if (!select) return 75;
+        if (select.value === "custom") {
+          const value = Number(document.getElementById("customTarget")?.value);
+          return value > 0 && value <= 100 ? value : 75;
+        }
+        return Number(select.value);
+      }
+
+      function isLab(s) {
+        return /lab/i.test(s.type);
+      }
+      function isDebarred(s, overall) {
+        const pct = getStats(s).pct;
+        const target = getTarget();
+        return isLab(s) ? pct < target : overall < target && pct < target;
+      }
+      function getStats(s) {
+        const attended = s.present + s.od + s.makeup;
+        const total = s.present + s.od + s.absent;
+        const pct = total ? (attended / total) * 100 : 0;
+        const target = getTarget();
+        const ratio = target / 100;
+
+        const canMiss = Math.max(
+          0,
+          Math.floor(attended / ratio - total + 1e-9),
+        );
+        const needAttend =
+          pct >= target
+            ? 0
+            : Math.ceil((ratio * total - attended) / (1 - ratio) - 1e-9);
+
+        return { attended, total, pct, canMiss, needAttend, target };
+      }
+
+      const ROASTS = {
+        perfect: [
+          "WHO ARE YOU 😭 Bro IS the timetable.",
+          "100%. Bro has apparently moved into the classroom 💀",
+          "Attendance so clean it's suspicious 🗿",
+          "Bro attends classes like rent is due 😭",
+        ],
+        excellent: [
+          "Attendance looking illegally good 💀",
+          "Bro is farming attendance. Don't get too confident 😮‍💨",
+          "This is getting teacher's-favourite suspicious 👀",
+          "Bro really said attendance comes first 😭",
+        ],
+        good: [
+          "Attendance merchant spotted 🫡",
+          "You're chilling. Don't fumble the bag 😮‍💨",
+          "We got breathing room. Please don't waste it 💀",
+          "Lowkey cooking. Keep it together 🗿",
+        ],
+        safe: [
+          "Bare minimum secured 🗿 Don't test your luck.",
+          "75% gang has entered the chat 😭",
+          "Technically surviving. We take those 😮‍💨",
+          "You're alive. That's what matters 💀",
+        ],
+        danger: [
+          "LOCK. TF. IN. 🔒🫡 You're one bad week from cooked.",
+          "Bro is walking the attendance tightrope 😭",
+          "One more L and it's over 💀",
+          "The 75% committee is watching you 👀",
+        ],
+        bad: [
+          "Bro attends classes in spirit only 💀",
+          "At this point you're on a long-distance relationship with the classroom 😭",
+          "Attendance has officially entered the danger zone 🚨",
+          "Academic comeback loading... maybe 🫠",
+        ],
+        cooked: [
+          "This attendance has LEFT THE CHAT 😭",
+          "Bro is collecting absences like achievements 💀",
+          "The classroom hasn't seen you in ages 😭",
+          "Attendance status: cooked beyond repair 🫠",
+        ],
+      };
+
+      function randomFrom(list) {
+        return list[Math.floor(Math.random() * list.length)];
+      }
+
+      function getRoast(pct, target, overall, lab = false) {
+        if (lab && pct < target)
+          return randomFrom([
+            "LAB SHORTAGE ALERT 🚨 You're actually cooked.",
+            "Bro the lab attendance police are outside 💀",
+            "Lab below target = instant academic jump scare 😭",
+          ]);
+        if (overall < target && pct < target)
+          return randomFrom([
+            "Aggregate is cooked, and this subject is caught in the crossfire 💀",
+            "Overall below target. This subject is NOT getting a free pass 😭",
+            "The aggregate said no and took this subject down with it 🫠",
+          ]);
+        if (pct >= 100) return randomFrom(ROASTS.perfect);
+        if (pct >= 95) return randomFrom(ROASTS.excellent);
+        if (pct >= 85) return randomFrom(ROASTS.good);
+        if (pct >= target) return randomFrom(ROASTS.safe);
+        if (pct >= 70) return randomFrom(ROASTS.danger);
+        if (pct >= 60) return randomFrom(ROASTS.bad);
+        return randomFrom(ROASTS.cooked);
+      }
+
+      function subjectRoast(s, pct) {
+        const name = s.name.toLowerCase();
+        if (pct >= 100) {
+          if (name.includes("machine learning"))
+            return randomFrom([
+              "Machine learned how to attend 😭",
+              "Bro trained the attendance model to 100% 💀",
+            ]);
+          if (name.includes("algorithm") || name.includes("daa"))
+            return randomFrom([
+              "Solved attendance before solving DAA 🗿",
+              "Algorithm for attendance: show up. Bro mastered it 😭",
+            ]);
+          if (name.includes("devops"))
+            return randomFrom([
+              "Attendance deployed successfully 🚀",
+              "CI/CD pipeline for showing up is undefeated 💀",
+            ]);
+          return randomFrom([
             "Bro lives in the classroom 💀",
-            "Perfect attendance. Who even are you 😭"
-        ]);
-    }
-    if(pct<60){
-        if(name.includes("climate")) return randomFrom([
-            "Climate changed. Your attendance did too 💀",
-            "The climate is changing and so is your eligibility 😭"
-        ]);
-        return randomFrom([
+            "Perfect attendance. Who even are you 😭",
+          ]);
+        }
+        if (pct < 60) {
+          if (name.includes("climate"))
+            return randomFrom([
+              "Climate changed. Your attendance did too 💀",
+              "The climate is changing and so is your eligibility 😭",
+            ]);
+          return randomFrom([
             "Bro is attending this subject through telepathy 😭",
-            "This subject has forgotten what you look like 💀"
+            "This subject has forgotten what you look like 💀",
+          ]);
+        }
+        if (pct < 75)
+          return randomFrom([
+            "The 75% committee is looking for you 👀",
+            "Bro is speedrunning the shortage list 💀",
+            "LOCK IN BEFORE THE ERP LOCKS YOU OUT 😭",
+          ]);
+        return randomFrom([
+          "We're surviving. Barely, but we're surviving 😮‍💨",
+          "Still alive. Don't get brave now 💀",
+          "Attendance is giving 'one more absence and we're done' 😭",
         ]);
-    }
-    if(pct<75) return randomFrom([
-        "The 75% committee is looking for you 👀",
-        "Bro is speedrunning the shortage list 💀",
-        "LOCK IN BEFORE THE ERP LOCKS YOU OUT 😭"
-    ]);
-    return randomFrom([
-        "We're surviving. Barely, but we're surviving 😮‍💨",
-        "Still alive. Don't get brave now 💀",
-        "Attendance is giving 'one more absence and we're done' 😭"
-    ]);
-}
- 
-function card(s,overall){
-    const x=getStats(s),target=x.target,lab=isLab(s);
-    const debarred=isDebarred(s,overall),below=x.pct<target;
- 
-    let badge=debarred?"DEBARRED 💀":(below&&!lab?"Below target, still safe 😮‍💨":"W • You're chilling 😮‍💨");
- 
-    return `
-    <article class="card ${debarred?"danger-bar":""}">
+      }
+
+      function card(s, overall) {
+        const x = getStats(s),
+          target = x.target,
+          lab = isLab(s);
+        const debarred = isDebarred(s, overall),
+          below = x.pct < target;
+
+        let badge = debarred
+          ? "DEBARRED 💀"
+          : below && !lab
+            ? "Below target, still safe 😮‍💨"
+            : "W • You're chilling 😮‍💨";
+
+        return `
+    <article class="card ${debarred ? "danger-bar" : ""}">
         <div class="top">
             <div><div class="code">${s.code}</div><div class="name">${s.name}</div><div class="type">${s.type}</div></div>
-            <div class="badge ${debarred?"danger":"safe"}">${badge}</div>
+            <div class="badge ${debarred ? "danger" : "safe"}">${badge}</div>
         </div>
         <div class="chart-row">
-            <div class="donut" style="--pct:${Math.min(x.pct,100)}%;--chart-color:${debarred?"#e5484d":"#22a85a"}">
+            <div class="donut" style="--pct:${Math.min(x.pct, 100)}%;--chart-color:${debarred ? "#e5484d" : "#22a85a"}">
                 <div class="donut-text">${x.pct.toFixed(2)}%</div>
             </div>
             <div class="metrics">
                 <div class="metric"><span>Actually showed up</span><b>${x.attended} hr</b></div>
                 <div class="metric"><span>Bro was NOT there</span><b>${s.absent} hr</b></div>
                 <div class="metric"><span>Total hours</span><b>${x.total} hr</b></div>
-                <div class="progress"><div style="width:${Math.min(x.pct,100)}%"></div></div>
-                <div class="subject-roast">${getRoast(x.pct,target,overall,lab)}</div>
+                <div class="progress"><div style="width:${Math.min(x.pct, 100)}%"></div></div>
+                <div class="subject-roast">${getRoast(x.pct, target, overall, lab)}</div>
             </div>
         </div>
         <div class="action">
-            ${x.pct>=target?`
-            <div class="action-box"><small>Free passes 🗿💦</small><strong class="miss">${x.canMiss} ${x.canMiss===1?"hour":"hours"}</strong></div>
-            <div class="action-box"><small>${lab?"Lab target":"Target"}: ${target}%</small><strong class="miss">${(x.pct-target).toFixed(2)}%</strong></div>
-            `:`
-            <div class="action-box"><small>${lab||overall<target?"LOCK TF IN 🔒🫡":"Below target, but safe 😮‍💨"}</small>
-            <strong class="${lab||overall<target?"catch":"miss"}">${lab||overall<target?x.needAttend+" "+(x.needAttend===1?"hour":"hours"):"No mandatory recovery"}</strong></div>
-            <div class="action-box"><small>${lab?"Lab rule 🚨":"Aggregate rule"}</small><strong class="${debarred?"catch":"miss"}">${debarred?"DEBARRED":"Not debarred"}</strong></div>
-            `}
+            ${
+              x.pct >= target
+                ? `
+            <div class="action-box"><small>Free passes 🗿💦</small><strong class="miss">${x.canMiss} ${x.canMiss === 1 ? "hour" : "hours"}</strong></div>
+            <div class="action-box"><small>${lab ? "Lab target" : "Target"}: ${target}%</small><strong class="miss">${(x.pct - target).toFixed(2)}%</strong></div>
+            `
+                : `
+            <div class="action-box"><small>${lab || overall < target ? "LOCK TF IN 🔒🫡" : "Below target, but safe 😮‍💨"}</small>
+            <strong class="${lab || overall < target ? "catch" : "miss"}">${lab || overall < target ? x.needAttend + " " + (x.needAttend === 1 ? "hour" : "hours") : "No mandatory recovery"}</strong></div>
+            <div class="action-box"><small>${lab ? "Lab rule 🚨" : "Aggregate rule"}</small><strong class="${debarred ? "catch" : "miss"}">${debarred ? "DEBARRED" : "Not debarred"}</strong></div>
+            `
+            }
         </div>
     </article>`;
-}
- 
-function render(){
-    const select=document.getElementById("targetSelect"),custom=document.getElementById("customTarget");
-    if(select&&custom) custom.style.display=select.value==="custom"?"block":"none";
-    if(!subjects.length){
-        document.getElementById("cards").innerHTML="";
-        document.getElementById("summary").innerHTML="";
-        document.getElementById("aggregateChart").innerHTML='<div class="aggregate-empty">Drop your report to unlock<br>the attendance tea ☕</div>';
-        document.getElementById("aggregateSub").textContent="";
-        document.getElementById("aggregateRoast").innerHTML="";
-        return;
-    }
- 
-    const totalAttended=subjects.reduce((a,s)=>a+getStats(s).attended,0);
-    const totalHours=subjects.reduce((a,s)=>a+getStats(s).total,0);
-    const overall=totalHours?totalAttended/totalHours*100:0;
-    const target=getTarget();
- 
-    document.getElementById("cards").innerHTML=subjects.map(s=>card(s,overall)).join("");
- 
-    const color=overall>=target?"#22a85a":"#e5484d";
-    document.getElementById("aggregateChart").innerHTML=`<div class="aggregate-donut" style="--aggregate-pct:${Math.min(overall,100)}%;background:conic-gradient(${color} var(--aggregate-pct),#e9edf2 0)"><div class="aggregate-value">${overall.toFixed(2)}%</div></div>`;
-    document.getElementById("aggregateSub").textContent=`${totalAttended} / ${totalHours} hours attended · target ${target}%`;
- 
-    const ratio=target/100;
-    const need=overall<target?Math.ceil((ratio*totalHours-totalAttended)/(1-ratio)-1e-9):0;
-    const canMiss=overall>=target?Math.max(0,Math.floor(totalAttended/ratio-totalHours+1e-9)):0;
-    document.getElementById("aggregateRoast").innerHTML=`<div class="roast">${getRoast(overall,target,overall,false)}</div><div class="aggregate-action ${overall>=target?"safe":"danger"}">${overall>=target?`Free pass unlocked 🗿💦 — you can miss <b>${canMiss} ${canMiss===1?"hour":"hours"}</b> and stay ${target}%+`:`LOCK TF IN 🔒🫡 — attend <b>${need} ${need===1?"hour":"hours"}</b> to hit ${target}%`}</div>`;
- 
-    const safeSubjects=subjects.filter(s=>!isDebarred(s,overall)).length;
-    document.getElementById("summary").innerHTML=`<div class="stat"><span>How cooked are we?</span><strong>${overall.toFixed(2)}%</strong></div><div class="stat"><span>Subjects safe</span><strong>${safeSubjects}/${subjects.length}</strong></div><div class="stat"><span>Total hours</span><strong>${totalHours}</strong></div>`;
- 
-    localStorage.setItem("attendanceVibeSubjects",JSON.stringify(subjects));
-    localStorage.setItem("attendanceVibeTarget",String(target));
-}
- 
-render();
-</script>
- </body>
+      }
+
+      function render() {
+        const select = document.getElementById("targetSelect"),
+          custom = document.getElementById("customTarget");
+        if (select && custom)
+          custom.style.display = select.value === "custom" ? "block" : "none";
+        if (!subjects.length) {
+          document.getElementById("cards").innerHTML = "";
+          document.getElementById("summary").innerHTML = "";
+          document.getElementById("aggregateChart").innerHTML =
+            '<div class="aggregate-empty">Drop your report to unlock<br>the attendance tea ☕</div>';
+          document.getElementById("aggregateSub").textContent = "";
+          document.getElementById("aggregateRoast").innerHTML = "";
+          return;
+        }
+
+        const totalAttended = subjects.reduce(
+          (a, s) => a + getStats(s).attended,
+          0,
+        );
+        const totalHours = subjects.reduce((a, s) => a + getStats(s).total, 0);
+        const overall = totalHours ? (totalAttended / totalHours) * 100 : 0;
+        const target = getTarget();
+
+        document.getElementById("cards").innerHTML = subjects
+          .map((s) => card(s, overall))
+          .join("");
+
+        const color = overall >= target ? "#22a85a" : "#e5484d";
+        document.getElementById("aggregateChart").innerHTML =
+          `<div class="aggregate-donut" style="--aggregate-pct:${Math.min(overall, 100)}%;background:conic-gradient(${color} var(--aggregate-pct),#e9edf2 0)"><div class="aggregate-value">${overall.toFixed(2)}%</div></div>`;
+        document.getElementById("aggregateSub").textContent =
+          `${totalAttended} / ${totalHours} hours attended · target ${target}%`;
+
+        const ratio = target / 100;
+        const need =
+          overall < target
+            ? Math.ceil(
+                (ratio * totalHours - totalAttended) / (1 - ratio) - 1e-9,
+              )
+            : 0;
+        const canMiss =
+          overall >= target
+            ? Math.max(0, Math.floor(totalAttended / ratio - totalHours + 1e-9))
+            : 0;
+        document.getElementById("aggregateRoast").innerHTML =
+          `<div class="roast">${getRoast(overall, target, overall, false)}</div><div class="aggregate-action ${overall >= target ? "safe" : "danger"}">${overall >= target ? `Free pass unlocked 🗿💦 — you can miss <b>${canMiss} ${canMiss === 1 ? "hour" : "hours"}</b> and stay ${target}%+` : `LOCK TF IN 🔒🫡 — attend <b>${need} ${need === 1 ? "hour" : "hours"}</b> to hit ${target}%`}</div>`;
+
+        const safeSubjects = subjects.filter(
+          (s) => !isDebarred(s, overall),
+        ).length;
+        document.getElementById("summary").innerHTML =
+          `<div class="stat"><span>How cooked are we?</span><strong>${overall.toFixed(2)}%</strong></div><div class="stat"><span>Subjects safe</span><strong>${safeSubjects}/${subjects.length}</strong></div><div class="stat"><span>Total hours</span><strong>${totalHours}</strong></div>`;
+
+        localStorage.setItem(
+          "attendanceVibeSubjects",
+          JSON.stringify(subjects),
+        );
+        localStorage.setItem("attendanceVibeTarget", String(target));
+      }
+
+      render();
+    </script>
+  </body>
 </html>
