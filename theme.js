@@ -8,6 +8,7 @@
     "iron-man": { label: "Iron Man", icon: "◉", color: "#11171d", detail: "Stark HUD", effect: "reactor" },
     "captain-america": { label: "Captain America", icon: "◌", color: "#081725", detail: "Tactical command", effect: "shield" },
     thanos: { label: "Thanos", icon: "∞", color: "#110d1c", detail: "Cosmic order", effect: "reality" },
+    cornhub: { label: "AttendanceHub", icon: "🟧", color: "#111111", detail: "Video feed", effect: "cornhub" },
 };
 
   const safeGet = () => { try { const saved = localStorage.getItem(KEY); const normalized = saved === "night" ? "dark" : saved; return profiles[normalized] ? normalized : null; } catch (_) { return null; } };
@@ -28,9 +29,107 @@
     sweep.addEventListener("animationend", () => sweep.remove(), { once: true });
   }
 
+  function syncCornHubChrome(resolved) {
+    const active = resolved === "cornhub";
+    let chrome = document.querySelector(".cornhub-shellbar");
+    if (!active) {
+      if (chrome) chrome.remove();
+      return;
+    }
+    if (chrome) return;
+    chrome = document.createElement("div");
+    chrome.className = "cornhub-shellbar";
+    chrome.innerHTML = `
+      <div class="cornhub-shellbar__inner">
+        <button class="cornhub-brand" type="button" data-corn-nav="home" aria-label="AttendanceHub home">
+          <span class="cornhub-brand__word">Attendance</span><span class="cornhub-brand__hub">Hub</span>
+        </button>
+        <label class="cornhub-search" aria-label="Search attendance subjects">
+          <span aria-hidden="true">⌕</span>
+          <input class="cornhub-search-input" type="search" autocomplete="off" placeholder="Search subjects...">
+          <button class="cornhub-search-clear" type="button" aria-label="Clear search" hidden>×</button>
+        </label>
+        <nav class="cornhub-shellbar__links" aria-label="AttendanceHub navigation">
+          <button type="button" data-corn-nav="trending">Trending</button>
+          <button type="button" data-corn-nav="subjects">Subjects</button>
+          <button type="button" data-corn-nav="tools">Tools</button>
+        </nav>
+        <button class="cornhub-shellbar__pill" type="button" data-corn-nav="18plus" aria-pressed="false">18+ MODE</button>
+      </div>`;
+    document.body.prepend(chrome);
+
+    const search = chrome.querySelector(".cornhub-search-input");
+    const clear = chrome.querySelector(".cornhub-search-clear");
+    const applySearch = () => {
+      const query = search.value.trim().toLowerCase();
+      document.documentElement.dataset.cornSearch = query ? "active" : "";
+      document.querySelectorAll("#cards .card").forEach((card) => {
+        const haystack = (card.textContent || "").toLowerCase();
+        card.hidden = !!query && !haystack.includes(query);
+      });
+      clear.hidden = !query;
+    };
+    search.addEventListener("input", applySearch);
+    clear.addEventListener("click", () => { search.value = ""; applySearch(); search.focus(); });
+
+    chrome.addEventListener("click", (event) => {
+      const nav = event.target.closest("[data-corn-nav]");
+      if (!nav) return;
+      const action = nav.dataset.cornNav;
+      if (action === "home") {
+        if (location.pathname.endsWith("index.html") || location.pathname === "/") window.scrollTo({ top: 0, behavior: "smooth" });
+        else location.href = "index.html";
+        return;
+      }
+      if (action === "subjects") {
+        document.querySelector("#cards")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+      if (action === "trending") {
+        document.querySelector("#cards")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        document.querySelectorAll("#cards .card").forEach((card) => card.hidden = false);
+        const cards = [...document.querySelectorAll("#cards .card")];
+        cards.sort((a, b) => {
+          const pa = parseFloat((a.querySelector(".donut-text")?.textContent || "0").replace("%", ""));
+          const pb = parseFloat((b.querySelector(".donut-text")?.textContent || "0").replace("%", ""));
+          return pa - pb;
+        }).forEach(card => document.getElementById("cards")?.appendChild(card));
+        return;
+      }
+      if (action === "tools") {
+        document.querySelector(".input-actions")?.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+      if (action === "18plus") {
+        const on = document.documentElement.dataset.corn18 === "1";
+        document.documentElement.dataset.corn18 = on ? "0" : "1";
+        nav.setAttribute("aria-pressed", String(!on));
+        nav.textContent = !on ? "18+ ON" : "18+ MODE";
+        document.querySelectorAll(".subject-roast").forEach((el) => {
+          if (!on) {
+            if (!el.dataset.cornNormal) el.dataset.cornNormal = el.textContent;
+            const subject = el.closest(".card")?.querySelector(".name")?.textContent || "this subject";
+            const options = [
+              `Bro is getting absolutely cooked by ${subject} 💀`,
+              `${subject} is personally violating your attendance at this point 😭`,
+              `At this attendance, ${subject} might as well file a missing-person report 💀`,
+            ];
+            let hash = 0; for (const ch of subject) hash = (hash * 31 + ch.charCodeAt(0)) | 0;
+            el.textContent = options[Math.abs(hash) % options.length];
+            el.classList.add("cornhub-brutal");
+          } else {
+            el.textContent = el.dataset.cornNormal || el.textContent;
+            el.classList.remove("cornhub-brutal");
+          }
+        });
+      }
+    });
+  }
+
   function commitTheme(resolved, persist) {
     document.documentElement.dataset.theme = resolved;
     document.documentElement.dataset.themeEffect = profiles[resolved].effect;
+    syncCornHubChrome(resolved);
     document.documentElement.style.colorScheme = resolved === "light" ? "light" : "dark";
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.content = profiles[resolved].color;
@@ -210,6 +309,31 @@ function thanosTransition(resolved, persist, initial = false) {
 
 
 
+  function cornhubTransition(resolved, persist, initial = false) {
+    const overlay = document.createElement("div");
+    overlay.className = "cornhub-transition";
+    overlay.setAttribute("aria-hidden", "true");
+    overlay.innerHTML = `
+      <div class="cornhub-transition__bar cornhub-transition__bar--top"></div>
+      <div class="cornhub-transition__grid"></div>
+      <div class="cornhub-transition__brand"><span>Attendance</span><b>Hub</b></div>
+      <div class="cornhub-transition__search">⌕ SEARCHING YOUR ATTENDANCE...</div>
+      <div class="cornhub-transition__line"><i></i></div>
+      <div class="cornhub-transition__bar cornhub-transition__bar--bottom"></div>`;
+    document.body.classList.add("theme-transitioning");
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => overlay.classList.add("is-active"));
+    window.setTimeout(() => {
+      commitTheme(resolved, persist);
+      overlay.classList.add("is-revealing");
+    }, 620);
+    window.setTimeout(() => {
+      overlay.remove();
+      document.body.classList.remove("theme-transitioning");
+      if (initial) document.documentElement.classList.remove("theme-booting");
+    }, 1080);
+  }
+
   function simpleEntry(resolved, persist, initial = false) {
     const overlay = document.createElement("div");
     overlay.className = `simple-entry simple-entry--${resolved}`;
@@ -252,6 +376,7 @@ function thanosTransition(resolved, persist, initial = false) {
       if (resolved === "captain-america") return captainTransition(resolved, persist, true);
       if (resolved === "iron-man") return ironManTransition(resolved, persist, true);
       if (resolved === "thanos") return thanosTransition(resolved, persist, true);
+      if (resolved === "cornhub") return cornhubTransition(resolved, persist, true);
       return simpleEntry(resolved, persist, true);
     }
 
@@ -265,6 +390,10 @@ function thanosTransition(resolved, persist, initial = false) {
     }
     if (resolved === "thanos" && current() !== resolved && origin && !reduced) {
       thanosTransition(resolved, persist);
+      return;
+    }
+    if (resolved === "cornhub" && current() !== resolved && origin && !reduced) {
+      cornhubTransition(resolved, persist);
       return;
     }
     animateThemeChange(resolved, origin);

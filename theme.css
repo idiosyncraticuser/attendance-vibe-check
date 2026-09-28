@@ -5308,3 +5308,526 @@ html[data-theme="thanos"] body:has(.back) .container::after {
     top: -2px;
   }
 }
+
+/* =========================================================
+   CORNHUB — HOMEPAGE-STYLE PARODY SKIN
+   Theme-only skin. Existing markup + app logic stay intact.
+   ========================================================= */
+html[data-theme="cornhub"] {
+  --avc-bg: #0f0f0f;
+  --avc-surface: #181818;
+  --avc-surface-alt: #222222;
+  --avc-text: #f2f2f2;
+  --avc-muted: #a7a7a7;
+  --avc-faint: #777777;
+  --avc-border: #303030;
+  --avc-border-strong: #414141;
+  --avc-line: #2a2a2a;
+  --avc-primary: #ff9900;
+  --avc-accent: #ff9900;
+  --avc-accent-soft: #30220f;
+  --avc-safe: #8fe388;
+  --avc-safe-bg: #19301b;
+  --avc-danger: #ff7777;
+  --avc-danger-bg: #3a1717;
+  --avc-warning: #ffc04d;
+  --avc-warning-bg: #3a2a12;
+  --avc-track: #343434;
+  --avc-shadow: 0 12px 34px rgba(0,0,0,.34);
+  --avc-glow: rgba(255,153,0,.2);
+  --avc-decor: rgba(255,153,0,.08);
+}
+
+html[data-theme="cornhub"] body {
+  background: #0f0f0f !important;
+  color: #f2f2f2 !important;
+}
+
+html[data-theme="cornhub"] .cornhub-shellbar {
+  position: sticky;
+  top: 0;
+  z-index: 15;
+  background: #181818;
+  border-bottom: 1px solid #2c2c2c;
+  box-shadow: 0 4px 18px rgba(0,0,0,.28);
+}
+
+html[data-theme="cornhub"] .cornhub-shellbar__inner {
+  max-width: 1220px;
+  min-height: 64px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: grid;
+  grid-template-columns: auto minmax(220px, 1fr) auto auto;
+  align-items: center;
+  gap: 18px;
+}
+
+html[data-theme="cornhub"] .cornhub-brand {
+  font: 900 25px/1 Inter, Segoe UI, Arial, sans-serif;
+  letter-spacing: -1.5px;
+  white-space: nowrap;
+}
+
+html[data-theme="cornhub"] .cornhub-brand__word { color: #f5f5f5; }
+html[data-theme="cornhub"] .cornhub-brand__hub {
+  color: #111;
+  background: #ff9900;
+  padding: 3px 7px;
+  margin-left: 2px;
+  border-radius: 5px;
+}
+
+html[data-theme="cornhub"] .cornhub-search {
+  height: 40px;
+  max-width: 560px;
+  width: 100%;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  border: 1px solid #353535;
+  border-radius: 5px;
+  background: #242424;
+  color: #8e8e8e;
+  font-size: 13px;
+}
+
+html[data-theme="cornhub"] .cornhub-search span:first-child {
+  color: #ff9900;
+  font-size: 19px;
+  line-height: 1;
+}
+
+html[data-theme="cornhub"] .cornhub-shellbar__links {
+  display: flex;
+  gap: 16px;
+  color: #aaa;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+html[data-theme="cornhub"] .cornhub-shellbar__links span:hover { color: #ff9900; }
+
+html[data-theme="cornhub"] .cornhub-shellbar__pill {
+  padding: 8px 11px;
+  border-radius: 4px;
+  background: #ff9900;
+  color: #111;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+
+html[data-theme="cornhub"] .container {
+  max-width: 1220px;
+  padding: 26px 20px 50px;
+}
+
+html[data-theme="cornhub"] .header {
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+html[data-theme="cornhub"] h1 {
+  font-size: 29px;
+  letter-spacing: -.8px;
+}
+
+html[data-theme="cornhub"] .subtitle,
+html[data-theme="cornhub"] .subject-roast,
+html[data-theme="cornhub"] .type,
+html[data-theme="cornhub"] .code,
+html[data-theme="cornhub"] .metric span,
+html[data-theme="cornhub"] .action-box small,
+html[data-theme="cornhub"] .legend,
+html[data-theme="cornhub"] .aggregate-sub {
+  color: #929292;
+}
+
+html[data-theme="cornhub"] .summary {
+  gap: 8px;
+}
+
+html[data-theme="cornhub"] .stat {
+  min-width: 135px;
+  padding: 12px 15px;
+  border: 1px solid #303030;
+  border-radius: 5px;
+  background: #1b1b1b;
+  box-shadow: none;
+}
+
+html[data-theme="cornhub"] .stat span { color: #888; }
+html[data-theme="cornhub"] .stat strong { color: #f5f5f5; }
+
+html[data-theme="cornhub"] .input-panel,
+html[data-theme="cornhub"] .legend,
+html[data-theme="cornhub"] .card {
+  background: #181818;
+  border: 1px solid #303030;
+  border-radius: 7px;
+  box-shadow: 0 7px 24px rgba(0,0,0,.24);
+}
+
+html[data-theme="cornhub"] .input-panel {
+  padding: 18px;
+  margin-bottom: 20px;
+}
+
+html[data-theme="cornhub"] .aggregate {
+  border-left-color: #303030;
+}
+
+html[data-theme="cornhub"] .aggregate-donut {
+  background: conic-gradient(#ff9900 var(--aggregate-pct), #303030 0);
+}
+
+html[data-theme="cornhub"] .aggregate-donut:after,
+html[data-theme="cornhub"] .donut:after {
+  background: #181818;
+}
+
+html[data-theme="cornhub"] .aggregate-action.safe,
+html[data-theme="cornhub"] .safe {
+  background: #19301b;
+  color: #8fe388;
+}
+
+html[data-theme="cornhub"] .aggregate-action.danger,
+html[data-theme="cornhub"] .danger {
+  background: #3a1717;
+  color: #ff7777;
+}
+
+html[data-theme="cornhub"] textarea,
+html[data-theme="cornhub"] input,
+html[data-theme="cornhub"] select {
+  background: #242424 !important;
+  color: #f2f2f2 !important;
+  border-color: #3a3a3a !important;
+  border-radius: 5px !important;
+}
+
+html[data-theme="cornhub"] textarea::placeholder,
+html[data-theme="cornhub"] input::placeholder {
+  color: #777;
+}
+
+html[data-theme="cornhub"] textarea:focus,
+html[data-theme="cornhub"] input:focus,
+html[data-theme="cornhub"] select:focus {
+  border-color: #ff9900 !important;
+  box-shadow: 0 0 0 3px rgba(255,153,0,.12) !important;
+}
+
+html[data-theme="cornhub"] button,
+html[data-theme="cornhub"] .skip-link,
+html[data-theme="cornhub"] .predictor-link {
+  border-radius: 5px;
+  background: #ff9900;
+  color: #111;
+  font-weight: 800;
+  box-shadow: none;
+}
+
+html[data-theme="cornhub"] button:hover,
+html[data-theme="cornhub"] .skip-link:hover,
+html[data-theme="cornhub"] .predictor-link:hover {
+  opacity: 1;
+  background: #ffad2e;
+  transform: translateY(-1px);
+}
+
+html[data-theme="cornhub"] button.secondary {
+  background: #282828;
+  color: #ddd;
+  border: 1px solid #3a3a3a;
+}
+
+html[data-theme="cornhub"] .roast {
+  background: #242424;
+  border-left: 4px solid #ff9900;
+  color: #f2f2f2;
+  border-radius: 4px;
+}
+
+html[data-theme="cornhub"] .cards {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+html[data-theme="cornhub"] .card {
+  padding: 0;
+  min-height: 0;
+  grid-template-rows: 126px 190px auto;
+  overflow: hidden;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+html[data-theme="cornhub"] .card:hover {
+  transform: translateY(-3px);
+  border-color: #4a4a4a;
+  box-shadow: 0 14px 32px rgba(0,0,0,.35);
+}
+
+html[data-theme="cornhub"] .card .top,
+html[data-theme="cornhub"] .card .action {
+  padding: 16px;
+}
+
+html[data-theme="cornhub"] .card .top {
+  background: linear-gradient(135deg, #242424, #171717);
+  border-bottom: 1px solid #2d2d2d;
+}
+
+html[data-theme="cornhub"] .code {
+  color: #ff9900;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+html[data-theme="cornhub"] .name {
+  color: #f4f4f4;
+  font-size: 16px;
+}
+
+html[data-theme="cornhub"] .badge {
+  border-radius: 4px;
+  background: #ff9900;
+  color: #111;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+html[data-theme="cornhub"] .chart-row {
+  height: 190px;
+  padding: 0 16px;
+  border-top-color: #292929;
+  border-bottom-color: #292929;
+}
+
+html[data-theme="cornhub"] .donut {
+  background: conic-gradient(var(--chart-color) var(--pct), #303030 0);
+}
+
+html[data-theme="cornhub"] .progress {
+  height: 7px;
+  background: #303030;
+}
+
+html[data-theme="cornhub"] .progress > div {
+  background: #ff9900;
+}
+
+html[data-theme="cornhub"] .danger-bar .progress > div { background: #ff5d5d; }
+
+html[data-theme="cornhub"] .action {
+  background: #151515;
+}
+
+html[data-theme="cornhub"] .action-box {
+  background: #242424;
+  border: 1px solid #303030;
+  border-radius: 5px;
+}
+
+html[data-theme="cornhub"] .miss { color: #8fe388; }
+html[data-theme="cornhub"] .catch { color: #ff7777; }
+html[data-theme="cornhub"] .legend b { color: #f2f2f2; }
+
+/* Linked tools: same homepage-style skin, without changing their layouts. */
+html[data-theme="cornhub"] .back { color: #ff9900; }
+html[data-theme="cornhub"] .panel {
+  background: #181818 !important;
+  border-color: #303030 !important;
+  border-radius: 7px !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,.28) !important;
+}
+html[data-theme="cornhub"] .subject-info .stat,
+html[data-theme="cornhub"] .result,
+html[data-theme="cornhub"] .day,
+html[data-theme="cornhub"] .month-buttons button {
+  background: #222 !important;
+  border-color: #343434 !important;
+  color: #eee !important;
+}
+html[data-theme="cornhub"] .result.safe { background: #19301b !important; color: #8fe388 !important; }
+html[data-theme="cornhub"] .result.danger { background: #3a1717 !important; color: #ff7777 !important; }
+html[data-theme="cornhub"] .section-sub,
+html[data-theme="cornhub"] .detail,
+html[data-theme="cornhub"] .weekdays div,
+html[data-theme="cornhub"] .month-title,
+html[data-theme="cornhub"] .section-title { color: #aaa !important; }
+
+/* Theme chooser: make CornHub look like a deliberate option, not a generic orange swatch. */
+html[data-theme="cornhub"] .theme-toggle {
+  border-color: #ff9900;
+  background: #181818;
+  color: #f2f2f2;
+  box-shadow: 0 10px 26px rgba(0,0,0,.35), 0 0 0 1px rgba(255,153,0,.14);
+}
+html[data-theme="cornhub"] .theme-toggle__core {
+  background: #ff9900;
+  color: #111;
+  box-shadow: 0 0 16px rgba(255,153,0,.25);
+}
+html[data-theme="cornhub"] .theme-toggle__icon { filter: none; }
+html[data-theme="cornhub"] .theme-menu {
+  background: #181818;
+  border-color: #383838;
+}
+html[data-theme="cornhub"] .theme-option:hover,
+html[data-theme="cornhub"] .theme-option[aria-checked="true"] {
+  background: #2a2116;
+}
+html[data-theme="cornhub"] .theme-option__preview--cornhub {
+  background: linear-gradient(135deg, #181818 0 54%, #ff9900 55% 100%);
+}
+
+@media (max-width: 1050px) {
+  html[data-theme="cornhub"] .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  html[data-theme="cornhub"] .cornhub-shellbar__links { display: none; }
+  html[data-theme="cornhub"] .cornhub-shellbar__inner { grid-template-columns: auto minmax(0,1fr) auto; }
+}
+
+@media (max-width: 650px) {
+  html[data-theme="cornhub"] .cornhub-shellbar__inner { grid-template-columns: 1fr auto; }
+  html[data-theme="cornhub"] .cornhub-search { display: none; }
+  html[data-theme="cornhub"] .cards { grid-template-columns: 1fr; }
+  html[data-theme="cornhub"] .card { grid-template-rows: 126px 190px auto; }
+  html[data-theme="cornhub"] .container { padding-left: 14px; padding-right: 14px; }
+  html[data-theme="cornhub"] .summary { width: 100%; }
+  html[data-theme="cornhub"] .stat { flex: 1; min-width: 110px; }
+}
+
+/* AttendanceHub content-platform skin: video-card treatment + working chrome. */
+html[data-theme="cornhub"] .cornhub-shellbar__inner { max-width: 1240px; }
+html[data-theme="cornhub"] .cornhub-brand {
+  appearance: none; border: 0; padding: 0; margin: 0; background: transparent; cursor: pointer;
+  color: inherit; text-align: left;
+}
+html[data-theme="cornhub"] .cornhub-brand__word { color: #f5f5f5; }
+html[data-theme="cornhub"] .cornhub-brand__hub { background: #ff9900; color: #111; }
+html[data-theme="cornhub"] .cornhub-search {
+  position: relative; max-width: 620px; border-radius: 4px; background: #222; border-color: #3b3b3b;
+}
+html[data-theme="cornhub"] .cornhub-search-input {
+  flex: 1; min-width: 0; border: 0 !important; outline: 0; box-shadow: none !important;
+  background: transparent !important; color: #f5f5f5 !important; height: 100%; padding: 0 !important; border-radius: 0 !important;
+}
+html[data-theme="cornhub"] .cornhub-search-clear {
+  border: 0 !important; background: transparent !important; color: #999 !important; padding: 0 4px !important;
+  box-shadow: none !important; font-size: 18px; line-height: 1; transform: none !important;
+}
+html[data-theme="cornhub"] .cornhub-search-clear:hover { color: #ff9900 !important; background: transparent !important; }
+html[data-theme="cornhub"] .cornhub-shellbar__links button {
+  border: 0; background: transparent; color: #aaa; padding: 8px 2px; font-size: 12px; font-weight: 800; cursor: pointer;
+  box-shadow: none; transform: none;
+}
+html[data-theme="cornhub"] .cornhub-shellbar__links button:hover { color: #ff9900; background: transparent; transform: none; }
+html[data-theme="cornhub"] .cornhub-shellbar__pill { border: 0; cursor: pointer; }
+html[data-theme="cornhub"] .cornhub-shellbar__pill[aria-pressed="true"] { background: #ff6a00; box-shadow: 0 0 0 2px rgba(255,153,0,.18), 0 0 18px rgba(255,102,0,.22); }
+
+html[data-theme="cornhub"] .container { max-width: 1240px; }
+html[data-theme="cornhub"] .header { padding-top: 6px; }
+html[data-theme="cornhub"] h1 { font-weight: 850; }
+html[data-theme="cornhub"] .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+html[data-theme="cornhub"] .card {
+  display: block; min-height: 0; padding: 0; border-radius: 7px; background: #181818; border-color: #2e2e2e;
+}
+html[data-theme="cornhub"] .card[hidden] { display: none; }
+html[data-theme="cornhub"] .card:hover { transform: translateY(-4px); border-color: #4b4b4b; box-shadow: 0 16px 34px rgba(0,0,0,.42); }
+
+html[data-theme="cornhub"] .cornhub-video-thumb {
+  position: relative; height: 184px; overflow: hidden; isolation: isolate;
+  background:
+    radial-gradient(circle at 76% 28%, rgba(255,153,0,.72), transparent 18%),
+    linear-gradient(135deg, hsl(var(--thumb-hue), 58%, 25%), #111 63%, hsl(calc(var(--thumb-hue) + 35), 70%, 30%));
+}
+html[data-theme="cornhub"] .cornhub-video-thumb::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(135deg, transparent 0 40%, rgba(255,255,255,.06) 40% 41%, transparent 41% 100%);
+}
+html[data-theme="cornhub"] .cornhub-video-thumb__shine {
+  position: absolute; inset: -45% -25%; background: linear-gradient(115deg, transparent 45%, rgba(255,255,255,.08) 50%, transparent 55%);
+  transform: rotate(-7deg); pointer-events: none;
+}
+html[data-theme="cornhub"] .cornhub-video-thumb__label {
+  position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,.72); color: #ff9900;
+  padding: 4px 6px; border-radius: 3px; font-size: 10px; font-weight: 900; letter-spacing: .06em;
+}
+html[data-theme="cornhub"] .cornhub-video-thumb__play {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 52px; height: 52px; padding: 0;
+  border-radius: 50%; background: rgba(255,153,0,.96); color: #111; font-size: 18px; display: grid; place-items: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,.35); border: 0;
+}
+html[data-theme="cornhub"] .cornhub-video-thumb__play:hover { transform: translate(-50%,-50%) scale(1.06); background: #ffad2e; }
+html[data-theme="cornhub"] .cornhub-video-thumb__duration {
+  position: absolute; right: 9px; bottom: 30px; background: rgba(0,0,0,.78); color: #fff; padding: 3px 5px; border-radius: 3px; font-size: 10px; font-weight: 800;
+}
+html[data-theme="cornhub"] .cornhub-video-thumb__title {
+  position: absolute; left: 10px; right: 10px; bottom: 9px; color: #fff; font-size: 11px; font-weight: 800;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 2px 6px rgba(0,0,0,.7);
+}
+html[data-theme="cornhub"] .card .top { padding: 13px 14px 10px; min-height: 108px; background: #181818; border: 0; }
+html[data-theme="cornhub"] .card .name { height: 48px; font-size: 15px; line-height: 1.25; }
+html[data-theme="cornhub"] .card .type { margin-top: 3px; }
+html[data-theme="cornhub"] .card .badge { font-size: 9px; padding: 5px 7px; }
+html[data-theme="cornhub"] .chart-row { height: auto; min-height: 152px; padding: 14px; border-color: #292929; grid-template-columns: 92px minmax(0,1fr); gap: 13px; }
+html[data-theme="cornhub"] .donut { width: 84px; height: 84px; }
+html[data-theme="cornhub"] .donut:after { inset: 11px; background: #181818; }
+html[data-theme="cornhub"] .donut-text { font-size: 15px; }
+html[data-theme="cornhub"] .metric { margin-bottom: 5px; }
+html[data-theme="cornhub"] .progress { height: 6px; }
+html[data-theme="cornhub"] .action { padding: 12px 14px 14px; }
+html[data-theme="cornhub"] .action-box { padding: 9px 10px; }
+html[data-theme="cornhub"] .subject-roast.cornhub-brutal { color: #ffb24d; }
+html[data-theme="cornhub"] [data-corn-nav="tools"] + * { display: none; }
+
+/* CornHub opening transition. */
+.cornhub-transition {
+  position: fixed; inset: 0; z-index: 99999; overflow: hidden; background: #0b0b0b; color: #fff;
+  display: grid; place-items: center; opacity: 0; pointer-events: all;
+}
+.cornhub-transition.is-active { opacity: 1; }
+.cornhub-transition.is-revealing { animation: cornhub-reveal .46s ease forwards; }
+.cornhub-transition__bar { position: absolute; left: 0; width: 100%; height: 5px; background: #ff9900; box-shadow: 0 0 24px rgba(255,153,0,.5); }
+.cornhub-transition__bar--top { top: 0; transform: translateX(-100%); }
+.cornhub-transition__bar--bottom { bottom: 0; transform: translateX(100%); }
+.cornhub-transition.is-active .cornhub-transition__bar--top { animation: cornhub-slide-in .55s ease forwards; }
+.cornhub-transition.is-active .cornhub-transition__bar--bottom { animation: cornhub-slide-in-rev .55s ease forwards; }
+.cornhub-transition__grid { position: absolute; inset: 0; opacity: .14; background-image: linear-gradient(rgba(255,153,0,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(255,153,0,.12) 1px,transparent 1px); background-size: 48px 48px; transform: scale(1.06); }
+.cornhub-transition__brand { font: 900 38px/1 Inter,Segoe UI,Arial,sans-serif; letter-spacing:-2px; position: relative; z-index: 2; transform: translateY(12px); opacity: 0; }
+.cornhub-transition.is-active .cornhub-transition__brand { animation: cornhub-pop .48s .12s cubic-bezier(.2,.9,.2,1) forwards; }
+.cornhub-transition__brand b { background:#ff9900;color:#111;padding:5px 9px;border-radius:5px;margin-left:2px; }
+.cornhub-transition__search { position:absolute; top:calc(50% + 48px); color:#888; font-size:10px; font-weight:800; letter-spacing:.14em; opacity:0; }
+.cornhub-transition.is-active .cornhub-transition__search { animation: cornhub-fade .35s .35s ease forwards; }
+.cornhub-transition__line { position:absolute; top:calc(50% + 76px); width:min(340px,70vw); height:3px; background:#272727; overflow:hidden; }
+.cornhub-transition__line i { display:block; width:35%; height:100%; background:#ff9900; transform:translateX(-120%); }
+.cornhub-transition.is-active .cornhub-transition__line i { animation: cornhub-load .72s .18s cubic-bezier(.2,.8,.2,1) forwards; }
+@keyframes cornhub-slide-in { to { transform:translateX(0); } }
+@keyframes cornhub-slide-in-rev { to { transform:translateX(0); } }
+@keyframes cornhub-pop { to { transform:translateY(0); opacity:1; } }
+@keyframes cornhub-fade { to { opacity:1; } }
+@keyframes cornhub-load { to { transform:translateX(320%); } }
+@keyframes cornhub-reveal { to { opacity:0; visibility:hidden; } }
+
+@media (max-width: 1050px) {
+  html[data-theme="cornhub"] .cards { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 650px) {
+  html[data-theme="cornhub"] .cornhub-shellbar__inner { grid-template-columns: auto 1fr auto; }
+  html[data-theme="cornhub"] .cornhub-search { display:flex; min-width:0; }
+  html[data-theme="cornhub"] .cornhub-shellbar__links { display:none; }
+  html[data-theme="cornhub"] .cornhub-search-input { min-width:0; }
+  html[data-theme="cornhub"] .cards { grid-template-columns:1fr; }
+  html[data-theme="cornhub"] .cornhub-video-thumb { height: 205px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cornhub-transition { display:none !important; }
+}

@@ -20,6 +20,7 @@
               "iron-man",
               "captain-america",
               "thanos",
+              "cornhub",
             ].includes(t)
           )
             t = null;
@@ -892,8 +893,17 @@ Example:
             ? "Below target, still safe 😮‍💨"
             : "W • You're chilling 😮‍💨";
 
+        const thumbKey = `${s.code}-${s.name}`.split("").reduce((n, ch) => (n * 31 + ch.charCodeAt(0)) % 360, 17);
+        const duration = `${Math.max(1, Math.round(x.total))}:${String(Math.max(0, Math.round((x.pct / 100) * 59))).padStart(2, "0")}`;
         return `
-    <article class="card ${debarred ? "danger-bar" : ""}">
+    <article class="card ${debarred ? "danger-bar" : ""}" data-subject-search="${String(s.code + " " + s.name + " " + s.type).replace(/"/g, '&quot;')}">
+        <div class="cornhub-video-thumb" style="--thumb-hue:${thumbKey}">
+          <div class="cornhub-video-thumb__shine"></div>
+          <span class="cornhub-video-thumb__label">${s.code}</span>
+          <button class="cornhub-video-thumb__play" type="button" aria-label="Open ${String(s.name).replace(/"/g, '&quot;')}">▶</button>
+          <span class="cornhub-video-thumb__duration">${duration}</span>
+          <div class="cornhub-video-thumb__title">${s.name}</div>
+        </div>
         <div class="top">
             <div><div class="code">${s.code}</div><div class="name">${s.name}</div><div class="type">${s.type}</div></div>
             <div class="badge ${debarred ? "danger" : "safe"}">${badge}</div>
