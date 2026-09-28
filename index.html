@@ -20,7 +20,7 @@
               "iron-man",
               "captain-america",
               "thanos",
-              "cornhub",
+              "attendance-hub",
             ].includes(t)
           )
             t = null;
@@ -591,6 +591,16 @@ Example:
           </div>
         </div>
       </section>
+      <div class="attendance-hub-toolbar" id="attendanceHubToolbar" hidden aria-label="AttendanceHub controls">
+        <div class="attendance-hub-search-wrap">
+          <span class="attendance-hub-search-icon" aria-hidden="true">⌕</span>
+          <input id="attendanceHubSearch" class="attendance-hub-search" type="search" placeholder="Search subjects..." autocomplete="off">
+        </div>
+        <button type="button" class="attendance-hub-chip is-active" data-hub-action="trending">🔥 Trending</button>
+        <button type="button" class="attendance-hub-chip" data-hub-action="subjects">📚 Subjects</button>
+        <button type="button" class="attendance-hub-chip" data-hub-action="tools">🧰 Tools</button>
+        <button type="button" class="attendance-hub-chip attendance-hub-adult" data-hub-action="adult">18+</button>
+      </div>
       <div class="cards" id="cards"></div>
       <div class="legend">
         <b>How the attendance lore works:</b> “Free pass” = maximum future hours
@@ -880,6 +890,119 @@ Example:
         ]);
       }
 
+      let attendanceHubAdultMode = false;
+      let attendanceHubSort = "trending";
+      let attendanceHubQuery = "";
+
+      function attendanceHubSubjects(overall) {
+        let list = [...subjects];
+        if (attendanceHubQuery) {
+          const q = attendanceHubQuery.toLowerCase();
+          list = list.filter((s) => `${s.code} ${s.name} ${s.type}`.toLowerCase().includes(q));
+        }
+        if (attendanceHubSort === "trending") {
+          list.sort((a, b) => {
+            const ax = getStats(a), bx = getStats(b);
+            const ar = isDebarred(a, overall) ? 1000 : Math.max(0, ax.target - ax.pct);
+            const br = isDebarred(b, overall) ? 1000 : Math.max(0, bx.target - bx.pct);
+            return br - ar || bx.pct - ax.pct;
+          });
+        }
+        return list;
+      }
+
+      function attendanceHubRoast(s, x, overall, debarred) {
+        if (debarred) return "Ab Johhny Bhaiya aapko chorenge nahi💦";
+        if (attendanceHubAdultMode) {
+          if (x.pct >= 90) return "Bro is absolutely locked in 😮‍💨";
+          if (x.pct >= x.target) return "Okay bro, you're doing suspiciously well 💀";
+          if (x.pct >= 75) return "This one is getting a little too close 😭";
+          return "Bro is getting absolutely cooked 💀";
+        }
+        return getRoast(x.pct, x.target, overall, isLab(s));
+      }
+
+      function attendanceHubCard(s, overall) {
+        const x = getStats(s);
+        const debarred = isDebarred(s, overall);
+        const pct = Math.min(x.pct, 100);
+        const title = debarred
+          ? `${s.name} — how bro got here 💀`
+          : `${s.name} — attendance update`;
+        const meta = `${s.code} · ${s.type} · ${x.attended}/${x.total} hr`;
+        const thumbnailStyle = debarred
+          ? `style="background-image:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.78)),url('assets/themes/attendance-hub/johnny-debarred.png')"`
+          : "";
+        return `
+          <article class="card attendance-hub-card ${debarred ? "attendance-hub-card--debarred danger-bar" : ""}">
+            <div class="attendance-hub-thumb" ${thumbnailStyle}>
+              ${!debarred ? `<div class="attendance-hub-thumb-pattern"><span>${escapeHtml(s.code)}</span></div>` : ""}
+              <span class="attendance-hub-play" aria-hidden="true">▶</span>
+              <span class="attendance-hub-duration">${Math.max(1, Math.round(x.total))}:00</span>
+              <span class="attendance-hub-badge ${debarred ? "is-danger" : ""}">${debarred ? "DEBARRED" : `${pct.toFixed(0)}%`}</span>
+            </div>
+            <div class="attendance-hub-card-body">
+              <div class="attendance-hub-title-row">
+                <div class="attendance-hub-avatar">${escapeHtml((s.code || s.name || "A").slice(0,2).toUpperCase())}</div>
+                <div class="attendance-hub-copy">
+                  <h3>${escapeHtml(title)}</h3>
+                  <p>${escapeHtml(meta)}</p>
+                  <div class="attendance-hub-mini-progress"><span style="width:${pct}%"></span></div>
+                  <div class="attendance-hub-roast">${escapeHtml(attendanceHubRoast(s, x, overall, debarred))}</div>
+                </div>
+              </div>
+            </div>
+          </article>`;
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "").replace(/[&<>'"]/g, (char) => ({
+          "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;"
+        })[char]);
+      }
+
+      function mountAttendanceHubControls() {
+        const toolbar = document.getElementById("attendanceHubToolbar");
+        if (!toolbar || toolbar.dataset.bound === "1") return;
+        toolbar.dataset.bound = "1";
+        const search = document.getElementById("attendanceHubSearch");
+        search.addEventListener("input", () => {
+          attendanceHubQuery = search.value.trim();
+          render();
+        });
+        toolbar.addEventListener("click", (event) => {
+          const button = event.target.closest("[data-hub-action]");
+          if (!button) return;
+          const action = button.dataset.hubAction;
+          toolbar.querySelectorAll("[data-hub-action]").forEach((b) => b.classList.remove("is-active"));
+          button.classList.add("is-active");
+          if (action === "trending") {
+            attendanceHubSort = "trending";
+            render();
+          } else if (action === "subjects") {
+            attendanceHubSort = "subjects";
+            render();
+            document.getElementById("cards")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          } else if (action === "tools") {
+            document.querySelector(".input-actions")?.scrollIntoView({ behavior: "smooth", block: "center" });
+          } else if (action === "adult") {
+            attendanceHubAdultMode = !attendanceHubAdultMode;
+            button.classList.toggle("is-active", attendanceHubAdultMode);
+            button.textContent = attendanceHubAdultMode ? "18+ ON" : "18+";
+            render();
+          }
+        });
+      }
+
+      function syncAttendanceHubTheme() {
+        const hub = document.documentElement.dataset.theme === "attendance-hub";
+        const toolbar = document.getElementById("attendanceHubToolbar");
+        if (toolbar) toolbar.hidden = !hub;
+        document.body.classList.toggle("attendance-hub-active", hub);
+        if (hub) mountAttendanceHubControls();
+        render();
+      }
+
       function card(s, overall) {
         const x = getStats(s),
           target = x.target,
@@ -893,17 +1016,8 @@ Example:
             ? "Below target, still safe 😮‍💨"
             : "W • You're chilling 😮‍💨";
 
-        const thumbKey = `${s.code}-${s.name}`.split("").reduce((n, ch) => (n * 31 + ch.charCodeAt(0)) % 360, 17);
-        const duration = `${Math.max(1, Math.round(x.total))}:${String(Math.max(0, Math.round((x.pct / 100) * 59))).padStart(2, "0")}`;
         return `
-    <article class="card ${debarred ? "danger-bar" : ""}" data-subject-search="${String(s.code + " " + s.name + " " + s.type).replace(/"/g, '&quot;')}">
-        <div class="cornhub-video-thumb" style="--thumb-hue:${thumbKey}">
-          <div class="cornhub-video-thumb__shine"></div>
-          <span class="cornhub-video-thumb__label">${s.code}</span>
-          <button class="cornhub-video-thumb__play" type="button" aria-label="Open ${String(s.name).replace(/"/g, '&quot;')}">▶</button>
-          <span class="cornhub-video-thumb__duration">${duration}</span>
-          <div class="cornhub-video-thumb__title">${s.name}</div>
-        </div>
+    <article class="card ${debarred ? "danger-bar" : ""}">
         <div class="top">
             <div><div class="code">${s.code}</div><div class="name">${s.name}</div><div class="type">${s.type}</div></div>
             <div class="badge ${debarred ? "danger" : "safe"}">${badge}</div>
@@ -960,8 +1074,14 @@ Example:
         const overall = totalHours ? (totalAttended / totalHours) * 100 : 0;
         const target = getTarget();
 
-        document.getElementById("cards").innerHTML = subjects
-          .map((s) => card(s, overall))
+        const displaySubjects = document.documentElement.dataset.theme === "attendance-hub"
+          ? attendanceHubSubjects(overall)
+          : subjects;
+        if (document.documentElement.dataset.theme === "attendance-hub" && attendanceHubSort === "subjects") {
+          displaySubjects.sort((a, b) => String(a.name).localeCompare(String(b.name)));
+        }
+        document.getElementById("cards").innerHTML = displaySubjects
+          .map((s) => document.documentElement.dataset.theme === "attendance-hub" ? attendanceHubCard(s, overall) : card(s, overall))
           .join("");
 
         const color = overall >= target ? "#22a85a" : "#e5484d";
@@ -998,6 +1118,9 @@ Example:
       }
 
       render();
+      const attendanceHubThemeObserver = new MutationObserver(syncAttendanceHubTheme);
+      attendanceHubThemeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+      syncAttendanceHubTheme();
     </script>
   </body>
 </html>
