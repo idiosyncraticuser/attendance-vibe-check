@@ -535,7 +535,7 @@ Example:
 1    CEUL560.1    Climate Change Science    Lecture    6    0    0    5    54.55
 2    CRT    Campus Recruitment Training    Lab    24    0    0    0    100.00"
             ></textarea>
-            <div class="input-actions">
+            <div class="input-actions" id="tools">
               <button onclick="parseReport()">Run the vibe check ⚡</button>
               <button class="secondary" onclick="clearReport()">
                 Reset the lore 🗑️
@@ -890,7 +890,7 @@ Example:
         ]);
       }
 
-      let attendanceHubAdultMode = false;
+      let attendanceHubAdultMode = (() => { try { return sessionStorage.getItem("attendanceHubAdultMode") === "1"; } catch (_) { return false; } })();
       let attendanceHubSort = "trending";
       let attendanceHubQuery = "";
 
@@ -923,33 +923,53 @@ Example:
       }
 
       function attendanceHubCard(s, overall) {
-        const x = getStats(s);
+        const x = getStats(s), target = x.target, lab = isLab(s);
         const debarred = isDebarred(s, overall);
         const pct = Math.min(x.pct, 100);
-        const title = debarred
-          ? `${s.name} — how bro got here 💀`
-          : `${s.name} — attendance update`;
-        const meta = `${s.code} · ${s.type} · ${x.attended}/${x.total} hr`;
+        const title = s.name || s.code;
         const thumbnailStyle = debarred
-          ? `style="background-image:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.78)),url('assets/themes/attendance-hub/johnny-debarred.png')"`
+          ? `style="background-image:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.78)),url('assets/themes/attendance-hub/johnny-debarred.png')"`
           : "";
+        const badge = debarred ? "DEBARRED 💀" : (x.pct < target && !lab ? "BELOW TARGET, STILL SAFE 😮‍💨" : "W • YOU'RE CHILLING 😮‍💨");
         return `
           <article class="card attendance-hub-card ${debarred ? "attendance-hub-card--debarred danger-bar" : ""}">
             <div class="attendance-hub-thumb" ${thumbnailStyle}>
               ${!debarred ? `<div class="attendance-hub-thumb-pattern"><span>${escapeHtml(s.code)}</span></div>` : ""}
+              <div class="attendance-hub-thumb-title">${escapeHtml(title)}</div>
               <span class="attendance-hub-play" aria-hidden="true">▶</span>
               <span class="attendance-hub-duration">${Math.max(1, Math.round(x.total))}:00</span>
               <span class="attendance-hub-badge ${debarred ? "is-danger" : ""}">${debarred ? "DEBARRED" : `${pct.toFixed(0)}%`}</span>
             </div>
+
             <div class="attendance-hub-card-body">
-              <div class="attendance-hub-title-row">
-                <div class="attendance-hub-avatar">${escapeHtml((s.code || s.name || "A").slice(0,2).toUpperCase())}</div>
-                <div class="attendance-hub-copy">
-                  <h3>${escapeHtml(title)}</h3>
-                  <p>${escapeHtml(meta)}</p>
-                  <div class="attendance-hub-mini-progress"><span style="width:${pct}%"></span></div>
+              <div class="attendance-hub-card-head">
+                <div>
+                  <div class="attendance-hub-code">${escapeHtml(s.code)}</div>
+                  <h3>${escapeHtml(s.name)}</h3>
+                  <div class="attendance-hub-type">${escapeHtml(s.type)}</div>
+                </div>
+                <div class="attendance-hub-status ${debarred ? "is-danger" : ""}">${escapeHtml(badge)}</div>
+              </div>
+
+              <div class="attendance-hub-detail-grid">
+                <div class="attendance-hub-donut" style="--pct:${pct}%;--hub-chart:${debarred ? "#e5484d" : "#22a85a"}">
+                  <div>${x.pct.toFixed(2)}%</div>
+                </div>
+                <div class="attendance-hub-metrics">
+                  <div><span>Actually showed up</span><b>${x.attended} hr</b></div>
+                  <div><span>Bro was NOT there</span><b>${s.absent} hr</b></div>
+                  <div><span>Total hours</span><b>${x.total} hr</b></div>
+                  <div class="attendance-hub-progress"><span style="width:${pct}%"></span></div>
                   <div class="attendance-hub-roast">${escapeHtml(attendanceHubRoast(s, x, overall, debarred))}</div>
                 </div>
+              </div>
+
+              <div class="attendance-hub-actions">
+                ${x.pct >= target
+                  ? `<div class="attendance-hub-action-box"><small>Free passes 🗿💦</small><strong>${x.canMiss} ${x.canMiss === 1 ? "hour" : "hours"}</strong></div>
+                     <div class="attendance-hub-action-box"><small>${lab ? "Lab target" : "Target"}: ${target}%</small><strong>${(x.pct - target).toFixed(2)}%</strong></div>`
+                  : `<div class="attendance-hub-action-box"><small>${lab || overall < target ? "LOCK TF IN 🔒🫡" : "Below target, but safe 😮‍💨"}</small><strong class="${lab || overall < target ? "is-catch" : ""}">${lab || overall < target ? x.needAttend + " " + (x.needAttend === 1 ? "hour" : "hours") : "No mandatory recovery"}</strong></div>
+                     <div class="attendance-hub-action-box"><small>${lab ? "Lab rule 🚨" : "Aggregate rule"}</small><strong class="${debarred ? "is-danger" : ""}">${debarred ? "DEBARRED" : "Not debarred"}</strong></div>`}
               </div>
             </div>
           </article>`;
@@ -966,10 +986,27 @@ Example:
         if (!toolbar || toolbar.dataset.bound === "1") return;
         toolbar.dataset.bound = "1";
         const search = document.getElementById("attendanceHubSearch");
+        const localAdultButton = toolbar.querySelector('[data-hub-action="adult"]');
+        if (localAdultButton) {
+          localAdultButton.classList.toggle("is-active", attendanceHubAdultMode);
+          localAdultButton.textContent = attendanceHubAdultMode ? "18+ ON" : "18+";
+        }
         search.addEventListener("input", () => {
           attendanceHubQuery = search.value.trim();
           render();
         });
+        try {
+          const initialQuery = new URLSearchParams(location.search).get("hubSearch") || "";
+          if (initialQuery) {
+            search.value = initialQuery;
+            attendanceHubQuery = initialQuery;
+          }
+          const initialAction = new URLSearchParams(location.search).get("hubAction");
+          if (initialAction && ["trending", "subjects", "tools"].includes(initialAction)) {
+            const actionButton = toolbar.querySelector(`[data-hub-action="${initialAction}"]`);
+            if (actionButton) actionButton.click();
+          }
+        } catch (_) {}
         toolbar.addEventListener("click", (event) => {
           const button = event.target.closest("[data-hub-action]");
           if (!button) return;
@@ -987,6 +1024,7 @@ Example:
             document.querySelector(".input-actions")?.scrollIntoView({ behavior: "smooth", block: "center" });
           } else if (action === "adult") {
             attendanceHubAdultMode = !attendanceHubAdultMode;
+            try { sessionStorage.setItem("attendanceHubAdultMode", attendanceHubAdultMode ? "1" : "0"); } catch (_) {}
             button.classList.toggle("is-active", attendanceHubAdultMode);
             button.textContent = attendanceHubAdultMode ? "18+ ON" : "18+";
             render();
