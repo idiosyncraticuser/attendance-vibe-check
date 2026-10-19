@@ -20,7 +20,6 @@
               "iron-man",
               "captain-america",
               "thanos",
-              "attendance-hub",
             ].includes(t)
           )
             t = null;
@@ -535,7 +534,7 @@ Example:
 1    CEUL560.1    Climate Change Science    Lecture    6    0    0    5    54.55
 2    CRT    Campus Recruitment Training    Lab    24    0    0    0    100.00"
             ></textarea>
-            <div class="input-actions" id="tools">
+            <div class="input-actions">
               <button onclick="parseReport()">Run the vibe check ⚡</button>
               <button class="secondary" onclick="clearReport()">
                 Reset the lore 🗑️
@@ -591,16 +590,6 @@ Example:
           </div>
         </div>
       </section>
-      <div class="attendance-hub-toolbar" id="attendanceHubToolbar" hidden aria-label="AttendanceHub controls">
-        <div class="attendance-hub-search-wrap">
-          <span class="attendance-hub-search-icon" aria-hidden="true">⌕</span>
-          <input id="attendanceHubSearch" class="attendance-hub-search" type="search" placeholder="Search subjects..." autocomplete="off">
-        </div>
-        <button type="button" class="attendance-hub-chip is-active" data-hub-action="trending">🔥 Trending</button>
-        <button type="button" class="attendance-hub-chip" data-hub-action="subjects">📚 Subjects</button>
-        <button type="button" class="attendance-hub-chip" data-hub-action="tools">🧰 Tools</button>
-        <button type="button" class="attendance-hub-chip attendance-hub-adult" data-hub-action="adult">18+</button>
-      </div>
       <div class="cards" id="cards"></div>
       <div class="legend">
         <b>How the attendance lore works:</b> “Free pass” = maximum future hours
@@ -890,157 +879,6 @@ Example:
         ]);
       }
 
-      let attendanceHubAdultMode = (() => { try { return sessionStorage.getItem("attendanceHubAdultMode") === "1"; } catch (_) { return false; } })();
-      let attendanceHubSort = "trending";
-      let attendanceHubQuery = "";
-
-      function attendanceHubSubjects(overall) {
-        let list = [...subjects];
-        if (attendanceHubQuery) {
-          const q = attendanceHubQuery.toLowerCase();
-          list = list.filter((s) => `${s.code} ${s.name} ${s.type}`.toLowerCase().includes(q));
-        }
-        if (attendanceHubSort === "trending") {
-          list.sort((a, b) => {
-            const ax = getStats(a), bx = getStats(b);
-            const ar = isDebarred(a, overall) ? 1000 : Math.max(0, ax.target - ax.pct);
-            const br = isDebarred(b, overall) ? 1000 : Math.max(0, bx.target - bx.pct);
-            return br - ar || bx.pct - ax.pct;
-          });
-        }
-        return list;
-      }
-
-      function attendanceHubRoast(s, x, overall, debarred) {
-        if (debarred) return "Ab Johhny Bhaiya aapko chorenge nahi💦";
-        if (attendanceHubAdultMode) {
-          if (x.pct >= 90) return "Bro is absolutely locked in 😮‍💨";
-          if (x.pct >= x.target) return "Okay bro, you're doing suspiciously well 💀";
-          if (x.pct >= 75) return "This one is getting a little too close 😭";
-          return "Bro is getting absolutely cooked 💀";
-        }
-        return getRoast(x.pct, x.target, overall, isLab(s));
-      }
-
-      function attendanceHubCard(s, overall) {
-        const x = getStats(s), target = x.target, lab = isLab(s);
-        const debarred = isDebarred(s, overall);
-        const pct = Math.min(x.pct, 100);
-        const title = s.name || s.code;
-        const thumbnailStyle = debarred
-          ? `style="background-image:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.78)),url('assets/themes/attendance-hub/johnny-debarred.png')"`
-          : "";
-        const badge = debarred ? "DEBARRED 💀" : (x.pct < target && !lab ? "BELOW TARGET, STILL SAFE 😮‍💨" : "W • YOU'RE CHILLING 😮‍💨");
-        return `
-          <article class="card attendance-hub-card ${debarred ? "attendance-hub-card--debarred danger-bar" : ""}">
-            <div class="attendance-hub-thumb" ${thumbnailStyle}>
-              ${!debarred ? `<div class="attendance-hub-thumb-pattern"><span>${escapeHtml(s.code)}</span></div>` : ""}
-              <div class="attendance-hub-thumb-title">${escapeHtml(title)}</div>
-              <span class="attendance-hub-play" aria-hidden="true">▶</span>
-              <span class="attendance-hub-duration">${Math.max(1, Math.round(x.total))}:00</span>
-              <span class="attendance-hub-badge ${debarred ? "is-danger" : ""}">${debarred ? "DEBARRED" : `${pct.toFixed(0)}%`}</span>
-            </div>
-
-            <div class="attendance-hub-card-body">
-              <div class="attendance-hub-card-head">
-                <div>
-                  <div class="attendance-hub-code">${escapeHtml(s.code)}</div>
-                  <h3>${escapeHtml(s.name)}</h3>
-                  <div class="attendance-hub-type">${escapeHtml(s.type)}</div>
-                </div>
-                <div class="attendance-hub-status ${debarred ? "is-danger" : ""}">${escapeHtml(badge)}</div>
-              </div>
-
-              <div class="attendance-hub-detail-grid">
-                <div class="attendance-hub-donut" style="--pct:${pct}%;--hub-chart:${debarred ? "#e5484d" : "#22a85a"}">
-                  <div>${x.pct.toFixed(2)}%</div>
-                </div>
-                <div class="attendance-hub-metrics">
-                  <div><span>Actually showed up</span><b>${x.attended} hr</b></div>
-                  <div><span>Bro was NOT there</span><b>${s.absent} hr</b></div>
-                  <div><span>Total hours</span><b>${x.total} hr</b></div>
-                  <div class="attendance-hub-progress"><span style="width:${pct}%"></span></div>
-                  <div class="attendance-hub-roast">${escapeHtml(attendanceHubRoast(s, x, overall, debarred))}</div>
-                </div>
-              </div>
-
-              <div class="attendance-hub-actions">
-                ${x.pct >= target
-                  ? `<div class="attendance-hub-action-box"><small>Free passes 🗿💦</small><strong>${x.canMiss} ${x.canMiss === 1 ? "hour" : "hours"}</strong></div>
-                     <div class="attendance-hub-action-box"><small>${lab ? "Lab target" : "Target"}: ${target}%</small><strong>${(x.pct - target).toFixed(2)}%</strong></div>`
-                  : `<div class="attendance-hub-action-box"><small>${lab || overall < target ? "LOCK TF IN 🔒🫡" : "Below target, but safe 😮‍💨"}</small><strong class="${lab || overall < target ? "is-catch" : ""}">${lab || overall < target ? x.needAttend + " " + (x.needAttend === 1 ? "hour" : "hours") : "No mandatory recovery"}</strong></div>
-                     <div class="attendance-hub-action-box"><small>${lab ? "Lab rule 🚨" : "Aggregate rule"}</small><strong class="${debarred ? "is-danger" : ""}">${debarred ? "DEBARRED" : "Not debarred"}</strong></div>`}
-              </div>
-            </div>
-          </article>`;
-      }
-
-      function escapeHtml(value) {
-        return String(value ?? "").replace(/[&<>'"]/g, (char) => ({
-          "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;"
-        })[char]);
-      }
-
-      function mountAttendanceHubControls() {
-        const toolbar = document.getElementById("attendanceHubToolbar");
-        if (!toolbar || toolbar.dataset.bound === "1") return;
-        toolbar.dataset.bound = "1";
-        const search = document.getElementById("attendanceHubSearch");
-        const localAdultButton = toolbar.querySelector('[data-hub-action="adult"]');
-        if (localAdultButton) {
-          localAdultButton.classList.toggle("is-active", attendanceHubAdultMode);
-          localAdultButton.textContent = attendanceHubAdultMode ? "18+ ON" : "18+";
-        }
-        search.addEventListener("input", () => {
-          attendanceHubQuery = search.value.trim();
-          render();
-        });
-        try {
-          const initialQuery = new URLSearchParams(location.search).get("hubSearch") || "";
-          if (initialQuery) {
-            search.value = initialQuery;
-            attendanceHubQuery = initialQuery;
-          }
-          const initialAction = new URLSearchParams(location.search).get("hubAction");
-          if (initialAction && ["trending", "subjects", "tools"].includes(initialAction)) {
-            const actionButton = toolbar.querySelector(`[data-hub-action="${initialAction}"]`);
-            if (actionButton) actionButton.click();
-          }
-        } catch (_) {}
-        toolbar.addEventListener("click", (event) => {
-          const button = event.target.closest("[data-hub-action]");
-          if (!button) return;
-          const action = button.dataset.hubAction;
-          toolbar.querySelectorAll("[data-hub-action]").forEach((b) => b.classList.remove("is-active"));
-          button.classList.add("is-active");
-          if (action === "trending") {
-            attendanceHubSort = "trending";
-            render();
-          } else if (action === "subjects") {
-            attendanceHubSort = "subjects";
-            render();
-            document.getElementById("cards")?.scrollIntoView({ behavior: "smooth", block: "start" });
-          } else if (action === "tools") {
-            document.querySelector(".input-actions")?.scrollIntoView({ behavior: "smooth", block: "center" });
-          } else if (action === "adult") {
-            attendanceHubAdultMode = !attendanceHubAdultMode;
-            try { sessionStorage.setItem("attendanceHubAdultMode", attendanceHubAdultMode ? "1" : "0"); } catch (_) {}
-            button.classList.toggle("is-active", attendanceHubAdultMode);
-            button.textContent = attendanceHubAdultMode ? "18+ ON" : "18+";
-            render();
-          }
-        });
-      }
-
-      function syncAttendanceHubTheme() {
-        const hub = document.documentElement.dataset.theme === "attendance-hub";
-        const toolbar = document.getElementById("attendanceHubToolbar");
-        if (toolbar) toolbar.hidden = !hub;
-        document.body.classList.toggle("attendance-hub-active", hub);
-        if (hub) mountAttendanceHubControls();
-        render();
-      }
-
       function card(s, overall) {
         const x = getStats(s),
           target = x.target,
@@ -1112,14 +950,8 @@ Example:
         const overall = totalHours ? (totalAttended / totalHours) * 100 : 0;
         const target = getTarget();
 
-        const displaySubjects = document.documentElement.dataset.theme === "attendance-hub"
-          ? attendanceHubSubjects(overall)
-          : subjects;
-        if (document.documentElement.dataset.theme === "attendance-hub" && attendanceHubSort === "subjects") {
-          displaySubjects.sort((a, b) => String(a.name).localeCompare(String(b.name)));
-        }
-        document.getElementById("cards").innerHTML = displaySubjects
-          .map((s) => document.documentElement.dataset.theme === "attendance-hub" ? attendanceHubCard(s, overall) : card(s, overall))
+        document.getElementById("cards").innerHTML = subjects
+          .map((s) => card(s, overall))
           .join("");
 
         const color = overall >= target ? "#22a85a" : "#e5484d";
@@ -1156,9 +988,6 @@ Example:
       }
 
       render();
-      const attendanceHubThemeObserver = new MutationObserver(syncAttendanceHubTheme);
-      attendanceHubThemeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-      syncAttendanceHubTheme();
     </script>
   </body>
 </html>

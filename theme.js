@@ -8,7 +8,6 @@
     "iron-man": { label: "Iron Man", icon: "◉", color: "#11171d", detail: "Stark HUD", effect: "reactor" },
     "captain-america": { label: "Captain America", icon: "◌", color: "#081725", detail: "Tactical command", effect: "shield" },
     thanos: { label: "Thanos", icon: "∞", color: "#110d1c", detail: "Cosmic order", effect: "reality" },
-    "attendance-hub": { label: "AttendanceHub", icon: "▶", color: "#111111", detail: "Dark mode, questionable vibes", effect: "hub" },
 };
 
   const safeGet = () => { try { const saved = localStorage.getItem(KEY); const normalized = saved === "night" ? "dark" : saved; return profiles[normalized] ? normalized : null; } catch (_) { return null; } };
@@ -36,8 +35,6 @@
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.content = profiles[resolved].color;
     if (persist) safeSet(resolved);
-    syncAttendanceHubNav();
-    if (resolved === "attendance-hub") document.body.classList.add("attendance-hub-active");
     const button = document.querySelector(".theme-toggle");
     if (button) {
       button.setAttribute("aria-label", `Theme: ${profiles[resolved].label}. Open theme chooser`);
@@ -47,29 +44,6 @@
         option.setAttribute("aria-checked", String(option.dataset.theme === resolved));
       });
     }
-  }
-
-  function hubTransition(resolved, persist, initial = false) {
-    const overlay = document.createElement("div");
-    overlay.className = "attendance-hub-transition";
-    overlay.setAttribute("aria-hidden", "true");
-    overlay.innerHTML = `
-      <div class="attendance-hub-transition__bar"></div>
-      <div class="attendance-hub-transition__logo">Attendance<span>Hub</span></div>
-      <div class="attendance-hub-transition__scan"></div>
-    `;
-    document.body.classList.add("theme-transitioning");
-    document.body.appendChild(overlay);
-    requestAnimationFrame(() => overlay.classList.add("is-active"));
-    window.setTimeout(() => {
-      commitTheme(resolved, persist);
-      overlay.classList.add("is-revealing");
-    }, 460);
-    window.setTimeout(() => {
-      overlay.remove();
-      document.body.classList.remove("theme-transitioning");
-      if (initial) document.documentElement.classList.remove("theme-booting");
-    }, 820);
   }
 
   function captainTransition(resolved, persist, initial = false) {
@@ -275,16 +249,12 @@ function thanosTransition(resolved, persist, initial = false) {
         document.documentElement.classList.remove("theme-booting");
         return;
       }
-      if (resolved === "attendance-hub") return hubTransition(resolved, persist, true);
       if (resolved === "captain-america") return captainTransition(resolved, persist, true);
       if (resolved === "iron-man") return ironManTransition(resolved, persist, true);
       if (resolved === "thanos") return thanosTransition(resolved, persist, true);
       return simpleEntry(resolved, persist, true);
     }
 
-    if (resolved === "attendance-hub" && current() !== resolved && origin && !reduced) {
-      return hubTransition(resolved, persist);
-    }
     if (resolved === "captain-america" && current() !== resolved && origin && !reduced) {
       captainTransition(resolved, persist);
       return;
@@ -299,75 +269,6 @@ function thanosTransition(resolved, persist, initial = false) {
     }
     animateThemeChange(resolved, origin);
     commitTheme(resolved, persist);
-  }
-
-  function mountAttendanceHubNav() {
-    if (document.getElementById("attendanceHubGlobalNav")) return;
-    const nav = document.createElement("div");
-    nav.id = "attendanceHubGlobalNav";
-    nav.className = "attendance-hub-global-nav";
-    nav.innerHTML = `
-      <div class="attendance-hub-global-nav__inner">
-        <a class="attendance-hub-brand" href="index.html" aria-label="AttendanceHub home">Attendance<span>Hub</span></a>
-        <div class="attendance-hub-global-search"><span>⌕</span><input id="attendanceHubGlobalSearch" type="search" placeholder="Search subjects..." autocomplete="off"></div>
-        <div class="attendance-hub-global-actions">
-          <button type="button" data-global-hub="trending">Trending</button>
-          <button type="button" data-global-hub="subjects">Subjects</button>
-          <button type="button" data-global-hub="tools">Tools</button>
-          <button type="button" class="is-adult" data-global-hub="adult">18+ <span>MODE</span></button>
-        </div>
-      </div>`;
-    document.body.prepend(nav);
-
-    const path = location.pathname.split('/').pop() || 'index.html';
-    const isHome = path === 'index.html' || path === '';
-    const input = nav.querySelector('#attendanceHubGlobalSearch');
-    const adultButton = nav.querySelector('[data-global-hub="adult"]');
-    let adult = false;
-    try { adult = sessionStorage.getItem('attendanceHubAdultMode') === '1'; } catch (_) {}
-    adultButton.classList.toggle('is-active', adult);
-    adultButton.innerHTML = adult ? '18+ <span>ON</span>' : '18+ <span>MODE</span>';
-
-    if (isHome) {
-      input.addEventListener('input', () => {
-        const local = document.getElementById('attendanceHubSearch');
-        if (local) { local.value = input.value; local.dispatchEvent(new Event('input', {bubbles:true})); }
-      });
-    } else {
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') location.href = `index.html?hubSearch=${encodeURIComponent(input.value.trim())}`;
-      });
-    }
-
-    nav.addEventListener('click', (event) => {
-      const b = event.target.closest('[data-global-hub]');
-      if (!b) return;
-      const action = b.dataset.globalHub;
-      if (action === 'adult') {
-        adult = !adult;
-        try { sessionStorage.setItem('attendanceHubAdultMode', adult ? '1' : '0'); } catch (_) {}
-        b.classList.toggle('is-active', adult);
-        b.innerHTML = adult ? '18+ <span>ON</span>' : '18+ <span>MODE</span>';
-        const local = document.getElementById('attendanceHubAdult');
-        const localButton = document.querySelector('[data-hub-action="adult"]');
-        if (localButton && localButton.classList.contains('is-active') !== adult) localButton.click();
-        else if (isHome && typeof window.__attendanceHubSetAdult === 'function') window.__attendanceHubSetAdult(adult);
-        return;
-      }
-      if (isHome) {
-        const local = document.querySelector(`[data-hub-action="${action}"]`);
-        if (local) { local.click(); return; }
-        if (action === 'tools') document.getElementById('tools')?.scrollIntoView({behavior:'smooth', block:'center'});
-      } else {
-        if (action === 'tools') location.href = 'index.html?hubAction=tools#tools';
-        else location.href = `index.html?hubAction=${encodeURIComponent(action)}#cards`;
-      }
-    });
-  }
-
-  function syncAttendanceHubNav() {
-    const nav = document.getElementById('attendanceHubGlobalNav');
-    if (nav) nav.classList.toggle('is-visible', document.documentElement.dataset.theme === 'attendance-hub');
   }
 
   function mount() {
@@ -413,9 +314,7 @@ function thanosTransition(resolved, persist, initial = false) {
       toggle.style.setProperty("--energy-x", `${event.clientX - box.left}px`);
       toggle.style.setProperty("--energy-y", `${event.clientY - box.top}px`);
     });
-    mountAttendanceHubNav();
     apply(current(), false, null, true);
-    syncAttendanceHubNav();
   }
 
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
