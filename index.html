@@ -506,6 +506,39 @@
           min-width: 110px;
         }
       }
+
+      .event-pass-panel {
+        margin: 0 0 22px;
+        padding: 18px;
+        background: var(--avc-surface, #fff);
+        color: var(--avc-text, #172033);
+        border: 1px solid var(--avc-border, #e4e9f0);
+        border-radius: 18px;
+        box-shadow: var(--avc-shadow, 0 5px 18px rgba(16,24,40,.06));
+      }
+      .event-pass-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+      .event-pass-heading h2 { margin:0; font-size:18px; }
+      .event-pass-heading p { margin:5px 0 0; color:var(--avc-muted,#667085); font-size:13px; }
+      .event-pass-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-top:16px; }
+      .event-pass {
+        min-height:100px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+        border:1px solid var(--avc-border, #e4e9f0); border-radius:14px; padding:12px 8px;
+        background:var(--avc-surface-alt,#f7f9fb); color:var(--avc-text,#172033); cursor:pointer;
+        font:inherit; transition:transform .16s ease,border-color .16s ease,background .16s ease,box-shadow .16s ease;
+      }
+      .event-pass:hover { transform:translateY(-2px); border-color:var(--avc-accent,#5b75f6); }
+      .event-pass[aria-pressed="true"] { border-color:var(--avc-accent,#5b75f6); background:var(--avc-accent-soft,#eef0ff); box-shadow:0 0 0 2px var(--avc-glow,rgba(91,117,246,.16)); }
+      .event-pass .pass-icon { font-size:24px; line-height:1; }
+      .event-pass strong { font-size:14px; }
+      .event-pass small { font-size:12px; color:var(--avc-muted,#667085); }
+      .event-pass[aria-pressed="true"] small { color:var(--avc-text,#172033); }
+      .event-pass-footer { display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-top:15px; }
+      .event-pass-total { font-weight:800; font-size:16px; }
+      .event-pass-total span { color:var(--avc-muted,#667085); font-weight:500; font-size:12px; margin-left:5px; }
+      .event-pass-progress { height:7px; background:var(--avc-track,#e9edf2); border-radius:999px; overflow:hidden; margin-top:9px; }
+      .event-pass-progress > div { height:100%; width:0; background:var(--avc-accent,#5b75f6); border-radius:999px; transition:width .2s ease; }
+      .copy-report-btn { margin-top:10px; width:100%; }
+      @media (max-width:600px) { .event-pass-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .event-pass { min-height:88px; } }
     </style>
     <link rel="stylesheet" href="theme.css" />
   </head>
@@ -539,11 +572,11 @@ Example:
               <button class="secondary" onclick="clearReport()">
                 Reset the lore 🗑️
               </button>
-              <a href="skip_simulator.html" class="skip-link"
-                >🧪 Skip Simulator</a
-              >
+              <button class="secondary" onclick="copyAttendanceReport()">
+                Copy Report 📋
+              </button>
               <a
-                href="future_predictor.html?v=3"
+                href="future_predictor.html?v=4"
                 class="skip-link predictor-link"
                 >🔮 Future Predictor</a
               >
@@ -590,6 +623,22 @@ Example:
           </div>
         </div>
       </section>
+      <section class="event-pass-panel" aria-labelledby="eventPassTitle">
+        <div class="event-pass-heading">
+          <div>
+            <h2 id="eventPassTitle">🎟️ Tech Event Attendance</h2>
+            <p>Select the days you attended. Each day contributes 6 hours to aggregate attendance.</p>
+          </div>
+          <div class="event-pass-total" id="eventPassCounter">0 / 24 hours <span>0% attended</span></div>
+        </div>
+        <div class="event-pass-grid" id="eventPassGrid">
+          <button type="button" class="event-pass" data-event-day="1" aria-pressed="false" onclick="toggleEventDay(1)"><span class="pass-icon">🎟️</span><strong>Day 1</strong><small>6 hours</small></button>
+          <button type="button" class="event-pass" data-event-day="2" aria-pressed="false" onclick="toggleEventDay(2)"><span class="pass-icon">🎟️</span><strong>Day 2</strong><small>6 hours</small></button>
+          <button type="button" class="event-pass" data-event-day="3" aria-pressed="false" onclick="toggleEventDay(3)"><span class="pass-icon">🎟️</span><strong>Day 3</strong><small>6 hours</small></button>
+          <button type="button" class="event-pass" data-event-day="4" aria-pressed="false" onclick="toggleEventDay(4)"><span class="pass-icon">🎟️</span><strong>Day 4</strong><small>6 hours</small></button>
+        </div>
+        <div class="event-pass-progress" aria-label="Tech event attendance progress"><div id="eventPassProgress"></div></div>
+      </section>
       <div class="cards" id="cards"></div>
       <div class="legend">
         <b>How the attendance lore works:</b> “Free pass” = maximum future hours
@@ -603,6 +652,38 @@ Example:
     <script src="theme.js"></script>
     <script>
       let subjects = [];
+      const EVENT_DAYS_KEY = "attendanceVibeEventDays";
+      function loadEventDays() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(EVENT_DAYS_KEY) || "[]");
+          return Array.isArray(saved) ? [...new Set(saved.map(Number).filter((day) => Number.isInteger(day) && day >= 1 && day <= 4))].sort() : [];
+        } catch (_) { return []; }
+      }
+      let eventDays = loadEventDays();
+      function eventAttendedHours() { return eventDays.length * 6; }
+      function saveEventDays() {
+        try { localStorage.setItem(EVENT_DAYS_KEY, JSON.stringify(eventDays)); } catch (_) {}
+      }
+      function renderEventPasses() {
+        document.querySelectorAll("[data-event-day]").forEach((button) => {
+          const day = Number(button.dataset.eventDay);
+          const selected = eventDays.includes(day);
+          button.setAttribute("aria-pressed", String(selected));
+          button.querySelector(".pass-icon").textContent = selected ? "🎫" : "🎟️";
+          button.querySelector("small").textContent = selected ? "Attended · 6 hrs" : "6 hours";
+        });
+        const hours = eventAttendedHours();
+        const counter = document.getElementById("eventPassCounter");
+        if (counter) counter.innerHTML = `${hours} / 24 hours <span>${Math.round(hours / 24 * 100)}% attended</span>`;
+        const progress = document.getElementById("eventPassProgress");
+        if (progress) progress.style.width = `${hours / 24 * 100}%`;
+      }
+      function toggleEventDay(day) {
+        eventDays = eventDays.includes(day) ? eventDays.filter((value) => value !== day) : [...eventDays, day].sort();
+        saveEventDays();
+        renderEventPasses();
+        render();
+      }
       const savedTarget = localStorage.getItem("attendanceVibeTarget");
       if (savedTarget) {
         const targetSelect = document.getElementById("targetSelect");
@@ -942,11 +1023,13 @@ Example:
           return;
         }
 
-        const totalAttended = subjects.reduce(
+        const subjectAttended = subjects.reduce(
           (a, s) => a + getStats(s).attended,
           0,
         );
-        const totalHours = subjects.reduce((a, s) => a + getStats(s).total, 0);
+        const subjectHours = subjects.reduce((a, s) => a + getStats(s).total, 0);
+        const totalAttended = subjectAttended + eventAttendedHours();
+        const totalHours = subjectHours + 24;
         const overall = totalHours ? (totalAttended / totalHours) * 100 : 0;
         const target = getTarget();
 
@@ -987,6 +1070,58 @@ Example:
         localStorage.setItem("attendanceVibeTarget", String(target));
       }
 
+      async function copyAttendanceReport() {
+        if (!subjects.length) {
+          const error = document.getElementById("error");
+          error.textContent = "Run your attendance report first, then copy it. 😭";
+          error.style.display = "block";
+          return;
+        }
+        const subjectAttended = subjects.reduce((sum, subject) => sum + getStats(subject).attended, 0);
+        const subjectHours = subjects.reduce((sum, subject) => sum + getStats(subject).total, 0);
+        const eventHours = eventAttendedHours();
+        const aggregateAttended = subjectAttended + eventHours;
+        const aggregateTotal = subjectHours + 24;
+        const lines = [
+          "ATTENDANCE VIBE CHECK REPORT",
+          "",
+          "SUBJECT ATTENDANCE",
+          ...subjects.map((subject) => {
+            const stats = getStats(subject);
+            return `${subject.code} — ${subject.name}: ${stats.attended}/${stats.total} hrs (${stats.pct.toFixed(2)}%)`;
+          }),
+          "",
+          "TECH EVENT ATTENDANCE",
+          `Attended days: ${eventDays.length ? eventDays.join(", ") : "None"}`,
+          `Tech event hours: ${eventHours}/24 hrs (${(eventHours / 24 * 100).toFixed(2)}%)`,
+          "",
+          "AGGREGATE ATTENDANCE",
+          `${aggregateAttended}/${aggregateTotal} hrs (${(aggregateAttended / aggregateTotal * 100).toFixed(2)}%)`,
+        ];
+        const reportText = lines.join("\n");
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(reportText);
+          } else {
+            const textarea = document.createElement("textarea");
+            textarea.value = reportText;
+            textarea.style.position = "fixed";
+            textarea.style.opacity = "0";
+            document.body.appendChild(textarea);
+            textarea.select();
+            const copied = document.execCommand("copy");
+            textarea.remove();
+            if (!copied) throw new Error("Clipboard copy failed");
+          }
+          const button = document.querySelector('button[onclick="copyAttendanceReport()"]');
+          if (button) { const original = button.textContent; button.textContent = "Copied! ✓"; setTimeout(() => { button.textContent = original; }, 1600); }
+        } catch (error) {
+          const el = document.getElementById("error");
+          el.textContent = "Could not copy automatically. Try using a secure browser context.";
+          el.style.display = "block";
+        }
+      }
+      renderEventPasses();
       render();
     </script>
   </body>

@@ -867,6 +867,13 @@
         return Number.isFinite(raw) && raw > 0 && raw <= 100 ? raw : 75;
       }
       const savedSubjects = loadSavedSubjects();
+      function loadTechEventAttendance() {
+        try {
+          const raw = JSON.parse(safeGet("attendanceVibeEventDays", "[]") || "[]");
+          const days = Array.isArray(raw) ? [...new Set(raw.map(Number).filter((day) => Number.isInteger(day) && day >= 1 && day <= 4))] : [];
+          return { days, attended: days.length * 6, total: 24 };
+        } catch (_) { return { days: [], attended: 0, total: 24 }; }
+      }
       let target = loadSavedTarget();
       let selectedSection = safeGet("attendanceVibeSection", "5CSD");
       if (!TIMETABLES[selectedSection]) selectedSection = "5CSD";
@@ -1226,13 +1233,14 @@
           };
         });
 
+        const eventAttendance = loadTechEventAttendance();
         const currentAttended = savedSubjects.reduce(
           (a, s) => a + baseStats(s).attended,
-          0,
+          eventAttendance.attended,
         );
         const currentTotal = savedSubjects.reduce(
           (a, s) => a + baseStats(s).total,
-          0,
+          eventAttendance.total,
         );
 
         const predictedAttended = currentAttended + futureAttendedHours;
@@ -1362,6 +1370,9 @@
             <div class="stat"><small>Predicted aggregate</small><b>${overall.toFixed(2)}%</b></div>
             <div class="stat"><small>Future classes attended</small><b>${data.futureAttendedHours} hr</b></div>
             <div class="stat"><small>Vacation damage</small><b>${data.missedHours} hr</b></div>
+        </div>
+        <div class="status safe" style="margin-bottom:14px">
+            🎟️ Tech event attendance included in aggregate: <b>${loadTechEventAttendance().attended}/24 hrs</b>.
         </div>
         <div class="status safe" style="margin-bottom:14px">
             📅 Assuming you attend every scheduled class you didn't select as leave, from tomorrow until your last vacation day.
